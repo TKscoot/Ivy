@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{4E40957C-3A77-960D-E363-7C10CF79120F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="environment">
+      <UniqueIdentifier>{3AC24330-A677-BC25-2F6C-B6FC9B20B329}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\Ivy.h" />
+    <ClInclude Include="source\Types.h" />
+    <ClInclude Include="source\core\Engine.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\environment\Input.h">
+      <Filter>environment</Filter>
+    </ClInclude>
+    <ClInclude Include="source\environment\KeyCodes.h">
+      <Filter>environment</Filter>
+    </ClInclude>
+    <ClInclude Include="source\environment\Log.h">
+      <Filter>environment</Filter>
+    </ClInclude>
+    <ClInclude Include="source\environment\Window.h">
+      <Filter>environment</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ivypch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\core\Engine.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\environment\Input.cpp">
+      <Filter>environment</Filter>
+    </ClCompile>
+    <ClCompile Include="source\environment\Log.cpp">
+      <Filter>environment</Filter>
+    </ClCompile>
+    <ClCompile Include="source\environment\Window.cpp">
+      <Filter>environment</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ivypch.cpp" />
+  </ItemGroup>
+</Project>
