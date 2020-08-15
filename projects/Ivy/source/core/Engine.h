@@ -25,7 +25,7 @@ namespace Ivy
 		bool ShouldTerminate();
 
 		// Getter & Setter
-		const Ptr<Window> const GetWindow() { return mWnd; }
+		const Ptr<Window> GetWindow() { return mWnd; }
 
 	private:
 		Ptr<Window> mWnd;

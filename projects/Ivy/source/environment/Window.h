@@ -32,7 +32,7 @@ namespace Ivy
 		void SetTitle(std::string title);
 		
 	private:
-		static void Window::OnFramebufferSizeChange(GLFWwindow* window, int width, int height);
+		static void OnFramebufferSizeChange(GLFWwindow* window, int width, int height);
 
 		GLFWwindow* mWnd;
 	};

@@ -2,7 +2,7 @@
 
 function useIvyLib()
 	-- The library's public headers
-	includedirs "Projects/Ivy"
+	includedirs "projects/Ivy"
 	
 	-- We link against a library that's in the same workspace, so we can just
 	-- use the project name - premake is really smart and will handle everything for us.
@@ -13,6 +13,8 @@ end
 workspace "Ivy"
 	-- We set the location of the files Premake will generate
 	
+        --configuration { "linux", "gmake" }
+            --buildoptions { "-j 4" } 
 	-- We indicate that all the projects are C++ only
 	language "C++"
 	-- Language standard should be C++17
@@ -22,8 +24,8 @@ workspace "Ivy"
 	architecture "x86_64"
 	
 	-- Configurations are often used to store some compiler / linker settings together.
-    -- The Debug configuration will be used by us while debugging.
-    -- The optimized Release configuration will be used when shipping the app.
+        -- The Debug configuration will be used by us while debugging.
+        -- The optimized Release configuration will be used when shipping the app.
 	configurations { "Debug", "Release" }
 	
 	-- We use filters to set options, a new feature of Premake5.
@@ -42,20 +44,16 @@ workspace "Ivy"
 	filter { }
 	
 	-- Here we use some "tokens" (the things between %{ ... }). They will be replaced by Premake
-	-- automatically when configuring the projects.
-	-- * %{prj.name} will be replaced by "ExampleLib" / "App" / "UnitTests"
-	--  * %{cfg.longname} will be replaced by "Debug" or "Release" depending on the configuration
 	-- The path is relative to *this* folder
 	targetdir ("Build/Bin/%{prj.name}/%{cfg.longname}")
 	objdir ("Build/Obj/%{prj.name}/%{cfg.longname}")
 	
--- The core engine, the static library
 project "GLAD"
 	
-	location "Projects/Ivy/dependencies/GLAD"
+	location "projects/Ivy/dependencies/GLAD"
 	
-	targetdir ("Projects/Ivy/dependencies/GLAD/Lib")
-	objdir ("Projects/Ivy/dependencies/GLAD/Lib")
+	targetdir ("projects/Ivy/dependencies/GLAD/Lib")
+	objdir ("projects/Ivy/dependencies/GLAD/Lib")
 	
 	kind "StaticLib"
 	
@@ -63,12 +61,12 @@ project "GLAD"
 
 	files
 	{
-		"Projects/Ivy/dependencies/GLAD/include/glad/glad.h",
-		"Projects/Ivy/dependencies/GLAD/include/KHR/khrplatform.h",
-		"Projects/Ivy/dependencies/GLAD/src/glad.c"
+		"projects/Ivy/dependencies/GLAD/include/glad/glad.h",
+		"projects/Ivy/dependencies/GLAD/include/KHR/khrplatform.h",
+		"projects/Ivy/dependencies/GLAD/src/glad.c"
 	}
 	
-	includedirs "Projects/Ivy/dependencies/GLAD/include"
+	includedirs "projects/Ivy/dependencies/GLAD/include"
 	
 	filter "configurations:Debug"
         runtime "Debug"
@@ -78,7 +76,7 @@ project "GLAD"
         runtime "Release"
         optimize "on"
 		
-	filter{ }	
+    filter{ }	
 
 -- The core engine, the static library
 project "Ivy"
@@ -90,32 +88,36 @@ project "Ivy"
 	
 	includedirs
 	{
-		"Projects/Ivy/source",
-		"Projects/Ivy/dependencies/GLFW/Include",
-		"Projects/Ivy/dependencies/GLAD/include",
-		"Projects/Ivy/dependencies/spdlog/include",
-		"Projects/Ivy/dependencies/glm"
+		"projects/Ivy/source",
+		"projects/Ivy/dependencies/GLFW/Include",
+		"projects/Ivy/dependencies/GLAD/include",
+		"projects/Ivy/dependencies/spdlog/include",
+		"projects/Ivy/dependencies/glm"
 	}
 	
 	libdirs
 	{
-		"Projects/Ivy/dependencies/GLFW/Lib",
-		"Projects/Ivy/dependencies/GLAD/Lib"
+		"projects/Ivy/dependencies/GLFW/Lib",
+		"projects/Ivy/dependencies/GLAD/Lib"
 	}
 	
-	links
-	{
-		links "GLAD",
-		links "GLFW3"
-	}
+        links "GLAD"
 
-	-- We specify where the source files are.
+        filter "system:linux"
+            links "glfw"
+        filter {}
+
+        filter "system:windows"
+            links "GLFW3"
+        filter {}
+
+        -- We specify where the source files are.
 	-- It would be better to separate header files in a folder and sources
 	-- in another, but for our simple project we will put everything in the same place.
 	-- Note: ** means recurse in subdirectories, so it will get all the files in ExampleLib/
 	pchheader "ivypch.h"
-    pchsource "Projects/Ivy/source/ivypch.cpp"
-	files "Projects/Ivy/source/**"
+        pchsource "projects/Ivy/source/ivypch.cpp"
+	files "projects/Ivy/source/**"
 	
 
 -- The windowed sandbox app
@@ -124,15 +126,42 @@ project "Sandbox"
 	location "projects/Sandbox"
 	
 	kind "ConsoleApp"
-	files "Projects/Sandbox/source/**"
+	files "projects/Sandbox/source/**"
 
 	-- We also need the headers
-	includedirs "Projects/Ivy/source"
-	includedirs "Projects/Ivy/dependencies/GLFW/Include"
-	includedirs "Projects/Ivy/dependencies/GLAD/include"
-	includedirs "Projects/Ivy/dependencies/spdlog/include"
-	includedirs "Projects/Ivy/dependencies/glm"
+	includedirs "projects/Ivy/source"
+	includedirs "projects/Ivy/dependencies/GLFW/Include"
+	includedirs "projects/Ivy/dependencies/GLAD/include"
+	includedirs "projects/Ivy/dependencies/spdlog/include"
+	includedirs "projects/Ivy/dependencies/glm"
 	
-	
-	links "Ivy"
-	
+
+	libdirs
+	{
+		"projects/Ivy/dependencies/GLFW/Lib",
+		"projects/Ivy/dependencies/GLAD/Lib"
+	}
+
+        filter "system:windows"
+	libdirs
+	{
+		"projects/Ivy/dependencies/GLAD/Lib"
+	}
+        filter{}
+
+        filter "system:windows"
+            libdirs
+            {
+                "projects/Ivy/dependencies/GLAD/Lib",
+                "projects/Ivy/dependencies/GLFW/lib"
+            }
+        filter{}
+
+        links "Ivy"
+        links "GLAD"
+
+        filter "system:linux"
+            links "dl"
+            links "glfw"
+            links "pthread"
+        filter {}
