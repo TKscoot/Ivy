@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLAD", "Projects\Ivy\dependencies\GLAD\GLAD.vcxproj", "{5D4A857C-4981-860D-F26D-6C10DE83020F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLAD", "projects\Ivy\dependencies\GLAD\GLAD.vcxproj", "{5D4A857C-4981-860D-F26D-6C10DE83020F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ivy", "projects\Ivy\Ivy.vcxproj", "{1DF9870B-8902-887C-127E-9E7C7E86937C}"
 EndProject

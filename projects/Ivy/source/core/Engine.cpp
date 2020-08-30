@@ -15,14 +15,15 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 	mWnd = CreatePtr<Window>(windowWidth, windowHeight, windowTitle);
 	if (mWnd == nullptr)
 	{
-		std::cout << "Failed to create window" << std::endl;
+		Debug::CoreError("Failed to create window!");
 		throw;
 	}
+	mWnd->EnableVsync(false);
 
 	// initializing glad
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		Debug::CoreError("Failed to initialize GLAD!");
 		throw;
 	}
 
@@ -30,11 +31,18 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 
 	Input::Initialize(mWnd);
 
+	mRenderer = CreatePtr<Renderer>();
+	mRenderer->Initialize();
+
 	Debug::CoreInfo(" *** Engine initialized! *** ");
 }
 
 void Ivy::Engine::Run()
 {
+	while (!ShouldTerminate())
+	{
+		NewFrame();
+	}
 }
 
 void Ivy::Engine::NewFrame()
@@ -49,19 +57,12 @@ void Ivy::Engine::NewFrame()
 	auto newtime = std::chrono::high_resolution_clock::now();
 	lastTime = std::chrono::high_resolution_clock::now();
 
-	// Please note: this is old, OpenGL 1.1 code. It's here for simplicity.
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	mWnd->PollEvents();
 
-	glBegin(GL_TRIANGLES);
-	glVertex2f(-0.5f, -0.5f);
-	glVertex2f(0.5f, -0.5f);
-	glVertex2f(0, 0.5f);
-	glEnd();
+	mRenderer->Render();
 
 	mWnd->SwapBuffers();
 
-	mWnd->PollEvents();
 
 	if (Input::IsKeyDown(W) && Input::IsKeyDown(Q))
 	{
@@ -94,6 +95,7 @@ bool Ivy::Engine::ShouldTerminate()
 {
 	if(mWnd->ShouldClose())
 	{
+		mWnd->Finalize();
 		return true;
 	}
 

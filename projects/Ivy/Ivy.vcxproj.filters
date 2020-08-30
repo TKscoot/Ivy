@@ -27,6 +27,10 @@
       <Filter>environment</Filter>
     </ClInclude>
     <ClInclude Include="source\ivypch.h" />
+    <ClInclude Include="source\rendering\Renderer.h" />
+    <ClInclude Include="source\rendering\Buffer.h" />
+    <ClInclude Include="source\rendering\VertexArray.h" />
+    <ClInclude Include="source\rendering\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">
@@ -42,5 +46,12 @@
       <Filter>environment</Filter>
     </ClCompile>
     <ClCompile Include="source\ivypch.cpp" />
+    <ClCompile Include="source\rendering\Renderer.cpp" />
+    <ClCompile Include="source\rendering\Buffer.cpp" />
+    <ClCompile Include="source\rendering\VertexArray.cpp" />
+    <ClCompile Include="source\rendering\Shader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="dependencies\GLAD\Lib\GLAD.lib" />
   </ItemGroup>
 </Project>

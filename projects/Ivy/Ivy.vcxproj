@@ -70,6 +70,9 @@
       <AdditionalDependencies>GLFW3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>lib.exe /OUT:IvyCombined.lib  dependencies\GLAD\Lib\GLAD.lib dependencies\GLFW\lib\glfw3.lib</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -96,6 +99,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="source\Ivy.h" />
+    <ClInclude Include="source\rendering\Buffer.h" />
+    <ClInclude Include="source\rendering\Renderer.h" />
+    <ClInclude Include="source\rendering\Shader.h" />
+    <ClInclude Include="source\rendering\VertexArray.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\environment\Input.h" />
@@ -112,11 +119,18 @@
     <ClCompile Include="source\ivypch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="source\rendering\Buffer.cpp" />
+    <ClCompile Include="source\rendering\Renderer.cpp" />
+    <ClCompile Include="source\rendering\Shader.cpp" />
+    <ClCompile Include="source\rendering\VertexArray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="dependencies\GLAD\GLAD.vcxproj">
       <Project>{5D4A857C-4981-860D-F26D-6C10DE83020F}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="dependencies\GLAD\Lib\GLAD.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

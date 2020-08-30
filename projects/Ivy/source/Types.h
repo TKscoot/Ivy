@@ -7,6 +7,7 @@ namespace Ivy
 
 	template<typename T>
 	using Ptr = std::shared_ptr<T>;
+
 	template<typename T, typename ... Args>
 	constexpr Ptr<T> CreatePtr(Args&& ... args)
 	{
@@ -23,5 +24,10 @@ namespace Ivy
 	using Mat2 = glm::mat2;
 	using Mat3 = glm::mat3;
 	using Mat4 = glm::mat4;
+
+	using String = std::string;
+
+	template<typename First, typename Second>
+	using UnorderedMap = std::unordered_map<First, Second>;
 
 }
