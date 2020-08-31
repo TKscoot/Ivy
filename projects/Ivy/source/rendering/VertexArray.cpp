@@ -34,8 +34,23 @@ void Ivy::VertexArray::SetVertexBuffer(Ptr<VertexBuffer>& vertexBuffer)
 	mVertexBuffer->Bind();
 	
 	// TODO: vertexBuffer->GetLayout() (layout class??)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); // vec3 position
-	glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); // vec3 position
+	//glEnableVertexAttribArray(0);
+
+	const auto& layout = vertexBuffer->GetLayout();
+	const auto& elements = layout.GetElements();
+	uint32_t offset = 0;
+	for (uint32_t i = 0; i < elements.size(); i++)
+	{
+		const auto& element = elements[i];
+		glEnableVertexAttribArray(i);
+		glVertexAttribPointer(i, 
+			element.GetComponentCount(), 
+			ShaderDataTypeToOpenGLBaseType(element.Type), 
+			element.Normalized ? GL_TRUE : GL_FALSE,
+			layout.GetStride(), 
+			(const void*)element.Offset);
+	}
 
 	mVertexBuffer->Unbind();
 }

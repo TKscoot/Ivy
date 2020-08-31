@@ -29,6 +29,11 @@ Ivy::Shader::Shader(const String vertexFilepath, const String fragmentFilepath)
 	Compile();
 }
 
+Ivy::Shader::~Shader()
+{
+	glDeleteProgram(mProgram);
+}
+
 void Ivy::Shader::Bind()
 {
 	glUseProgram(mProgram);
@@ -37,6 +42,54 @@ void Ivy::Shader::Bind()
 void Ivy::Shader::Unbind()
 {
 	glUseProgram(0);
+}
+
+void Ivy::Shader::SetUniformInt(const String & name, int value)
+{
+	GLint location = glGetUniformLocation(mProgram, name.c_str());
+	glUniform1i(location, value);
+}
+
+void Ivy::Shader::SetUniformIntArray(const String & name, int * values, uint32_t count)
+{
+	GLint location = glGetUniformLocation(mProgram, name.c_str());
+	glUniform1iv(location, count, values);
+}
+
+void Ivy::Shader::SetUniformFloat(const String & name, float value)
+{
+	GLint location = glGetUniformLocation(mProgram, name.c_str());
+	glUniform1f(location, value);
+}
+
+void Ivy::Shader::SetUniformFloat2(const String & name, const Vec2 & value)
+{
+	GLint location = glGetUniformLocation(mProgram, name.c_str());
+	glUniform2f(location, value.x, value.y);
+}
+
+void Ivy::Shader::SetUniformFloat3(const String & name, const Vec3 & value)
+{
+	GLint location = glGetUniformLocation(mProgram, name.c_str());
+	glUniform3f(location, value.x, value.y, value.z);
+}
+
+void Ivy::Shader::SetUniformFloat4(const String & name, const Vec4 & value)
+{
+	GLint location = glGetUniformLocation(mProgram, name.c_str());
+	glUniform4f(location, value.x, value.y, value.z, value.w);
+}
+
+void Ivy::Shader::SetUniformMat3(const String & name, const Mat3 & matrix)
+{
+	GLint location = glGetUniformLocation(mProgram, name.c_str());
+	glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+void Ivy::Shader::SetUniformMat4(const String & name, const Mat4 & matrix)
+{
+	GLint location = glGetUniformLocation(mProgram, name.c_str());
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 Ivy::String Ivy::Shader::ReadFile(const String filepath)

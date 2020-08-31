@@ -2,6 +2,7 @@
 #include "Buffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Texture.h"
 
 namespace Ivy
 {
@@ -33,6 +34,8 @@ namespace Ivy
 		Ptr<VertexBuffer> mVertexBuffer;
 		Ptr<IndexBuffer>  mIndexBuffer;
 		Ptr<Shader>		  mShader;
+		Ptr<Texture2D>    mTexture;
+		Ptr<Texture2D>    mTexture1;
 		GLuint            mVertexArrayObject = 0;
 		GLuint            mShaderProgram = 0;
 

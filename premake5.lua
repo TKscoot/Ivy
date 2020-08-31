@@ -92,7 +92,8 @@ project "Ivy"
 		"projects/Ivy/dependencies/GLFW/Include",
 		"projects/Ivy/dependencies/GLAD/include",
 		"projects/Ivy/dependencies/spdlog/include",
-		"projects/Ivy/dependencies/glm"
+		"projects/Ivy/dependencies/glm",
+		"projects/Ivy/dependencies/stb_image"
 	}
 	
 	libdirs
@@ -111,12 +112,12 @@ project "Ivy"
             links "GLFW3"
         filter {}
 
-        -- We specify where the source files are.
+    -- We specify where the source files are.
 	-- It would be better to separate header files in a folder and sources
 	-- in another, but for our simple project we will put everything in the same place.
 	-- Note: ** means recurse in subdirectories, so it will get all the files in ExampleLib/
 	pchheader "ivypch.h"
-        pchsource "projects/Ivy/source/ivypch.cpp"
+    pchsource "projects/Ivy/source/ivypch.cpp"
 	files "projects/Ivy/source/**"
 	
 
@@ -129,39 +130,37 @@ project "Sandbox"
 	files "projects/Sandbox/source/**"
 
 	-- We also need the headers
-	includedirs "projects/Ivy/source"
-	includedirs "projects/Ivy/dependencies/GLFW/Include"
-	includedirs "projects/Ivy/dependencies/GLAD/include"
-	includedirs "projects/Ivy/dependencies/spdlog/include"
-	includedirs "projects/Ivy/dependencies/glm"
+	includedirs 
+	{
+		"projects/Ivy/source",
+		"projects/Ivy/dependencies/GLFW/Include",
+		"projects/Ivy/dependencies/GLAD/include",
+		"projects/Ivy/dependencies/spdlog/include",
+		"projects/Ivy/dependencies/glm",
+		"projects/Ivy/dependencies/stb_image"
+	}
 	
 
 	libdirs
 	{
-		"projects/Ivy/dependencies/GLFW/Lib",
+		--"projects/Ivy/dependencies/GLFW/Lib",
 		"projects/Ivy/dependencies/GLAD/Lib"
 	}
 
-        filter "system:windows"
-	libdirs
-	{
-		"projects/Ivy/dependencies/GLAD/Lib"
-	}
-        filter{}
+    filter "system:windows"
+        libdirs
+        {
+			--"projects/Ivy/dependencies/GLAD/Lib",
+            --"projects/Ivy/dependencies/GLAD/Lib",
+            "projects/Ivy/dependencies/GLFW/lib"
+        }
+    filter{}
 
-        filter "system:windows"
-            libdirs
-            {
-                "projects/Ivy/dependencies/GLAD/Lib",
-                "projects/Ivy/dependencies/GLFW/lib"
-            }
-        filter{}
+    links "Ivy"
+    links "GLAD"
 
-        links "Ivy"
-        links "GLAD"
-
-        filter "system:linux"
-            links "dl"
-            links "glfw"
-            links "pthread"
-        filter {}
+    filter "system:linux"
+        links "dl"
+        links "glfw"
+        links "pthread"
+    filter {}

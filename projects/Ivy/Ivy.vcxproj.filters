@@ -7,6 +7,9 @@
     <Filter Include="environment">
       <UniqueIdentifier>{3AC24330-A677-BC25-2F6C-B6FC9B20B329}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rendering">
+      <UniqueIdentifier>{03CFAD0B-6F39-6282-B877-1328242140D7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Ivy.h" />
@@ -27,10 +30,24 @@
       <Filter>environment</Filter>
     </ClInclude>
     <ClInclude Include="source\ivypch.h" />
-    <ClInclude Include="source\rendering\Renderer.h" />
-    <ClInclude Include="source\rendering\Buffer.h" />
-    <ClInclude Include="source\rendering\VertexArray.h" />
-    <ClInclude Include="source\rendering\Shader.h" />
+    <ClInclude Include="source\rendering\Buffer.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rendering\BufferLayout.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rendering\Renderer.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rendering\Shader.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rendering\Texture.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rendering\VertexArray.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">
@@ -46,12 +63,20 @@
       <Filter>environment</Filter>
     </ClCompile>
     <ClCompile Include="source\ivypch.cpp" />
-    <ClCompile Include="source\rendering\Renderer.cpp" />
-    <ClCompile Include="source\rendering\Buffer.cpp" />
-    <ClCompile Include="source\rendering\VertexArray.cpp" />
-    <ClCompile Include="source\rendering\Shader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="dependencies\GLAD\Lib\GLAD.lib" />
+    <ClCompile Include="source\rendering\Buffer.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="source\rendering\Renderer.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="source\rendering\Shader.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="source\rendering\Texture.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="source\rendering\VertexArray.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

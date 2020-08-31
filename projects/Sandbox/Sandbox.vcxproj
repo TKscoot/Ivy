@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -66,14 +66,14 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLFW\Lib;..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -85,7 +85,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLFW\Lib;..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

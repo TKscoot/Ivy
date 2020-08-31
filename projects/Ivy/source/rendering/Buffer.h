@@ -1,5 +1,7 @@
 #pragma once
 #include "Types.h"
+#include "glad/glad.h"
+#include "BufferLayout.h"
 #include "environment/Log.h"
 
 namespace Ivy
@@ -42,6 +44,13 @@ namespace Ivy
 		virtual void Unbind() override;
 
 		virtual void SetBufferData(const void* data, uint32_t size) override;
+
+		void SetLayout(BufferLayout& layout) { mBufferLayout = layout; }
+
+		inline const BufferLayout GetLayout() { return mBufferLayout; }
+
+	private:
+		BufferLayout mBufferLayout;
 	};
 
 	class IndexBuffer : public Buffer
