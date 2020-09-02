@@ -48,6 +48,9 @@
     <ClInclude Include="source\rendering\VertexArray.h">
       <Filter>rendering</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\components\Mesh.h" />
+    <ClInclude Include="source\scene\components\Transform.h" />
+    <ClInclude Include="source\scene\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">

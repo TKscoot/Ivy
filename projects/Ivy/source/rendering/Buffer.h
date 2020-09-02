@@ -13,7 +13,7 @@ namespace Ivy
 
 		virtual void CreateBuffer() = 0;
 		virtual void CreateBuffer(uint32_t size) = 0;
-		virtual void CreateBuffer(float* data, uint32_t size) = 0;
+		virtual void CreateBuffer(void* data, uint32_t size) = 0;
 
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
@@ -31,14 +31,14 @@ namespace Ivy
 	public:
 		VertexBuffer();
 		VertexBuffer(uint32_t size);
-		VertexBuffer(float* vertices, uint32_t size);
+		VertexBuffer(void* vertices, uint32_t size);
 
 		virtual ~VertexBuffer();
 
 
 		virtual void CreateBuffer() override;
 		virtual void CreateBuffer(uint32_t size) override;
-		virtual void CreateBuffer(float* data, uint32_t size) override;
+		virtual void CreateBuffer(void* data, uint32_t size) override;
 
 		virtual void Bind() override;
 		virtual void Unbind() override;
@@ -64,7 +64,7 @@ namespace Ivy
 
 		virtual void CreateBuffer() override;
 		virtual void CreateBuffer(uint32_t size) override;
-		virtual void CreateBuffer(float* data, uint32_t size) override;
+		virtual void CreateBuffer(void* data, uint32_t size) override;
 
 		virtual void Bind() override;
 		virtual void Unbind() override;

@@ -9,12 +9,12 @@ void Ivy::Renderer::Initialize()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// DEBUG TRIANGLE
-	float vertices[] = {
-		// positions          // colors				    // texture coords
-		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f,   1.0f, 1.0f,   // top right
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 1.0f,   1.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f, 1.0f,   0.0f, 1.0f    // top left 
+	Vector<Vertex> vertices = {
+		// positions           // colors				 // texture coords
+		{{ 0.5f,  0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+		{{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+		{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+		{{-0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}
 	};
 
 	std::array<uint32_t, 6> indices = { 
@@ -26,12 +26,13 @@ void Ivy::Renderer::Initialize()
 	//mShader->Bind();
 
 	// Create Vertex- and Indexbuffer
-	mVertexBuffer = CreatePtr<VertexBuffer>(vertices, sizeof(vertices));
+	mVertexBuffer = CreatePtr<VertexBuffer>(vertices.data(), sizeof(Vertex) * vertices.size());
 	BufferLayout layout = {
 		{ShaderDataType::Float3, "aPosition"},
 		{ShaderDataType::Float4, "aColor"},
 		{ShaderDataType::Float2, "aTexCoord"}
 	};
+
 	mVertexBuffer->SetLayout(layout);
 
 	mIndexBuffer = CreatePtr<IndexBuffer>(indices.data(), static_cast<uint32_t>(indices.size()));

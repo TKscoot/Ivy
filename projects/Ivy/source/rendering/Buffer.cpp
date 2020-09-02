@@ -22,7 +22,7 @@ Ivy::VertexBuffer::VertexBuffer(uint32_t size)
 	glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-Ivy::VertexBuffer::VertexBuffer(float* vertices, uint32_t size)
+Ivy::VertexBuffer::VertexBuffer(void* vertices, uint32_t size)
 {
 	if (mID == 0)
 	{
@@ -57,7 +57,7 @@ void Ivy::VertexBuffer::CreateBuffer(uint32_t size)
 	glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-void Ivy::VertexBuffer::CreateBuffer(float* data, uint32_t size)
+void Ivy::VertexBuffer::CreateBuffer(void* data, uint32_t size)
 {
 	if (mID == 0)
 	{
@@ -158,7 +158,7 @@ void Ivy::IndexBuffer::CreateBuffer(uint32_t size)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(uint32_t), nullptr, GL_STATIC_DRAW);
 }
 
-void Ivy::IndexBuffer::CreateBuffer(float * data, uint32_t size)
+void Ivy::IndexBuffer::CreateBuffer(void* data, uint32_t size)
 {
 	if (mID == 0)
 	{

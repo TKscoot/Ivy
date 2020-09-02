@@ -96,6 +96,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="source\Ivy.h" />
+    <ClInclude Include="source\scene\components\Mesh.h" />
+    <ClInclude Include="source\scene\components\Transform.h" />
+    <ClInclude Include="source\scene\Entity.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\environment\Input.h" />

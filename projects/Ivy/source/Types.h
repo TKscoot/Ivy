@@ -45,8 +45,8 @@ namespace Ivy
 	using StringStream = std::stringstream;
 
 	// Datastructures
-	template<typename First, typename Second>
-	using Vector = std::vector<First, Second>;
+	template<typename T>
+	using Vector = std::vector<T>;
 
 	template<typename First, typename Second>
 	using UnorderedMap = std::unordered_map<First, Second>;
