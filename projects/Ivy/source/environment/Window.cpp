@@ -10,14 +10,14 @@ namespace Ivy
 
 		// Specifies OpenGL version (4.6) for further use with glfw
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		mWnd = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 
 		if (mWnd == nullptr)
 		{
-			Debug::CoreError("Failed to create glfw window!");
+			//Debug::CoreError("Failed to create glfw window!");
 			return;
 		}
 

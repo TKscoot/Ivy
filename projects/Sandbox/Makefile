@@ -16,7 +16,7 @@ ifeq ($(config),debug)
   TARGET = $(TARGETDIR)/Sandbox
   OBJDIR = ../../Build/Obj/Sandbox/Debug
   DEFINES +=
-  INCLUDES += -I../Ivy/source -I../Ivy/dependencies/GLFW/Include -I../Ivy/dependencies/GLAD/include -I../Ivy/dependencies/spdlog/include -I../Ivy/dependencies/glm
+  INCLUDES += -I../Ivy/source -I../Ivy/dependencies/GLFW/Include -I../Ivy/dependencies/GLAD/include -I../Ivy/dependencies/spdlog/include -I../Ivy/dependencies/glm -I../Ivy/dependencies/stb_image
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
@@ -24,7 +24,7 @@ ifeq ($(config),debug)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += ../../Build/Bin/Ivy/Debug/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a -ldl -lglfw -lpthread
   LDDEPS += ../../Build/Bin/Ivy/Debug/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a
-  ALL_LDFLAGS += $(LDFLAGS) -L../Ivy/dependencies/GLFW/Lib -L../Ivy/dependencies/GLAD/Lib -L/usr/lib64 -m64
+  ALL_LDFLAGS += $(LDFLAGS) -L../Ivy/dependencies/GLAD/Lib -L/usr/lib64 -m64
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -43,7 +43,7 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/Sandbox
   OBJDIR = ../../Build/Obj/Sandbox/Release
   DEFINES +=
-  INCLUDES += -I../Ivy/source -I../Ivy/dependencies/GLFW/Include -I../Ivy/dependencies/GLAD/include -I../Ivy/dependencies/spdlog/include -I../Ivy/dependencies/glm
+  INCLUDES += -I../Ivy/source -I../Ivy/dependencies/GLFW/Include -I../Ivy/dependencies/GLAD/include -I../Ivy/dependencies/spdlog/include -I../Ivy/dependencies/glm -I../Ivy/dependencies/stb_image
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
@@ -51,7 +51,7 @@ ifeq ($(config),release)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += ../../Build/Bin/Ivy/Release/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a -ldl -lglfw -lpthread
   LDDEPS += ../../Build/Bin/Ivy/Release/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a
-  ALL_LDFLAGS += $(LDFLAGS) -L../Ivy/dependencies/GLFW/Lib -L../Ivy/dependencies/GLAD/Lib -L/usr/lib64 -m64 -s
+  ALL_LDFLAGS += $(LDFLAGS) -L../Ivy/dependencies/GLAD/Lib -L/usr/lib64 -m64 -s
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
