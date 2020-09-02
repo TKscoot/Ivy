@@ -18,7 +18,7 @@ ifeq ($(config),debug)
   PCH = source/ivypch.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES +=
-  INCLUDES += -Isource -Idependencies/GLFW/Include -Idependencies/GLAD/include -Idependencies/spdlog/include -Idependencies/glm
+  INCLUDES += -Isource -Idependencies/GLFW/Include -Idependencies/GLAD/include -Idependencies/spdlog/include -Idependencies/glm -Idependencies/stb_image
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
@@ -47,7 +47,7 @@ ifeq ($(config),release)
   PCH = source/ivypch.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES +=
-  INCLUDES += -Isource -Idependencies/GLFW/Include -Idependencies/GLAD/include -Idependencies/spdlog/include -Idependencies/glm
+  INCLUDES += -Isource -Idependencies/GLFW/Include -Idependencies/GLAD/include -Idependencies/spdlog/include -Idependencies/glm -Idependencies/stb_image
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
@@ -74,6 +74,11 @@ OBJECTS := \
 	$(OBJDIR)/Log.o \
 	$(OBJDIR)/Window.o \
 	$(OBJDIR)/ivypch.o \
+	$(OBJDIR)/Buffer.o \
+	$(OBJDIR)/Renderer.o \
+	$(OBJDIR)/Shader.o \
+	$(OBJDIR)/Texture.o \
+	$(OBJDIR)/VertexArray.o \
 
 RESOURCES := \
 
@@ -145,6 +150,21 @@ $(OBJDIR)/Window.o: source/environment/Window.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ivypch.o: source/ivypch.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Buffer.o: source/rendering/Buffer.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Renderer.o: source/rendering/Renderer.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Shader.o: source/rendering/Shader.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Texture.o: source/rendering/Texture.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/VertexArray.o: source/rendering/VertexArray.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

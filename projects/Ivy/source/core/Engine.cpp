@@ -8,15 +8,19 @@ Ivy::Engine::Engine()
 Ivy::Engine::~Engine()
 {
 }
+void ErrorCallback(int, const char* err_str)
+{
+    std::cout << "GLFW Error: " << err_str << std::endl;
+}
 
 void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::string& windowTitle)
 {
+    glfwSetErrorCallback(ErrorCallback);
 	// creating window
 	mWnd = CreatePtr<Window>(windowWidth, windowHeight, windowTitle);
 	if (mWnd == nullptr)
 	{
 		Debug::CoreError("Failed to create window!");
-		throw;
 	}
 	mWnd->EnableVsync(false);
 
@@ -24,7 +28,6 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		Debug::CoreError("Failed to initialize GLAD!");
-		throw;
 	}
 
 	Debug::Initialize();
