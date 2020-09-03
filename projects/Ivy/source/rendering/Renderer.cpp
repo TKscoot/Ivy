@@ -1,6 +1,6 @@
+#include "ivypch.h"
 #include "Renderer.h"
 
-#include "ivypch.h"
 
 void Ivy::Renderer::Initialize()
 {
@@ -10,26 +10,28 @@ void Ivy::Renderer::Initialize()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // DEBUG TRIANGLE
-    float vertices[] = {
-        // positions          // colors				    // texture
-        // coords
-        0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // top right
-        0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // bottom left
-        -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f  // top left
+    Vector<Vertex> vertices =
+    {
+        // positions           // colors		 // texture coords
+        {{ 0.5f,  0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+        {{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+        {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+        {{-0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}
     };
 
     std::array<uint32_t, 6> indices = {0, 1, 3, 1, 2, 3};
 
     mShader = CreatePtr<Shader>("shaders/Triangle.vert", "shaders/Triangle.frag");
-    // mShader->Bind();
-
-    mShader->Unbind();
 
     // Create Vertex- and Indexbuffer
-    mVertexBuffer = CreatePtr<VertexBuffer>(vertices, sizeof(vertices));
-    BufferLayout layout = {
-        {ShaderDataType::Float3, "aPosition"}, {ShaderDataType::Float4, "aColor"}, {ShaderDataType::Float2, "aTexCoord"}};
+    mVertexBuffer = CreatePtr<VertexBuffer>(vertices.data(), sizeof(Vertex) * vertices.size());
+    BufferLayout layout =
+    {
+        {ShaderDataType::Float3, "aPosition"},
+        {ShaderDataType::Float4, "aColor"},
+        {ShaderDataType::Float2, "aTexCoord"}
+    };
+
     mVertexBuffer->SetLayout(layout);
 
     mIndexBuffer = CreatePtr<IndexBuffer>(indices.data(), static_cast<uint32_t>(indices.size()));
@@ -41,7 +43,7 @@ void Ivy::Renderer::Initialize()
     mVertexArray->Unbind(); // does not need to be unbound but it's good practice to do so
 
     // Create test textures
-    mTexture = CreatePtr<Texture2D>("assets/textures/container.jpg");
+    mTexture  = CreatePtr<Texture2D>("assets/textures/container.jpg");
     mTexture1 = CreatePtr<Texture2D>("assets/textures/awesomeface.png");
 }
 
@@ -55,15 +57,25 @@ void Ivy::Renderer::Render()
     float timeValue = glfwGetTime();
     float colorValue = (sin(timeValue) / 2.0f) + 0.5f;
 
+    mTransform.setRotation(Vec3(-timeValue * 5.0f, 0.0f, 0.0f));
+
+    Mat4 view = Mat4(1.0f);
+    view = glm::translate(view, Vec3(0.0f, 0.0f, -3.0f));
+
+    Mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 1000.0f);
+
     mTexture->Bind(0);
     mTexture1->Bind(1);
 
     mShader->Bind(); // does not need to get bound again since theres only one
-                     // shader program
+    // shader program
     mShader->SetUniformFloat4("aColor", Vec4(Vec3(colorValue), 1.0f));
+    mShader->SetUniformMat4("model", mTransform.getComposed());
+    mShader->SetUniformMat4("view", view);
+    mShader->SetUniformMat4("projection", projection);
 
     mVertexArray->Bind(); // only needs to get bound because it got unbound
-                          // because of good practice
+    // because of good practice
 
     glDrawElements(GL_TRIANGLES, mIndexBuffer->GetCount(), GL_UNSIGNED_INT, 0);
 

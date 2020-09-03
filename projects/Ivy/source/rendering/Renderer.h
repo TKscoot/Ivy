@@ -1,8 +1,10 @@
 #pragma once
+#include "Types.h"
 #include "Buffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "scene/components/Transform.h"
 
 namespace Ivy
 {
@@ -36,6 +38,7 @@ namespace Ivy
 		Ptr<Shader>		  mShader;
 		Ptr<Texture2D>    mTexture;
 		Ptr<Texture2D>    mTexture1;
+                Transform    mTransform;
 		GLuint            mVertexArrayObject = 0;
 		GLuint            mShaderProgram = 0;
 

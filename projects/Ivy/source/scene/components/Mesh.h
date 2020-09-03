@@ -4,32 +4,30 @@
 #include "rendering/Buffer.h"
 #include "rendering/VertexArray.h"
 
-
 namespace Ivy
 {
-	class Renderer;
-	
-	class Mesh
-	{
-	public:
-		friend class Renderer;
+    class Renderer;
 
-		Mesh();
-		Mesh(String filepath);
-		Mesh(Vector<Vertex> vertices, Vector<uint32_t> indices);
+    class Mesh
+    {
+    public:
+        friend class Renderer;
 
-		void Load(String filepath);
+        Mesh();
+        Mesh(String filepath);
+        Mesh(Vector<Vertex> vertices, Vector<uint32_t> indices);
 
+        void Load(String filepath);
 
-	private:
-		Vector<Vertex>	 mVertices;
-		Vector<uint32_t> mIndices;
+    private:
+        Vector<Vertex> mVertices;
+        Vector<uint32_t> mIndices;
 
-		Ptr<Buffer>		 mVertexBuffer;
-		Ptr<Buffer>		 mIndexBuffer;
+        Ptr<Buffer> mVertexBuffer;
+        Ptr<Buffer> mIndexBuffer;
 
-		Ptr<VertexArray> mVertexArray;
+        Ptr<VertexArray> mVertexArray;
 
-		BufferLayout     mBufferLayout;
-	};
-}
+        BufferLayout mBufferLayout;
+    };
+} // namespace Ivy
