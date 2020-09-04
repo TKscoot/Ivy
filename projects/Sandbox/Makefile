@@ -22,7 +22,7 @@ ifeq ($(config),debug)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../Build/Bin/Ivy/Debug/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a -ldl -lglfw -lpthread
+  LIBS += ../../Build/Bin/Ivy/Debug/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a -ldl -lglfw -lassimp -lpthread
   LDDEPS += ../../Build/Bin/Ivy/Debug/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a
   ALL_LDFLAGS += $(LDFLAGS) -L../Ivy/dependencies/GLAD/Lib -L/usr/lib64 -m64
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
@@ -49,7 +49,7 @@ ifeq ($(config),release)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../Build/Bin/Ivy/Release/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a -ldl -lglfw -lpthread
+  LIBS += ../../Build/Bin/Ivy/Release/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a -ldl -lglfw -lassimp -lpthread
   LDDEPS += ../../Build/Bin/Ivy/Release/libIvy.a ../Ivy/dependencies/GLAD/Lib/libGLAD.a
   ALL_LDFLAGS += $(LDFLAGS) -L../Ivy/dependencies/GLAD/Lib -L/usr/lib64 -m64 -s
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)

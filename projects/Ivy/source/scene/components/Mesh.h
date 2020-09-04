@@ -3,6 +3,7 @@
 
 #include "rendering/Buffer.h"
 #include "rendering/VertexArray.h"
+#include <glad/glad.h>
 
 namespace Ivy
 {
@@ -20,14 +21,17 @@ namespace Ivy
         void Load(String filepath);
 
     private:
-        Vector<Vertex> mVertices;
+        void CreateResources();
+        void Draw();
+
+        Vector<Vertex>   mVertices;
         Vector<uint32_t> mIndices;
 
-        Ptr<Buffer> mVertexBuffer;
-        Ptr<Buffer> mIndexBuffer;
+        Ptr<VertexBuffer> mVertexBuffer;
+        Ptr<IndexBuffer>  mIndexBuffer;
 
-        Ptr<VertexArray> mVertexArray;
+        Ptr<VertexArray>  mVertexArray;
 
-        BufferLayout mBufferLayout;
+        BufferLayout      mBufferLayout;
     };
 } // namespace Ivy

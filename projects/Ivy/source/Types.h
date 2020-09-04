@@ -36,8 +36,9 @@ namespace Ivy
 	// Vertex
 	struct Vertex
 	{
-		Vec3 position;
-		Vec4 color;
+		Vec4 position;
+		Vec3 normal;
+                Vec3 tangent;
 		Vec2 texcoord;
 	};
 

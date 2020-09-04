@@ -24,7 +24,7 @@ ifeq ($(config),debug)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += dependencies/GLAD/Lib/libGLAD.a -lglfw
+  LIBS += dependencies/GLAD/Lib/libGLAD.a -lglfw -lassimp
   LDDEPS += dependencies/GLAD/Lib/libGLAD.a
   ALL_LDFLAGS += $(LDFLAGS) -Ldependencies/GLFW/Lib -Ldependencies/GLAD/Lib -L/usr/lib64 -m64
   LINKCMD = $(AR) -rcs "$@" $(OBJECTS)
@@ -53,7 +53,7 @@ ifeq ($(config),release)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += dependencies/GLAD/Lib/libGLAD.a -lglfw
+  LIBS += dependencies/GLAD/Lib/libGLAD.a -lglfw -lassimp
   LDDEPS += dependencies/GLAD/Lib/libGLAD.a
   ALL_LDFLAGS += $(LDFLAGS) -Ldependencies/GLFW/Lib -Ldependencies/GLAD/Lib -L/usr/lib64 -m64 -s
   LINKCMD = $(AR) -rcs "$@" $(OBJECTS)
@@ -79,6 +79,7 @@ OBJECTS := \
 	$(OBJDIR)/Shader.o \
 	$(OBJDIR)/Texture.o \
 	$(OBJDIR)/VertexArray.o \
+	$(OBJDIR)/Mesh.o \
 
 RESOURCES := \
 
@@ -165,6 +166,9 @@ $(OBJDIR)/Texture.o: source/rendering/Texture.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/VertexArray.o: source/rendering/VertexArray.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Mesh.o: source/scene/components/Mesh.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

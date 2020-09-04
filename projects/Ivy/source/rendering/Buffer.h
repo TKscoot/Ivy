@@ -6,75 +6,87 @@
 
 namespace Ivy
 {
-	class Buffer
-	{
-	public:
-		virtual ~Buffer() = default;
+    class Buffer
+    {
+    public:
+        virtual ~Buffer() = default;
 
-		virtual void CreateBuffer() = 0;
-		virtual void CreateBuffer(uint32_t size) = 0;
-		virtual void CreateBuffer(void* data, uint32_t size) = 0;
+        virtual void CreateBuffer() = 0;
+        virtual void CreateBuffer(uint32_t size) = 0;
+        virtual void CreateBuffer(void* data, uint32_t size) = 0;
 
-		virtual void Bind() = 0;
-		virtual void Unbind() = 0;
+        virtual void Bind() = 0;
+        virtual void Unbind() = 0;
 
-		virtual void SetBufferData(const void* data, uint32_t size) = 0;
+        virtual void SetBufferData(const void* data, uint32_t size) = 0;
 
-		GLuint GetHandle() { return mID; }
+        GLuint GetHandle()
+        {
+            return mID;
+        }
 
-	protected:
-		GLuint mID = 0;
-	};
+    protected:
+        GLuint mID = 0;
+    };
 
-	class VertexBuffer : public Buffer
-	{
-	public:
-		VertexBuffer();
-		VertexBuffer(uint32_t size);
-		VertexBuffer(void* vertices, uint32_t size);
+    class VertexBuffer : public Buffer
+    {
+    public:
+        VertexBuffer();
+        VertexBuffer(uint32_t size);
+        VertexBuffer(void* vertices, uint32_t size);
 
-		virtual ~VertexBuffer();
+        virtual ~VertexBuffer();
 
 
-		virtual void CreateBuffer() override;
-		virtual void CreateBuffer(uint32_t size) override;
-		virtual void CreateBuffer(void* data, uint32_t size) override;
+        virtual void CreateBuffer() override;
+        virtual void CreateBuffer(uint32_t size) override;
+        virtual void CreateBuffer(void* data, uint32_t size) override;
 
-		virtual void Bind() override;
-		virtual void Unbind() override;
+        virtual void Bind() override;
+        virtual void Unbind() override;
 
-		virtual void SetBufferData(const void* data, uint32_t size) override;
+        virtual void SetBufferData(const void* data, uint32_t size) override;
 
-		void SetLayout(BufferLayout& layout) { mBufferLayout = layout; }
+        void SetLayout(BufferLayout& layout)
+        {
+            mBufferLayout = layout;
+        }
 
-		inline const BufferLayout GetLayout() { return mBufferLayout; }
+        inline const BufferLayout GetLayout()
+        {
+            return mBufferLayout;
+        }
 
-	private:
-		BufferLayout mBufferLayout;
-	};
+    private:
+        BufferLayout mBufferLayout;
+    };
 
-	class IndexBuffer : public Buffer
-	{
-	public:
-		IndexBuffer();
-		IndexBuffer(uint32_t count);
-		IndexBuffer(uint32_t* indices, uint32_t count);
+    class IndexBuffer : public Buffer
+    {
+    public:
+        IndexBuffer();
+        IndexBuffer(uint32_t count);
+        IndexBuffer(uint32_t* indices, uint32_t count);
 
-		virtual ~IndexBuffer();
+        virtual ~IndexBuffer();
 
-		virtual void CreateBuffer() override;
-		virtual void CreateBuffer(uint32_t size) override;
-		virtual void CreateBuffer(void* data, uint32_t size) override;
+        virtual void CreateBuffer() override;
+        virtual void CreateBuffer(uint32_t size) override;
+        virtual void CreateBuffer(void* data, uint32_t size) override;
 
-		virtual void Bind() override;
-		virtual void Unbind() override;
+        virtual void Bind() override;
+        virtual void Unbind() override;
 
-		virtual void SetBufferData(const void* data, uint32_t size) override;
+        virtual void SetBufferData(const void* data, uint32_t size) override;
 
-		uint32_t GetCount() const { return mCount; }
-	
-	private:
-		uint32_t mCount = 0;
-	};
+        uint32_t GetCount() const
+        {
+            return mCount;
+        }
+
+    private:
+        uint32_t mCount = 0;
+    };
 
 }

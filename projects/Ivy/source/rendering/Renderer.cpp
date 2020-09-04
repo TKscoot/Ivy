@@ -10,7 +10,7 @@ void Ivy::Renderer::Initialize()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // DEBUG TRIANGLE
-    Vector<Vertex> vertices =
+    /*Vector<Vertex> vertices =
     {
         // positions           // colors		 // texture coords
         {{ 0.5f,  0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
@@ -20,28 +20,32 @@ void Ivy::Renderer::Initialize()
     };
 
     std::array<uint32_t, 6> indices = {0, 1, 3, 1, 2, 3};
+    
+    */
 
     mShader = CreatePtr<Shader>("shaders/Triangle.vert", "shaders/Triangle.frag");
 
     // Create Vertex- and Indexbuffer
-    mVertexBuffer = CreatePtr<VertexBuffer>(vertices.data(), sizeof(Vertex) * vertices.size());
-    BufferLayout layout =
-    {
-        {ShaderDataType::Float3, "aPosition"},
-        {ShaderDataType::Float4, "aColor"},
-        {ShaderDataType::Float2, "aTexCoord"}
-    };
+  //mVertexBuffer = CreatePtr<VertexBuffer>(vertices.data(), sizeof(Vertex) * vertices.size());
+  //BufferLayout layout =
+  //{
+  //    {ShaderDataType::Float3, "aPosition"},
+  //    {ShaderDataType::Float4, "aColor"},
+  //    {ShaderDataType::Float2, "aTexCoord"}
+  //};
 
-    mVertexBuffer->SetLayout(layout);
+  //mVertexBuffer->SetLayout(layout);
 
-    mIndexBuffer = CreatePtr<IndexBuffer>(indices.data(), static_cast<uint32_t>(indices.size()));
+  //mIndexBuffer = CreatePtr<IndexBuffer>(indices.data(), static_cast<uint32_t>(indices.size()));
 
-    // Set Index- and Vertexbuffer in VertexArray
-    mVertexArray = CreatePtr<VertexArray>();
-    mVertexArray->SetVertexBuffer(mVertexBuffer);
-    mVertexArray->SetIndexBuffer(mIndexBuffer);
-    mVertexArray->Unbind(); // does not need to be unbound but it's good practice to do so
-
+  //// Set Index- and Vertexbuffer in VertexArray
+  //mVertexArray = CreatePtr<VertexArray>();
+  //mVertexArray->SetVertexBuffer(mVertexBuffer);
+  //mVertexArray->SetIndexBuffer(mIndexBuffer);
+  //mVertexArray->Unbind(); // does not need to be unbound but it's good practice to do so
+    
+    mMesh = CreatePtr<Mesh>("assets/models/teapot.obj");
+    Debug::CoreLog("loaded mesh");
     // Create test textures
     mTexture  = CreatePtr<Texture2D>("assets/textures/container.jpg");
     mTexture1 = CreatePtr<Texture2D>("assets/textures/awesomeface.png");
@@ -74,10 +78,12 @@ void Ivy::Renderer::Render()
     mShader->SetUniformMat4("view", view);
     mShader->SetUniformMat4("projection", projection);
 
-    mVertexArray->Bind(); // only needs to get bound because it got unbound
+    //mVertexArray->Bind(); // only needs to get bound because it got unbound
     // because of good practice
 
-    glDrawElements(GL_TRIANGLES, mIndexBuffer->GetCount(), GL_UNSIGNED_INT, 0);
+    //glDrawElements(GL_TRIANGLES, mIndexBuffer->GetCount(), GL_UNSIGNED_INT, 0);
+    
+    mMesh->Draw();
 
     // mVertexArray->Unbind(); // no need to unbind it every time
 }

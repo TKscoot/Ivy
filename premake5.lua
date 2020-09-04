@@ -106,6 +106,7 @@ project "Ivy"
 
         filter "system:linux"
             links "glfw"
+            links "assimp"
         filter {}
 
         filter "system:windows"
@@ -162,5 +163,6 @@ project "Sandbox"
     filter "system:linux"
         links "dl"
         links "glfw"
+        links "assimp"
         links "pthread"
     filter {}
