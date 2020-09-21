@@ -19,6 +19,11 @@ namespace Ivy
 		static bool  IsKeyDown(KeyCode key);
 
 		///
+		/// Checks if the specified key is being released
+		///
+		static bool  IsKeyUp(KeyCode key);
+
+		///
 		/// Checks if the specified mouse button is being pressed right now
 		///
 		static bool  IsMouseButtonDown(MouseCode button);
@@ -27,6 +32,11 @@ namespace Ivy
 		/// Gets the current mouse position relative to the window
 		///
 		static Vec2  GetMousePosition();
+
+		///
+		/// Gets the mouse position delta of new frame and last frame
+		///
+		static Vec2  GetMouseDelta();
 		
 		///
 		/// Gets the x coordinate of the current mouse position relative to the window
@@ -38,11 +48,21 @@ namespace Ivy
 		///
 		static float GetMousePositionY();
 
+		///
+		/// Hides or shows the mouse cursor
+		/// @param should the cursor be hidden (default true)
+		///
+		static void SetMouseCursorVisible(bool show = true);
+
 	private:
 		static void Initialize(Ptr<Window> mWnd);
 
 		Input();
 
 		static GLFWwindow* mGlfwWnd;
+
+		static float lastX;
+		static float lastY;
+		static bool  firstMouse;
 	};
 }

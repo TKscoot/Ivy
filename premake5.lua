@@ -93,13 +93,15 @@ project "Ivy"
 		"projects/Ivy/dependencies/GLAD/include",
 		"projects/Ivy/dependencies/spdlog/include",
 		"projects/Ivy/dependencies/glm",
-		"projects/Ivy/dependencies/stb_image"
+		"projects/Ivy/dependencies/stb_image",
+		"projects/Ivy/dependencies/assimp/include"
 	}
 	
 	libdirs
 	{
 		"projects/Ivy/dependencies/GLFW/Lib",
-		"projects/Ivy/dependencies/GLAD/Lib"
+		"projects/Ivy/dependencies/GLAD/Lib",
+		"projects/Ivy/dependencies/assimp/lib"
 	}
 	
         links "GLAD"
@@ -111,6 +113,7 @@ project "Ivy"
 
         filter "system:windows"
             links "GLFW3"
+			links "assimp-vc140-mt"
         filter {}
 
     -- We specify where the source files are.
@@ -138,7 +141,8 @@ project "Sandbox"
 		"projects/Ivy/dependencies/GLAD/include",
 		"projects/Ivy/dependencies/spdlog/include",
 		"projects/Ivy/dependencies/glm",
-		"projects/Ivy/dependencies/stb_image"
+		"projects/Ivy/dependencies/stb_image",
+		"projects/Ivy/dependencies/assimp/include"
 	}
 	
 

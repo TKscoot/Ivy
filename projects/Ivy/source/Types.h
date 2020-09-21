@@ -3,6 +3,7 @@
 #include <memory>
 #include <algorithm>
 #include <unordered_map>
+#include <set>
 #include <glm/glm.hpp>
 
 namespace Ivy
@@ -38,7 +39,7 @@ namespace Ivy
 	{
 		Vec4 position;
 		Vec3 normal;
-                Vec3 tangent;
+        Vec3 tangent;
 		Vec2 texcoord;
 	};
 
@@ -52,5 +53,11 @@ namespace Ivy
 
 	template<typename First, typename Second>
 	using UnorderedMap = std::unordered_map<First, Second>;
+
+	template<typename First, typename Second>
+	using Set = std::set<First, Second>;
+
+	template<typename First, typename Second>
+	using Pair = std::pair<First, Second>;
 
 }

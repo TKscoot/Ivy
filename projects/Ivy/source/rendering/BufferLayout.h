@@ -60,14 +60,16 @@ namespace Ivy
 		ShaderDataType Type;
 		uint32_t Size;
 		size_t Offset;
+		size_t BufferOffset;
 		bool Normalized;
 
 		BufferElement() = default;
 
-		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
-			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized)
+		BufferElement(ShaderDataType type, const std::string& name, size_t bufferOffset, bool normalized = false)
+			: Name(name), Type(type), BufferOffset(bufferOffset), Size(ShaderDataTypeSize(type)), Offset(0),  Normalized(normalized)
 		{
 		}
+
 
 		uint32_t GetComponentCount() const
 		{

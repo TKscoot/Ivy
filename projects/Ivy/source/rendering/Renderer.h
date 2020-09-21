@@ -4,14 +4,21 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "scene/components/Mesh.h"
-#include "Texture.h"
 #include "scene/components/Transform.h"
+#include "scene/components/Material.h"
+#include "scene/Scene.h"
+#include "Texture.h"
+#include "scene/Camera.h"
+
 
 namespace Ivy
 {
 	class Renderer
 	{
 	public:
+		Renderer(Ptr<Window> window)
+			: mWindow(window)
+		{}
 
 		void Initialize();
 
@@ -31,18 +38,17 @@ namespace Ivy
 		// Methods
 		void EnableDebugMessages();
 
-
 		// Variables
+		Ptr<Window>       mWindow;
 		Ptr<VertexArray>  mVertexArray;
 		Ptr<VertexBuffer> mVertexBuffer;
 		Ptr<IndexBuffer>  mIndexBuffer;
-		Ptr<Shader>	  mShader;
-                Ptr<Mesh>         mMesh;
+		Ptr<Shader>		  mShader;
+        Ptr<Mesh>         mMesh;
 		Ptr<Texture2D>    mTexture;
 		Ptr<Texture2D>    mTexture1;
-                Transform    mTransform;
-		GLuint            mVertexArrayObject = 0;
-		GLuint            mShaderProgram = 0;
+		Ptr<Camera>       mCamera;
+		Ptr<Scene>		  mScene;
 
 	};
 }

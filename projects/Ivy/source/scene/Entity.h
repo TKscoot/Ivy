@@ -1,11 +1,87 @@
 #pragma once
-#include "components/Mesh.h"
-#include "components/Transform.h"
+#include <typeindex>
+
+#include "Types.h"
+#include "components/Component.h"
 
 namespace Ivy
 {
-	class Entity
+	class Entity : public std::enable_shared_from_this<Entity>
 	{
+	public:
+		// Make Scene a friend of this class so it has access to private members
+		// because userspace should not get access of UpdateComponents() but it needs to
+		// be called in core
+		friend class Scene;
+
+		template <typename T>
+		Ptr<T> AddComponent(Ptr<T> component)
+		{
+			std::type_index const index = std::type_index(typeid(T));
+			if (mComponents.end() == mComponents.find(index))
+			{
+				mComponents[index] = {};
+			}
+
+			mComponents[index].push_back(component);
+			Ptr<Entity> ent = GetPtr();
+			component->SetEntity(ent);
+
+			return component;
+		}
+
+		template <typename T>
+		Vector<Ptr<T>> const GetComponentsOfType()
+		{
+			std::type_index const index = std::type_index(typeid(T));
+			if (mComponents.end() == mComponents.find(index))
+			{
+				return {};
+			}
+
+			Vector<Ptr<Component>> const components = mComponents.at(index);
+			Vector<Ptr<T>> casted{};
+			std::transform(components.begin(), components.end(), std::back_inserter(casted), 
+				[](Ptr<Component> input) -> Ptr<T> 
+				{ 
+					return std::dynamic_pointer_cast<T>(input); 
+				});
+
+			return casted;
+		}
+
+		template<typename T>
+		Ptr<T> const GetFirstComponentOfType()
+		{
+			std::type_index const index = std::type_index(typeid(T));
+			if (mComponents.end() == mComponents.find(index))
+			{
+				return nullptr;
+			}
+
+			Vector<Ptr<Component>> const components = mComponents.at(index);
+			Vector<Ptr<T>> casted{};
+			std::transform(components.begin(), components.end(), std::back_inserter(casted),
+				[](Ptr<Component> input) -> Ptr<T>
+			{
+				return std::dynamic_pointer_cast<T>(input);
+			});
+
+			return casted.front();
+		}
+
+		Ptr<Entity> GetPtr()
+		{
+			return shared_from_this();
+		}
+
+		void OnUpdate()  {};
+		void OnDestroy() {};
+		void OnCreate()  {};
+
+	private:
+		void UpdateComponents();
+		UnorderedMap<std::type_index, Vector<Ptr<Component>>> mComponents;
 
 	};
 }

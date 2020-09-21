@@ -5,6 +5,8 @@
 #include "environment/Log.h"
 #include "environment/Input.h"
 #include "rendering/Renderer.h"
+#include "scene/Entity.h"
+#include "core/Timer.h"
 
 // Forward declare GLFWwindow to avoid including glfw3.h
 struct GLFWwindow;
@@ -45,10 +47,14 @@ namespace Ivy
 
 		// Getter & Setter
 		const Ptr<Window> GetWindow() { return mWnd; }
+		const float GetDeltaTime() { return mDeltaTime; }
 
 	private:
-		Ptr<Window> mWnd;
+		Ptr<Window>   mWnd;
 		Ptr<Renderer> mRenderer;
+		Ptr<Entity>   mEntity;
+
+		float mDeltaTime = 0;
 
 	};
 }

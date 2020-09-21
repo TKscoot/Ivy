@@ -94,6 +94,17 @@ void Ivy::VertexBuffer::SetBufferData(const void * data, uint32_t size)
 	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 }
 
+void Ivy::VertexBuffer::SetBufferSubData(uint32_t offset, const void * data, uint32_t size)
+{
+	if (mID == 0)
+	{
+		Debug::CoreError("Buffer needs to be created first!");
+		return;
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, mID);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+}
+
 
 // Index Buffer
 
@@ -198,4 +209,18 @@ void Ivy::IndexBuffer::SetBufferData(const void * data, uint32_t size)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(uint32_t), data, GL_STATIC_DRAW);
+}
+
+void Ivy::IndexBuffer::SetBufferSubData(uint32_t offset, const void * data, uint32_t size)
+{
+	if (mID == 0)
+	{
+		Debug::CoreError("Buffer needs to be created first!");
+		return;
+	}
+
+	mCount += size;
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mID);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size * sizeof(uint32_t), data);
 }

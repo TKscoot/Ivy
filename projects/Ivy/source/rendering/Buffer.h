@@ -18,7 +18,8 @@ namespace Ivy
         virtual void Bind() = 0;
         virtual void Unbind() = 0;
 
-        virtual void SetBufferData(const void* data, uint32_t size) = 0;
+		virtual void SetBufferData(const void* data, uint32_t size) = 0;
+		virtual void SetBufferSubData(uint32_t offset, const void* data, uint32_t size) = 0;
 
         GLuint GetHandle()
         {
@@ -47,19 +48,10 @@ namespace Ivy
         virtual void Unbind() override;
 
         virtual void SetBufferData(const void* data, uint32_t size) override;
+		virtual void SetBufferSubData(uint32_t offset, const void* data, uint32_t size) override;
 
-        void SetLayout(BufferLayout& layout)
-        {
-            mBufferLayout = layout;
-        }
 
-        inline const BufferLayout GetLayout()
-        {
-            return mBufferLayout;
-        }
-
-    private:
-        BufferLayout mBufferLayout;
+	private:
     };
 
     class IndexBuffer : public Buffer
@@ -79,6 +71,7 @@ namespace Ivy
         virtual void Unbind() override;
 
         virtual void SetBufferData(const void* data, uint32_t size) override;
+		virtual void SetBufferSubData(uint32_t offset, const void* data, uint32_t size) override;
 
         uint32_t GetCount() const
         {

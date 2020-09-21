@@ -9,6 +9,7 @@ namespace Ivy
 	{
 	public:
 		Texture2D(uint32_t width, uint32_t height);
+		Texture2D(uint32_t width, uint32_t height, void* data);
 		Texture2D(String filepath);
 		~Texture2D();
 
@@ -21,7 +22,6 @@ namespace Ivy
 		uint32_t GetHeight() const { return mHeight; }
 
 		// TODO: void SetPixel(Vec2i coord, Vec4 colorValues); 
-
 	private:
 		GLuint mID	 = 0;
 		GLenum mInternalFormat;

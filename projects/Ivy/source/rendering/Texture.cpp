@@ -8,6 +8,9 @@ Ivy::Texture2D::Texture2D(uint32_t width, uint32_t height)
 	: mWidth(width)
 	, mHeight(height)
 {
+	mInternalFormat = GL_RGBA8;
+	mDataFormat		= GL_RGBA;
+
 	glCreateTextures(GL_TEXTURE_2D, 1, &mID);
 	glTextureStorage2D(mID, 1, mInternalFormat, mWidth, mHeight);
 
@@ -16,6 +19,29 @@ Ivy::Texture2D::Texture2D(uint32_t width, uint32_t height)
 
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
+
+Ivy::Texture2D::Texture2D(uint32_t width, uint32_t height, void * data)
+	: mWidth(width)
+	, mHeight(height)
+{
+	mInternalFormat = GL_RGBA8;
+	mDataFormat     = GL_RGBA;
+
+	if (!mID)
+	{
+		glCreateTextures(GL_TEXTURE_2D, 1, &mID);
+	}
+	glTextureStorage2D(mID, 1, mInternalFormat, mWidth, mHeight);
+
+	glTextureParameteri(mID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTextureParameteri(mID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 Ivy::Texture2D::Texture2D(String filepath)
@@ -71,7 +97,6 @@ void Ivy::Texture2D::Load(String filepath)
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
-	//glTexImage2D(GL_TEXTURE_2D, 0, mInternalFormat, mWidth, mHeight, 0, mDataFormat, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(data);
@@ -79,6 +104,16 @@ void Ivy::Texture2D::Load(String filepath)
 
 void Ivy::Texture2D::SetData(void * data, uint32_t size)
 {
+	glTextureStorage2D(mID, 1, mInternalFormat, mWidth, mHeight);
+
+	glTextureParameteri(mID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTextureParameteri(mID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 void Ivy::Texture2D::Bind(uint32_t slot)

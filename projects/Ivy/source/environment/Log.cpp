@@ -7,7 +7,7 @@ Ivy::Ptr<spdlog::logger> Ivy::Debug::mAppLogger;
 void Ivy::Debug::Initialize()
 {
 	spdlog::sink_ptr logSinkCore = CreatePtr<spdlog::sinks::stdout_color_sink_mt>();
-	spdlog::sink_ptr logSinkApp = CreatePtr<spdlog::sinks::stdout_color_sink_mt>();
+	spdlog::sink_ptr logSinkApp  = CreatePtr<spdlog::sinks::stdout_color_sink_mt>();
 
 	logSinkCore->set_pattern("%H:%M:%S|%n|%^%l: %v%$");
 	logSinkApp->set_pattern("%H:%M:%S|%n|%^%l: %v%$");
@@ -23,6 +23,9 @@ void Ivy::Debug::Initialize()
 
 	mCoreLogger->set_level(spdlog::level::trace);
 	mCoreLogger->flush_on(spdlog::level::trace);
+
+	mAppLogger->set_level(spdlog::level::trace);
+	mAppLogger->flush_on(spdlog::level::trace);
 }
 
 

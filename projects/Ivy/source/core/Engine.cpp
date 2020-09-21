@@ -8,9 +8,10 @@ Ivy::Engine::Engine()
 Ivy::Engine::~Engine()
 {
 }
+
 void ErrorCallback(int, const char* err_str)
 {
-    std::cout << "GLFW Error: " << err_str << std::endl;
+	Ivy::Debug::CoreError("GLFW Error: {}", err_str);
 }
 
 void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::string& windowTitle)
@@ -33,8 +34,9 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 	Debug::Initialize();
 
 	Input::Initialize(mWnd);
+	Input::SetMouseCursorVisible(false);
 
-	mRenderer = CreatePtr<Renderer>();
+	mRenderer = CreatePtr<Renderer>(mWnd);
 	mRenderer->Initialize();
 
 	Debug::CoreInfo(" *** Engine initialized! *** ");
@@ -54,7 +56,7 @@ void Ivy::Engine::NewFrame()
 
 	if (!mWnd)
 	{
-		throw "You need to create window first!";
+		throw "You need to create a window first!";
 	}
 
 	auto newtime = std::chrono::high_resolution_clock::now();
@@ -66,30 +68,25 @@ void Ivy::Engine::NewFrame()
 
 	mWnd->SwapBuffers();
 
-
-	if (Input::IsKeyDown(W) && Input::IsKeyDown(Q))
-	{
-		Debug::CoreLog("W and Q pressed");
-	}
-	if (Input::IsKeyDown(W))
-	{
-		Debug::CoreLog("W pressed");
-	}
-	if (Input::IsKeyDown(Q))
-	{
-		Debug::CoreLog("Q pressed");
-	}
-
 	newtime = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> delta = newtime - lastTime;
+	std::chrono::duration<float> delta = newtime - lastTime;
+	mDeltaTime = delta.count();
 
-	std::ostringstream ss;
-	ss << "Ivy Sandbox v0.0.1 | frame time: ";
-	ss << delta.count();
-	ss << " | FPS: ";
-	ss << (1 / delta.count());
+	static float timer = 0;
+	timer += mDeltaTime;
 
-	mWnd->SetTitle(ss.str());
+	if (timer >= 1.0f)
+	{
+		std::ostringstream ss;
+		ss << "Ivy Sandbox v0.0.1 | frame time: ";
+		ss << delta.count();
+		ss << " | FPS: ";
+		ss << (1 / delta.count());
+		mWnd->SetTitle(ss.str());
+		
+		timer = 0.0f;
+	}
+
 
 	newtime = lastTime;
 }

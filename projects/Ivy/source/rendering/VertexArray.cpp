@@ -1,8 +1,9 @@
 #include "ivypch.h"
 #include "VertexArray.h"
 
-Ivy::VertexArray::VertexArray()
+Ivy::VertexArray::VertexArray(BufferLayout& layout)
 {
+	mBufferLayout = layout;
 	glCreateVertexArrays(1, &mID);
 }
 
@@ -30,29 +31,12 @@ void Ivy::VertexArray::SetVertexBuffer(Ptr<VertexBuffer>& vertexBuffer)
 	}
 
 	mVertexBuffer = vertexBuffer;
-	glBindVertexArray(mID);
+	Bind();
 	mVertexBuffer->Bind();
-	
-	// TODO: vertexBuffer->GetLayout() (layout class??)
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); // vec3 position
-	//glEnableVertexAttribArray(0);
 
-	const auto& layout = vertexBuffer->GetLayout();
-	const auto& elements = layout.GetElements();
-	uint32_t offset = 0;
-	for (uint32_t i = 0; i < elements.size(); i++)
-	{
-		const auto& element = elements[i];
-		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, 
-			element.GetComponentCount(), 
-			ShaderDataTypeToOpenGLBaseType(element.Type), 
-			element.Normalized ? GL_TRUE : GL_FALSE,
-			layout.GetStride(), 
-			(const void*)element.Offset);
-	}
+	EnableVertexAttributes();
 
-	mVertexBuffer->Unbind();
+	Unbind();
 }
 
 void Ivy::VertexArray::SetIndexBuffer(Ptr<IndexBuffer>& indexBuffer)
@@ -66,4 +50,40 @@ void Ivy::VertexArray::SetIndexBuffer(Ptr<IndexBuffer>& indexBuffer)
 	mIndexBuffer = indexBuffer;
 	glBindVertexArray(mID);
 	mIndexBuffer->Bind();
+
+	Unbind();
+}
+
+void Ivy::VertexArray::SetVertexAndIndexBuffer(Ptr<VertexBuffer>& vertexBuffer, Ptr<IndexBuffer>& indexBuffer)
+{
+	mVertexBuffer = vertexBuffer;
+	mIndexBuffer  = indexBuffer;
+	Bind();
+
+	mVertexBuffer->Bind();
+	mIndexBuffer->Bind();
+
+	EnableVertexAttributes();
+
+	Unbind();
+}
+
+void Ivy::VertexArray::EnableVertexAttributes()
+{
+	const auto& elements = mBufferLayout.GetElements();
+	uint32_t offset = 0;
+	for (uint32_t i = 0; i < elements.size(); i++)
+	{
+		const auto& element = elements[i];
+ 		uint32_t offset = element.Offset + element.BufferOffset;
+		Debug::CoreLog("offset of {} is {}", i, offset);
+
+		glEnableVertexAttribArray(i);
+		glVertexAttribPointer(i,
+			element.GetComponentCount(),
+			ShaderDataTypeToOpenGLBaseType(element.Type),
+			element.Normalized ? GL_TRUE : GL_FALSE,
+			mBufferLayout.GetStride(),
+			(void*)(offset));
+	}
 }
