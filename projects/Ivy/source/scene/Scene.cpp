@@ -17,6 +17,8 @@ Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
 	ent->AddComponent(CreatePtr<Transform>());
 	ent->AddComponent(CreatePtr<Material>());
 	ent->OnCreate();
+	ent->mIndex = mEntities.size();
+	Debug::CoreLog("Created entity with index {}", ent->mIndex);
 
 	mEntities.push_back(ent);
 

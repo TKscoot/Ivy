@@ -24,7 +24,7 @@ void Ivy::Camera::Update(float deltaTime)
 
 	// Movement calculation
 
-	float velocity = mFastMove ? (mMovementSpeed + 10.0f) * deltaTime : mMovementSpeed * deltaTime;
+	float velocity = mFastMove ? (mMovementSpeed + 20.0f) * deltaTime : mMovementSpeed * deltaTime;
 
 	if (mGoingForward) mPosition += mFront * velocity;
 	if (mGoingBack)    mPosition -= mFront * velocity;

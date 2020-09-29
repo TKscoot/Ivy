@@ -37,7 +37,7 @@ namespace Ivy
 		float mPitch = 0.0f;
 
 		// camera options
-		float mMovementSpeed	= 2.5f;
+		float mMovementSpeed	= 5.0f;
 		float mMouseSensitivity = 0.1f;
 		float mZoom				= 45.0f;
 

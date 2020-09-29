@@ -6,7 +6,7 @@
 
 namespace Ivy
 {
-	class Entity : public std::enable_shared_from_this<Entity>
+	class Entity
 	{
 	public:
 		// Make Scene a friend of this class so it has access to private members
@@ -24,8 +24,7 @@ namespace Ivy
 			}
 
 			mComponents[index].push_back(component);
-			Ptr<Entity> ent = GetPtr();
-			component->SetEntity(ent);
+			component->SetEntityIndex(mIndex);
 
 			return component;
 		}
@@ -70,11 +69,6 @@ namespace Ivy
 			return casted.front();
 		}
 
-		Ptr<Entity> GetPtr()
-		{
-			return shared_from_this();
-		}
-
 		void OnUpdate()  {};
 		void OnDestroy() {};
 		void OnCreate()  {};
@@ -82,6 +76,8 @@ namespace Ivy
 	private:
 		void UpdateComponents();
 		UnorderedMap<std::type_index, Vector<Ptr<Component>>> mComponents;
+
+		uint32_t mIndex = 0;
 
 	};
 }

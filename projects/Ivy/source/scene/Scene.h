@@ -27,6 +27,11 @@ namespace Ivy
 
 		Vector<Ptr<Entity>> GetEntities() { return mEntities; }
 
+		Ptr<Entity> GetEntityWithIndex(uint32_t entityIndex)
+		{
+			return mEntities.at(entityIndex);
+		}
+
 	private:
 		static Ptr<Scene>   mInstance;
 		Vector<Ptr<Entity>> mEntities = {};

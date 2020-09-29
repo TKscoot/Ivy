@@ -76,7 +76,6 @@ void Ivy::VertexArray::EnableVertexAttributes()
 	{
 		const auto& element = elements[i];
  		uint32_t offset = element.Offset + element.BufferOffset;
-		Debug::CoreLog("offset of {} is {}", i, offset);
 
 		glEnableVertexAttribArray(i);
 		glVertexAttribPointer(i,

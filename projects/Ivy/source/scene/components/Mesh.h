@@ -7,6 +7,7 @@
 #include "Component.h"
 #include "scene/Entity.h"
 #include "scene/components/Material.h"
+#include "scene/Scene.h"
 
 
 namespace Ivy
@@ -54,5 +55,7 @@ namespace Ivy
         Ptr<VertexArray>  mVertexArray;
 
         BufferLayout      mBufferLayout;
+
+		Ptr<Entity> mEnt;
     };
 } // namespace Ivy

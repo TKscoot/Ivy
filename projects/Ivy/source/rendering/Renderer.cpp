@@ -63,6 +63,7 @@ void Ivy::Renderer::Render()
 	{
 		for (auto& mat : entity->GetComponentsOfType<Material>())
 		{
+			// Bind Textures to specific slot (diff, norm, ...)
 			for (auto& kv : mat->GetTextures())
 			{
 				kv.second->Bind(static_cast<uint32_t>(kv.first));

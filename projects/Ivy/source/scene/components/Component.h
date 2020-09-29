@@ -3,6 +3,7 @@
 namespace Ivy
 {
 	class Entity;
+
 	class Component
 	{
 	public:
@@ -21,20 +22,16 @@ namespace Ivy
 			mActive = active;
 		}
 
-		
-		void SetEntity(Ptr<Entity> ent)
-		{
-			mEntity = ent;
-		}
+		void SetEntityIndex(uint32_t index) { mEntityIndex = index; }
 
-		Ptr<Entity> GetEntity()
+		uint32_t GetEntityIndex()
 		{
-			return mEntity;
+			return mEntityIndex;
 		}
 
 		virtual ~Component() = default;
 	private:
 		bool mActive = true;
-		Ptr<Entity> mEntity;
+		uint32_t mEntityIndex = 0;
 	};
 }

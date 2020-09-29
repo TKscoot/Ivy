@@ -95,6 +95,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="source\core\ResourceManager.h" />
     <ClInclude Include="source\Ivy.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />

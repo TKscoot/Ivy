@@ -47,6 +47,9 @@ namespace Ivy
 	using String = std::string;
 	using StringStream = std::stringstream;
 
+	// IDs
+	using ResourceID = std::uint32_t;
+
 	// Datastructures
 	template<typename T>
 	using Vector = std::vector<T>;

@@ -23,6 +23,22 @@ layout(binding = 1) uniform sampler2D normalMap;
 layout(binding = 2) uniform sampler2D roughnessMap;
 layout(binding = 3) uniform sampler2D metallicMap;
 
+// calculates the color when using a directional light.
+vec3 CalcDirLight(Material light, vec3 direction, vec3 normal, vec3 viewDir)
+{
+    vec3 lightDir = normalize(-direction);
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0.0);
+    // specular shading
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    // combine results
+    vec3 ambient = light.ambient * vec3(texture(diffuseMap, texCoord));
+    vec3 diffuse = light.diffuse * diff * vec3(texture(diffuseMap, texCoord));
+    vec3 specular = light.specular * spec * vec3(texture(diffuseMap, texCoord));
+    return (ambient + diffuse + specular);
+}
+
 void main()
 {
 	//FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
@@ -30,23 +46,26 @@ void main()
 	//FragColor = mix(texture(albedo, texCoord), texture(albedo1, texCoord), 0.2);
 	// ambient
 	vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
-	vec3 lightPos = vec3(1.2f, 1.0f, 2.0f);
+	vec3 lightPos = vec3(20.2f, 1.0f, 2.0f);
 
     vec3 ambient = lightColor * material.ambient;
   	
-    // diffuse 
     vec3 norm = normalize(normal);
+	vec3 viewDir = normalize(viewPos - position.xyz);
+
+    // 
+	vec3 result = CalcDirLight(material, vec3(-0.2, -1.0, -0.3), norm, viewDir);
+
     vec3 lightDir = normalize(lightPos - position.xyz);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = lightColor * (diff * texture(diffuseMap, texCoord).xyz);
     
     // specular
-    vec3 viewDir = normalize(viewPos - position.xyz);
     vec3 reflectDir = reflect(-lightDir, norm);  
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular = lightColor * (spec * material.specular);  
         
-    vec3 result = /*ambient + */diffuse + specular;
+    result += /*ambient + */diffuse + specular;
 
 
 	FragColor = /*texture(diffuseMap, texCoord) +*/ vec4(result, 1.0f);
