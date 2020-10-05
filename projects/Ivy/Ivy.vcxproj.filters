@@ -78,7 +78,6 @@
     <ClInclude Include="source\scene\components\Transform.h">
       <Filter>scene\components</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">

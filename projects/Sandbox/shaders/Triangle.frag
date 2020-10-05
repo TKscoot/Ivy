@@ -24,7 +24,7 @@ layout(binding = 2) uniform sampler2D roughnessMap;
 layout(binding = 3) uniform sampler2D metallicMap;
 
 // calculates the color when using a directional light.
-vec3 CalcDirLight(Material light, vec3 direction, vec3 normal, vec3 viewDir)
+vec3 CalcDirLight(Material light, vec4 diffuseTexture, vec3 direction, vec3 normal, vec3 viewDir)
 {
     vec3 lightDir = normalize(-direction);
     // diffuse shading
@@ -33,9 +33,9 @@ vec3 CalcDirLight(Material light, vec3 direction, vec3 normal, vec3 viewDir)
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     // combine results
-    vec3 ambient = light.ambient * vec3(texture(diffuseMap, texCoord));
-    vec3 diffuse = light.diffuse * diff * vec3(texture(diffuseMap, texCoord));
-    vec3 specular = light.specular * spec * vec3(texture(diffuseMap, texCoord));
+    vec3 ambient = light.ambient *			vec3(diffuseTexture);
+    vec3 diffuse = light.diffuse * diff *	vec3(diffuseTexture);
+    vec3 specular = light.specular * spec * vec3(diffuseTexture);
     return (ambient + diffuse + specular);
 }
 
@@ -45,6 +45,8 @@ void main()
 	//FragColor = vec4(normal, 1.0);
 	//FragColor = mix(texture(albedo, texCoord), texture(albedo1, texCoord), 0.2);
 	// ambient
+	vec4 diffTex = texture(diffuseMap, texCoord);
+
 	vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
 	vec3 lightPos = vec3(20.2f, 1.0f, 2.0f);
 
@@ -54,11 +56,11 @@ void main()
 	vec3 viewDir = normalize(viewPos - position.xyz);
 
     // 
-	vec3 result = CalcDirLight(material, vec3(-0.2, -1.0, -0.3), norm, viewDir);
+	vec3 result = CalcDirLight(material, diffTex, vec3(-0.2, -1.0, -0.3), norm, viewDir);
 
     vec3 lightDir = normalize(lightPos - position.xyz);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = lightColor * (diff * texture(diffuseMap, texCoord).xyz);
+    vec3 diffuse = lightColor * (diff * diffTex.xyz);
     
     // specular
     vec3 reflectDir = reflect(-lightDir, norm);  
@@ -68,5 +70,5 @@ void main()
     result += /*ambient + */diffuse + specular;
 
 
-	FragColor = /*texture(diffuseMap, texCoord) +*/ vec4(result, 1.0f);
+	FragColor = vec4(result, diffTex.a);
 }

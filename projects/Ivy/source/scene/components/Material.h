@@ -20,10 +20,27 @@ namespace Ivy
 		Material();
 
 		void SetTexture(Ptr<Texture2D> texture, TextureMapType type) { mTextures[type] = texture; }
-		void LoadTexture(String texturePath, TextureMapType type);
+		Ivy::Ptr<Texture2D> LoadTexture(String texturePath, TextureMapType type);
 
-		void SetShader(Ptr<Shader> shader) { mShader = shader; }
-		void LoadShader(String vertexPath, String fragmentPath);
+		void SetShader(Ptr<Shader> shader) 
+		{
+			mShader = shader; 
+			if (!mShader)
+			{
+				Debug::CoreError("Shader is null!");
+				return;
+			}
+		
+			// Set default color values
+			mShader->Bind();
+			SetAmbientColor(mAmbient);
+			SetDiffuseColor(mDiffuse);
+			SetSpecularColor(mSpecular);
+			SetShininess(mShininess);
+			mShader->Unbind();
+		}
+		
+		void LoadShader(String vertexPath, String fragmentPath); // TODO: Implement
 
 		Ptr<Shader> GetShader() { return mShader; }
 		UnorderedMap<TextureMapType, Ptr<Texture2D>> GetTextures() { return mTextures; }
@@ -36,7 +53,9 @@ namespace Ivy
 				Debug::CoreError("Shader is null!");
 				return;
 			}
+			mShader->Bind();
 			mShader->SetUniformFloat3("material.ambient", colorValue);
+			mShader->Unbind();
 		}
 		void SetDiffuseColor (Vec3 colorValue) 
 		{ 
@@ -46,8 +65,9 @@ namespace Ivy
 				Debug::CoreError("Shader is null!");
 				return;
 			}
+			mShader->Bind();
 			mShader->SetUniformFloat3("material.diffuse", colorValue);
-
+			mShader->Unbind();
 		}
 		void SetSpecularColor(Vec3 colorValue) 
 		{ 
@@ -57,8 +77,9 @@ namespace Ivy
 				Debug::CoreError("Shader is null!");
 				return;
 			}
+			mShader->Bind();
 			mShader->SetUniformFloat3("material.specular", colorValue);
-
+			mShader->Unbind();
 		}
 		void SetShininess(float factor) 
 		{ 
@@ -68,18 +89,21 @@ namespace Ivy
 				Debug::CoreError("Shader is null!");
 				return;
 			}
+			mShader->Bind();
 			mShader->SetUniformFloat("material.shininess", factor);
+			mShader->Unbind();
 		}
 
 	private:
 		UnorderedMap<TextureMapType, Ptr<Texture2D>> mTextures;
+		static UnorderedMap<String, Ivy::Ptr<Texture2D>> mLoadedTextures;
 
-		Ptr<Shader>	   mShader = nullptr;
+		Ptr<Shader> mShader = nullptr;
 
-		Vec3  mAmbient;
-		Vec3  mDiffuse;
-		Vec3  mSpecular;
-		float mShininess;
+		Vec3  mAmbient   = Vec3(0.5f, 0.5f, 0.5f);
+		Vec3  mDiffuse   = Vec3(1.0f, 1.0f, 1.0f);
+		Vec3  mSpecular  = Vec3(0.5f, 0.5f, 0.5f);
+		float mShininess = 32.0f;
 
 	};
 }

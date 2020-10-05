@@ -54,6 +54,13 @@ namespace Ivy
 		///
 		void SetUniformMat4(	const String& name, const Mat4& matrix);
 
+		///
+		///
+		///
+		uint32_t GetRendererID() { return mProgram; }
+
+		static uint32_t GetCurrentlyUsedShaderID();
+
 	private:
 		// Methods
 		String ReadFile(const String filepath);

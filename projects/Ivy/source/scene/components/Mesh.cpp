@@ -24,7 +24,6 @@ Ivy::Mesh::Mesh(String filepath)
 Ivy::Mesh::Mesh(Vector<Vertex> vertices, Vector<uint32_t> indices)
 {
 	mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
-
 }
 
 void Ivy::Mesh::Load(String filepath)
@@ -80,7 +79,7 @@ void Ivy::Mesh::Load(String filepath)
 	{
 		aiMesh* mesh = scene->mMeshes[i];
 
-		Submesh& submesh = mSubmeshes[i].second;
+		Submesh& submesh = mSubmeshes[i];
 
 		submesh.vertices.resize(mesh->mNumVertices);
 		submesh.indices.resize(mesh->mNumFaces * 3);
@@ -123,10 +122,19 @@ void Ivy::Mesh::Load(String filepath)
 			{ShaderDataType::Float3, "aTangent" , submesh.vertexOffset},
 			{ShaderDataType::Float2, "aTexCoord", submesh.vertexOffset}
 		};
-		mSubmeshes[i].first = CreatePtr<VertexArray>(layout);
-		mSubmeshes[i].first->SetVertexAndIndexBuffer(mVertexBuffer, mIndexBuffer);
 
-		mSubmeshes[i].first->Bind();
+
+		//mSubmeshes[i].first = CreatePtr<VertexArray>(layout);
+		//mSubmeshes[i].first->SetVertexAndIndexBuffer(mVertexBuffer, mIndexBuffer);
+		//
+		//mSubmeshes[i].first->Bind();
+
+
+		submesh.vertexArray = CreatePtr<VertexArray>(layout);
+		submesh.vertexArray->SetVertexAndIndexBuffer(mVertexBuffer, mIndexBuffer);
+		submesh.vertexArray->Bind();
+
+
 		mVertexBuffer->Bind();
 		mVertexBuffer->SetBufferSubData(submesh.vertexOffset, submesh.vertices.data(), submesh.vertices.size() * sizeof(Vertex));
 		mIndexBuffer->Bind();
@@ -166,7 +174,6 @@ void Ivy::Mesh::Load(String filepath)
 		
 		if (diff.length > 0)
 		{
-			// TODO: Check if texture has already been loaded
 			materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::DIFFUSE);
 		}
 
@@ -184,6 +191,11 @@ void Ivy::Mesh::Load(String filepath)
 		
 	}
 
+	std::sort(mSubmeshes.begin(), mSubmeshes.end(), less_than_key());
+	for (auto& sm : mSubmeshes)
+	{
+		Debug::CoreLog("Submesh with matIndex: {}", sm.materialIndex);
+	}
 }
 
 void Ivy::Mesh::Draw()
@@ -193,20 +205,30 @@ void Ivy::Mesh::Draw()
 	
 	auto& materials = mEnt->GetComponentsOfType<Material>();
 
+	static uint32_t lastMatIndex = 0;
+	int bindCount = 0;
 	for (int i = 0; i < mSubmeshes.size(); i++)
 	{
-		if (materials.size() >= mSubmeshes[i].second.materialIndex)
+
+		// TODO: VERY PERFORMANCE HUNGRY: FIX
+		if (materials.size() >= mSubmeshes[i].materialIndex)
 		{
-			for (auto& kv : materials[mSubmeshes[i].second.materialIndex]->GetTextures())
+			for (auto& kv : materials[mSubmeshes[i].materialIndex]->GetTextures())
 			{
-				kv.second->Bind(static_cast<uint32_t>(kv.first));
+				if (mSubmeshes[i].materialIndex != lastMatIndex)
+				{
+					kv.second->Bind(static_cast<uint32_t>(kv.first));
+					bindCount++;
+				}
 			}
+
+			lastMatIndex = mSubmeshes[i].materialIndex;
 		}
+		// ENDTODO
 
-		mSubmeshes[i].first->Bind();
-		glDrawElements(GL_TRIANGLES, mSubmeshes[i].second.indices.size(), GL_UNSIGNED_INT, (void*)mSubmeshes[i].second.indexOffset);
+		mSubmeshes[i].vertexArray->Bind();
+		glDrawElements(GL_TRIANGLES, mSubmeshes[i].indices.size(), GL_UNSIGNED_INT, (void*)mSubmeshes[i].indexOffset);
 	}
-
 }
 
 void Ivy::Mesh::CreateResources()

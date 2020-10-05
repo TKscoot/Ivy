@@ -92,6 +92,14 @@ void Ivy::Shader::SetUniformMat4(const String & name, const Mat4 & matrix)
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+uint32_t Ivy::Shader::GetCurrentlyUsedShaderID()
+{
+	GLint id;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &id);
+
+	return static_cast<uint32_t>(id);
+}
+
 Ivy::String Ivy::Shader::ReadFile(const String filepath)
 {
 	String result = "";

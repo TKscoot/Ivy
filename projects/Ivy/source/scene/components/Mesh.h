@@ -33,6 +33,15 @@ namespace Ivy
 			Ptr<VertexArray> vertexArray;
 		};
 
+		struct less_than_key
+		{
+			inline bool operator() (const Submesh& struct1, const Submesh& struct2)
+			{
+				return (struct1.materialIndex < struct2.materialIndex);
+			}
+		};
+
+
         Mesh();
         Mesh(String filepath);
         Mesh(Vector<Vertex> vertices, Vector<uint32_t> indices);
@@ -47,7 +56,8 @@ namespace Ivy
         //Vector<Vertex>   mVertices;
         //Vector<uint32_t> mIndices;
 
-		Vector<Pair<Ptr<VertexArray>,Submesh>> mSubmeshes;
+		Vector<Submesh> mSubmeshes;
+		UnorderedMap<String, Ivy::Ptr<Texture2D>> mLoadedTextures;
 
         Ptr<VertexBuffer> mVertexBuffer;
         Ptr<IndexBuffer>  mIndexBuffer;

@@ -13,8 +13,6 @@ void Ivy::Renderer::Initialize()
 	mScene = Scene::GetScene();
 
 	mCamera = CreatePtr<Camera>(Vec3(0.0f, 0.0f, 0.0f));
-
-	mShader = CreatePtr<Shader>("shaders/Triangle.vert", "shaders/Triangle.frag");
 }
 
 void Ivy::Renderer::Render()
@@ -28,12 +26,8 @@ void Ivy::Renderer::Render()
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // draw our first mesh
 
     float colorValue = (sin(timeValue) / 2.0f) + 0.5f;
-
-    //mTransform.setRotation(Vec3(0.0f, -timeValue * 5.0f, 0.0f));
-	//mTransform.setPositionZ(-10.0f);
 
 	Mat4 model = Mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f)); // translate it down so it's at the center of the scene
@@ -42,27 +36,15 @@ void Ivy::Renderer::Render()
 	mCamera->Update(dt);
 	Mat4 view = mCamera->GetViewMatrix();
 
-	//Mat4 view = Mat4(1.0f);
-	//view = glm::lookAt(Vec3(0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(0.0f, 1.0f, 0.0f));
-	
 	Vec2 currentWindowSize = mWindow->GetWindowSize();
     Mat4 projection = glm::perspective(glm::radians(45.0f), currentWindowSize.x / currentWindowSize.y, 0.1f, 1000.0f);
-
-    //mTexture->Bind(0);
-    //mTexture1->Bind(1);
-	//
-	//// Bind shader to tell renderer to use it
-	//mShader->Bind(); 
-	//mShader->SetUniformMat4("view", view);
-	//mShader->SetUniformMat4("projection", projection);
-
-	// Draw our mesh    
-    //mMesh->Draw();
 
 	for(auto& entity : mScene->GetEntities())
 	{
 		for (auto& mat : entity->GetComponentsOfType<Material>())
 		{
+			Ptr<Shader> shader = mat->GetShader();
+
 			// Bind Textures to specific slot (diff, norm, ...)
 			for (auto& kv : mat->GetTextures())
 			{
@@ -70,23 +52,25 @@ void Ivy::Renderer::Render()
 			}
 
 			// TODO: Compare if this shader is the default shader
-			mat->SetShader(mShader);
-			mat->GetShader()->Bind();
-			mat->GetShader()->SetUniformMat4("view", view);
-			mat->GetShader()->SetUniformMat4("projection", projection);
-			mat->GetShader()->SetUniformFloat3("viewPos", mCamera->GetPosition());
-		}
-		for (auto& trans : entity->GetComponentsOfType<Transform>())
-		{
-			mShader->SetUniformMat4("model", trans->getComposed());
+			if (shader->GetRendererID() != Shader::GetCurrentlyUsedShaderID())
+			{
+				shader->Bind();
+			}
+
+			shader->SetUniformMat4("view", view);
+			shader->SetUniformMat4("projection", projection);
+			shader->SetUniformFloat3("viewPos", mCamera->GetPosition());
+			
+			for (auto& trans : entity->GetComponentsOfType<Transform>())
+			{
+				shader->SetUniformMat4("model", trans->getComposed());
+			}
 		}
 		for (auto& mesh : entity->GetComponentsOfType<Mesh>())
 		{
 			mesh->Draw();
 		}
 	}
-
-    // mVertexArray->Unbind(); // no need to unbind it every time
 }
 
 void Ivy::Renderer::GLLogCallback(unsigned source, unsigned type, unsigned id, unsigned severity, int length, const char* message,
