@@ -10,13 +10,22 @@ int main()
 	std::unique_ptr<Engine> engine = std::make_unique<Engine>();
 	engine->Initialize(800, 600, "Ivy Sandbox v0.0.1");
 	
+	Vector<String> skyboxTextures =
+	{
+		"assets/textures/skybox/right.jpg",
+		"assets/textures/skybox/left.jpg",
+		"assets/textures/skybox/top.jpg",
+		"assets/textures/skybox/bottom.jpg",
+		"assets/textures/skybox/front.jpg",
+		"assets/textures/skybox/back.jpg"
+	};
+
+	Scene::GetScene()->SetSkybox(skyboxTextures);
+
 	Ptr<Entity> uvSphere = Scene::GetScene()->CreateEntity();
 	uvSphere->AddComponent(CreatePtr<Mesh>("assets/models/sponza.obj"));
 	Ptr<Material> uvMat = uvSphere->GetFirstComponentOfType<Material>();
 	uvSphere->GetFirstComponentOfType<Transform>()->setScale(0.2f, 0.2f, 0.2f);
-	//Ptr<Texture2D> texture = Texture2D::Create("assets/textures/box.jpg");
-	//
-	//uvMat->SetTexture(texture, Material::DIFFUSE);
 
 
 	Ptr<Entity> bunny = Scene::GetScene()->CreateEntity();

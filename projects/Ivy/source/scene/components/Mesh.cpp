@@ -164,7 +164,7 @@ void Ivy::Mesh::Load(String filepath)
 		aiString rough;
 		aiString metal;
 		assimpMaterial->GetTexture(aiTextureType_DIFFUSE,   0, &diff);
-		assimpMaterial->GetTexture(aiTextureType_NORMALS,   0, &norm);
+		assimpMaterial->GetTexture(aiTextureType_HEIGHT,   0, &norm);
 		assimpMaterial->GetTexture(aiTextureType_SHININESS, 0, &rough);
 		assimpMaterial->GetTexture(aiTextureType_AMBIENT,   0, &metal);
 
@@ -177,9 +177,13 @@ void Ivy::Mesh::Load(String filepath)
 			materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::DIFFUSE);
 		}
 
-		//ss.clear();
-		//ss << norm.C_Str();
-		//mat->LoadTexture(ss.str(), Material::TextureMapType::NORMAL);
+		ss.clear();
+		ss << norm.C_Str();
+		if (norm.length > 0)
+		{
+			materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::NORMAL);
+		}
+
 		//
 		//ss.clear();
 		//ss << rough.C_Str();
@@ -190,12 +194,9 @@ void Ivy::Mesh::Load(String filepath)
 		//mat->LoadTexture(ss.str(), Material::TextureMapType::METALLIC);
 		
 	}
-
+	
+	// sorting submeshes for better texture binding performance
 	std::sort(mSubmeshes.begin(), mSubmeshes.end(), less_than_key());
-	for (auto& sm : mSubmeshes)
-	{
-		Debug::CoreLog("Submesh with matIndex: {}", sm.materialIndex);
-	}
 }
 
 void Ivy::Mesh::Draw()

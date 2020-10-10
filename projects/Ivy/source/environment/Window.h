@@ -15,6 +15,13 @@ namespace Ivy
 	class Window
 	{
 	public:
+		/*!
+		 * Window constructor
+		 * 
+		 * \param width width of the window
+		 * \param height height of the window
+		 * \param title title of the window
+		 */
 		Window(int width, int  height, const std::string& title);
 		~Window();
 

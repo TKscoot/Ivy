@@ -7,11 +7,21 @@ namespace Ivy
 {
 	// Code used from Yan Chernikov (TheCherno)
 
+	/*!
+	 * All types of data you can pass to a shader as attribute
+	 * 
+	 */
 	enum class ShaderDataType
 	{
 		None = 0, Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
 	};
 
+	/*!
+	 * Gets the size of the specified data type in bytes
+	 * 
+	 * \param type the type to get the size of
+	 * \return returns uint32_t of the bytesize
+	 */
 	static uint32_t ShaderDataTypeSize(ShaderDataType type)
 	{
 		switch (type)
@@ -33,6 +43,12 @@ namespace Ivy
 		return 0;
 	}
 
+	/*!
+	 * Converts from the ShaderDataType struct to OpenGL conform defines
+	 * 
+	 * \param type type to convert
+	 * \return returns OpenGL define of the type
+	 */
 	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
 	{
 		switch (type)
@@ -54,6 +70,10 @@ namespace Ivy
 		return 0;
 	}
 
+	/*!
+	 * A element of a buffer attribute
+	 * 
+	 */
 	struct BufferElement
 	{
 		std::string Name;
@@ -70,7 +90,11 @@ namespace Ivy
 		{
 		}
 
-
+		/*!
+		 * Gets how many components the type of the buffer elements has
+		 * 
+		 * \return returns uint32_t of the count
+		 */
 		uint32_t GetComponentCount() const
 		{
 			switch (Type)
@@ -93,6 +117,10 @@ namespace Ivy
 		}
 	};
 
+	/*!
+	 * The attribute layout of a buffer
+	 * 
+	 */
 	class BufferLayout
 	{
 	public:

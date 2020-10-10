@@ -107,9 +107,6 @@ void Ivy::Texture2D::Load(String filepath)
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(data);
-
-	mIsLoaded = true;
-
 }
 
 void Ivy::Texture2D::SetData(void * data, uint32_t size)
@@ -129,6 +126,74 @@ void Ivy::Texture2D::SetData(void * data, uint32_t size)
 void Ivy::Texture2D::Bind(uint32_t slot)
 {
 	if(	glIsTexture(mID))
+	{
+		glBindTextureUnit(slot, mID);
+	}
+}
+
+Ivy::TextureCube::TextureCube(Vector<String> filenames)
+{
+	glGenTextures(1, &mID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, mID);
+
+	Load(filenames);
+}
+
+Ivy::TextureCube::TextureCube(String right, String left, String top, String bottom, String back, String front)
+{
+
+
+	glGenTextures(1, &mID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, mID);
+	
+	Load(right,
+		left,
+		top,
+		bottom,
+		back,
+		front);
+}
+
+void Ivy::TextureCube::Load(Vector<String> filenames)
+{
+	int width, height, nrChannels;
+	for (unsigned int i = 0; i < filenames.size(); i++)
+	{
+		unsigned char *data = stbi_load(filenames[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			Debug::CoreError("Cubemap texture failed to load at path: {}", filenames[i]);
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+}
+
+void Ivy::TextureCube::Load(String right, String left, String top, String bottom, String back, String front)
+{
+	Vector<String> filenames;
+	filenames.push_back(right);
+	filenames.push_back(left);
+	filenames.push_back(top);
+	filenames.push_back(bottom);
+	filenames.push_back(back);
+	filenames.push_back(front);
+
+	Load(filenames);
+}
+
+void Ivy::TextureCube::Bind(uint32_t slot)
+{
+	if (glIsTexture(mID))
 	{
 		glBindTextureUnit(slot, mID);
 	}

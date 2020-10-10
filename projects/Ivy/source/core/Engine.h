@@ -16,37 +16,59 @@ namespace Ivy
 	class Engine
 	{
 	public:
+
+		/*!
+		 *  Default constructor
+		 * 
+		 */
 		Engine();
 		~Engine();
 		
-		///
-		/// Initializes the engine. Call this befor starting the game loop.
-		/// @Param width of window in screen coordinates
-		/// @Param height of window in screen coordinates
-		///	@Param the title of the window
-		///
+
+		/*!
+		 * Initializes the engine. Call this befor starting the game loop.
+		 * 
+		 * \param windowWidth width of window in screen coordinates
+		 * \param windowHeight height of window in screen coordinates
+		 * \param windowTitle the title of the window
+		 */
 		void Initialize(int windowWidth, int  windowHeight, const std::string& windowTitle);
 
-		///
-		/// Starting the game loop. Call this after the initialization
-		///
+		/*!
+		 * Starting the game loop. Call this after the initialization
+		 * 
+		 */
 		void Run();
 
-		///
-		/// Use NewFrame() if you want your own game loop. This should be called first in your loop.
-		///
+		/*!
+		 * Use NewFrame() if you want your own game loop. This should be called first in your loop.
+		 * 
+		 */
 		void NewFrame();
 
-		///
-		/// Checks if the engine should terminate. 
-		/// Triggers if close button of the window is pressed
-		/// or something went wrong in the engine
-		/// @Return returns true if it should terminate. 
-		///
+		/*!
+		 * Checks if the engine should terminate. 
+		 * Triggers if close button of the window is pressed
+		 * or something went wrong in the engine
+		 * 
+		 * \return returns true if it should terminate. 
+		 */
 		bool ShouldTerminate();
 
 		// Getter & Setter
+
+		/*!
+		 * Gets the window instance
+		 * 
+		 * \return const pointer to window
+		 */
 		const Ptr<Window> GetWindow() { return mWnd; }
+
+		/*!
+		 * Gets delta time in ms
+		 * 
+		 * \return const float delta time
+		 */
 		const float GetDeltaTime() { return mDeltaTime; }
 
 	private:

@@ -18,6 +18,7 @@ namespace Ivy
     {
     public:
         friend class Renderer;
+		friend class Scene;
 
 		struct Submesh
 		{

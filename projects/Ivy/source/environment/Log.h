@@ -39,7 +39,7 @@ namespace Ivy
 
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints white trace message to stdout
 		///
 		template<typename T>
 		static void Log(T &msg)
@@ -48,7 +48,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints green info message to stdout
 		///
 		template<typename T>
 		static void Info(T &msg)
@@ -57,7 +57,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints yellow warning message to stdout
 		///
 		template<typename T>
 		static void Warning(T &msg)
@@ -66,7 +66,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints red error message to stdout
 		///
 		template<typename T>
 		static void Error(T &msg)
@@ -75,7 +75,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints red highlighted critical error message to stdout
 		///
 		template<typename T>
 		static void Critical(T &msg)
@@ -84,7 +84,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints uncolored (white) core/engine message to stdout
 		///
 		template<typename T>
 		static void CoreLog(T &msg)
@@ -93,7 +93,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints green success core/engine message to stdout
 		///
 		template<typename T>
 		static void CoreInfo(T &msg)
@@ -102,7 +102,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints yellow warning core/engine message to stdout
 		///
 		template<typename T>
 		static void CoreWarning(T &msg)
@@ -111,7 +111,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints Red error core/engine message to stdout
 		///
 		template<typename T>
 		static void CoreError(T &msg)
@@ -120,7 +120,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints red highlighted critical error core/engine message to stdout
 		///
 		template<typename T>
 		static void CoreCritical(T &msg)
@@ -132,7 +132,7 @@ namespace Ivy
 
 
 		///
-		/// Prints uncolored (white) message to stdout
+		/// Prints white trace message to stdout
 		///
 		template<typename FormatString, typename... Args>
 		static void Log(const FormatString &fmt, const Args &... args)
@@ -141,7 +141,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints green success message to stdout
+		/// Prints green info message to stdout
 		///
 		template<typename FormatString, typename... Args>
 		static void Info(const FormatString &fmt, const Args &... args)
@@ -160,7 +160,7 @@ namespace Ivy
 		}
 
 		///
-		/// Prints Red error message to stdout
+		/// Prints red error message to stdout
 		///
 		template<typename FormatString, typename... Args>
 		static void Error(const FormatString &fmt, const Args &... args)

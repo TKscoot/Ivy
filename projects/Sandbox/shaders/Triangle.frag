@@ -52,10 +52,14 @@ void main()
 
     vec3 ambient = lightColor * material.ambient;
   	
+	// NORMAL MAPPING TEST
+
     vec3 norm = normalize(normal);
+	//vec3 norm = texture(normalMap, texCoord).rgb;
+	//norm = normalize(normal * 2.0 - 1.0);
+
 	vec3 viewDir = normalize(viewPos - position.xyz);
 
-    // 
 	vec3 result = CalcDirLight(material, diffTex, vec3(-0.2, -1.0, -0.3), norm, viewDir);
 
     vec3 lightDir = normalize(lightPos - position.xyz);
