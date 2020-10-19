@@ -42,7 +42,7 @@ Ivy::Texture2D::Texture2D(uint32_t width, uint32_t height, void * data)
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	//glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 Ivy::Texture2D::Texture2D(String filepath)
@@ -66,45 +66,40 @@ void Ivy::Texture2D::Load(String filepath)
 	}
 
 	int width, height, channels;
-
-	// Flips the the image vertically for correct UV mapping
 	stbi_set_flip_vertically_on_load(1);
-
-	stbi_uc* data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
-
+	stbi_uc* data = nullptr;
+	{
+		data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
+	}
 	mWidth = width;
 	mHeight = height;
 
-	if (!data)
-	{
-		Debug::CoreError("Couldn't load image file: {}", filepath);
-	}
-
+	GLenum internalFormat = 0, dataFormat = 0;
 	if (channels == 4)
 	{
-		mInternalFormat = GL_RGBA8;
-		mDataFormat = GL_RGBA;
+		internalFormat = GL_RGBA8;
+		dataFormat = GL_RGBA;
 	}
 	else if (channels == 3)
 	{
-		mInternalFormat = GL_RGB8;
-		mDataFormat = GL_RGB;
+		internalFormat = GL_RGB8;
+		dataFormat = GL_RGB;
 	}
 
-	if (!mID)
-	{
-		glCreateTextures(GL_TEXTURE_2D, 1, &mID);
-	}
-	glTextureStorage2D(mID, 1, mInternalFormat, mWidth, mHeight);
+	mInternalFormat = internalFormat;
+	mDataFormat = dataFormat;
+
+
+	glCreateTextures(GL_TEXTURE_2D, 1, &mID);
+	glTextureStorage2D(mID, 1, internalFormat, mWidth, mHeight);
 
 	glTextureParameteri(mID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
 
 	stbi_image_free(data);
 }
@@ -114,13 +109,13 @@ void Ivy::Texture2D::SetData(void * data, uint32_t size)
 	glTextureStorage2D(mID, 1, mInternalFormat, mWidth, mHeight);
 
 	glTextureParameteri(mID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	//glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 void Ivy::Texture2D::Bind(uint32_t slot)
@@ -172,7 +167,7 @@ void Ivy::TextureCube::Load(Vector<String> filenames)
 		}
 	}
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);

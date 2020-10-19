@@ -17,12 +17,12 @@ Ivy::Scene::~Scene()
 Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
 {
 	Ptr<Entity> ent = CreatePtr<Entity>(); 
+	ent->mIndex = mEntities.size();
 	ent->AddComponent(CreatePtr<Transform>());
 	ent->AddComponent(CreatePtr<Material>());
 	ent->OnCreate();
-	ent->mIndex = mEntities.size();
 	Debug::CoreLog("Created entity with index {}", ent->mIndex);
-	 
+
 	mEntities.push_back(ent);
 
 	return ent; 
@@ -66,15 +66,17 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 	for (int i = 0; i < mEntities.size(); i++)
 	{
 		Vector<Ptr<Material>> materials = mEntities[i]->GetComponentsOfType<Material>();
+		Ptr<Shader> shader;
 		for (int j = 0; j < materials.size(); j++)
 		{
-			Ptr<Shader> shader = materials[j]->GetShader();
+			//Debug::CoreLog("entidx: {}", materials[j]->GetEntityIndex());
+			shader = materials[j]->GetShader();
 
 			// Bind Textures to specific slot (diff, norm, ...)
-			for (auto& kv : materials[j]->GetTextures())
-			{
-				kv.second->Bind(static_cast<uint32_t>(kv.first));
-			}
+			//for (auto& kv : materials[j]->GetTextures())
+			//{
+			//	kv.second->Bind(static_cast<int>(kv.first));
+			//}
 
 			// TODO: Compare if this shader is the default shader
 			if (shader->GetRendererID() != Shader::GetCurrentlyUsedShaderID())
@@ -82,15 +84,19 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 				shader->Bind();
 			}
 
-			shader->SetUniformMat4("view", view);
-			shader->SetUniformMat4("projection", projection);
-			shader->SetUniformFloat3("viewPos", mCamera->GetPosition());
-
-			for (auto& trans : mEntities[i]->GetComponentsOfType<Transform>())
-			{
-				shader->SetUniformMat4("model", trans->getComposed());
-			}
 		}
+
+		shader->SetUniformMat4("view", view);
+		shader->SetUniformMat4("projection", projection);
+		shader->SetUniformFloat3("viewPos", mCamera->GetPosition());
+
+		shader->SetUniformFloat3("lightPos", Vec3(5.0f, 3.0f, 0.0f));
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::rotate(model, glm::radians((float)glfwGetTime() * -10.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
+
+		Ptr<Transform> trans = mEntities[i]->GetFirstComponentOfType<Transform>();
+		shader->SetUniformMat4("model", trans->getComposed());
 
 		Vector<Ptr<Mesh>> meshes = mEntities[i]->GetComponentsOfType<Mesh>();
 		for (int j = 0; j < meshes.size(); j++)
@@ -188,7 +194,6 @@ void Ivy::Scene::SetupSkybox()
 	mSkyboxVertexBuffer->SetBufferData(&skyboxVertices, sizeof(skyboxVertices));
 
 	mSkyboxShader->Bind();
-	//mSkyboxData.mShader->SetUniformInt("skybox", 0);	// TODO: Eventuell buggy wegen texture slots anstatt uniform bind
 	mShouldRenderSkybox = true;
 }
 
@@ -200,7 +205,7 @@ void Ivy::Scene::SetupSkyboxShaders()
 	if (!std::filesystem::exists(vertexFilepath))
 	{
 		std::filesystem::path path{ vertexFilepath };
-		std::filesystem::create_directories(path.parent_path()); //add directories based on the object path (without this line it will not work)
+		std::filesystem::create_directories(path.parent_path());
 
 		std::ofstream ofs(path);
 		ofs << "#version 450 core\n";
@@ -222,7 +227,7 @@ void Ivy::Scene::SetupSkyboxShaders()
 	if (!std::filesystem::exists(fragmentFilepath))
 	{
 		std::filesystem::path path{ fragmentFilepath };
-		std::filesystem::create_directories(path.parent_path()); //add directories based on the object path (without this line it will not work)
+		std::filesystem::create_directories(path.parent_path());
 
 		std::ofstream ofs(path);
 		ofs << "#version 450 core\n";

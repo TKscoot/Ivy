@@ -43,9 +43,9 @@ namespace Ivy
 		};
 
 
-        Mesh();
-        Mesh(String filepath);
-        Mesh(Vector<Vertex> vertices, Vector<uint32_t> indices);
+        Mesh(Entity* ent);
+        Mesh(Entity* ent, String filepath);
+        Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices);
 
         //void Load(String filepath);
 		void Load(String filepath);

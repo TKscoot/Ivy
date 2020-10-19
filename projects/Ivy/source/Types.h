@@ -1,4 +1,5 @@
 #pragma once
+#include <inttypes.h>
 #include <vector>
 #include <memory>
 #include <algorithm>
@@ -40,6 +41,7 @@ namespace Ivy
 		Vec4 position;
 		Vec3 normal;
         Vec3 tangent;
+		Vec3 bitangent;
 		Vec2 texcoord;
 	};
 

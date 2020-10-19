@@ -7,6 +7,13 @@ namespace Ivy
 	class Component
 	{
 	public:
+		Component() {}
+
+		Component(Entity* ent)
+		{
+			mEntity = ent;
+		}
+
 		virtual void OnCreate() {};
 		virtual void OnStart()  {};
 		virtual void OnUpdate() {};
@@ -29,7 +36,13 @@ namespace Ivy
 			return mEntityIndex;
 		}
 
+		void SetEntity(Entity* ent) { mEntity = ent; }
+
 		virtual ~Component() = default;
+
+	protected:
+		Entity* mEntity = nullptr;
+
 	private:
 		bool mActive = true;
 		uint32_t mEntityIndex = 0;

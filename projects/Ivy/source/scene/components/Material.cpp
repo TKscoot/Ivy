@@ -10,7 +10,7 @@ Ivy::Material::Material()
 	, mShininess(32.0f)
 {
 	// Set default shader
-	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Triangle.vert", "shaders/Triangle.frag");
+	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Normalmapped.vert", "shaders/Normalmapped.frag");
 	mShader = defaultShader;
 	// Set default color values
 	mShader->Bind();
@@ -18,6 +18,7 @@ Ivy::Material::Material()
 	SetDiffuseColor(mDiffuse);
 	SetSpecularColor(mSpecular);
 	SetShininess(mShininess);
+	SetDefaultShaderUniforms();
 	mShader->Unbind();
 
 	int width  = 2;
@@ -48,6 +49,14 @@ Ivy::Material::Material()
 		pixelData[i * 4 + 3] = 255;
 	}
 	mTextures[TextureMapType::METALLIC]  = CreatePtr<Texture2D>(2, 2, pixelData);
+	// Set all pixels blue & full opacity
+	for (int i = 0; i < width * height; ++i)
+	{
+		pixelData[i * 4 + 0] = 127;
+		pixelData[i * 4 + 1] = 127;
+		pixelData[i * 4 + 2] = 255;
+		pixelData[i * 4 + 3] = 255;
+	}
 	mTextures[TextureMapType::NORMAL]	 = CreatePtr<Texture2D>(2, 2, pixelData);
 
 }
@@ -68,10 +77,41 @@ Ivy::Ptr<Ivy::Texture2D> Ivy::Material::LoadTexture(String texturePath, TextureM
 	}
 
 	mTextures[type] = mLoadedTextures[texturePath];
+
+	if (mShader)
+	{
+		mShader->Bind();
+
+		switch (type)
+		{
+		case Ivy::Material::TextureMapType::DIFFUSE:
+			break;
+		case Ivy::Material::TextureMapType::NORMAL:
+			mShader->SetUniformInt("useNormalMap", 1);
+			break;
+		case Ivy::Material::TextureMapType::ROUGHNESS:
+			mShader->SetUniformInt("useRoughnessMap", 1);
+			break;
+		case Ivy::Material::TextureMapType::METALLIC:
+			mShader->SetUniformInt("useMetallicMap", 1);
+			break;
+		default:
+			break;
+		}
+
+		mShader->Unbind();
+	}
 	
 	return mTextures[type];
 }
 
 void Ivy::Material::LoadShader(String vertexPath, String fragmentPath)
 {
+}
+
+void Ivy::Material::SetDefaultShaderUniforms()
+{
+	mShader->SetUniformInt("useNormalMap",	  0);
+	mShader->SetUniformInt("useRoughnessMap", 0);
+	mShader->SetUniformInt("useMetallicMap",  0);
 }

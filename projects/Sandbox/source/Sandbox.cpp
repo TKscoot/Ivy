@@ -23,13 +23,16 @@ int main()
 	Scene::GetScene()->SetSkybox(skyboxTextures);
 
 	Ptr<Entity> uvSphere = Scene::GetScene()->CreateEntity();
-	uvSphere->AddComponent(CreatePtr<Mesh>("assets/models/sponza.obj"));
+	uvSphere->AddComponent(CreatePtr<Mesh>(uvSphere.get(), "assets/models/sponza.obj"));
 	Ptr<Material> uvMat = uvSphere->GetFirstComponentOfType<Material>();
-	uvSphere->GetFirstComponentOfType<Transform>()->setScale(0.2f, 0.2f, 0.2f);
-
+	//uvMat->LoadTexture("assets/textures/box.jpg", Material::TextureMapType::DIFFUSE);
+	//uvMat->LoadTexture("assets/textures/brick_normal.jpg", Material::TextureMapType::NORMAL);
+	uvSphere->GetFirstComponentOfType<Transform>()->setScale(0.085f, 0.085f, 0.085f);
 
 	Ptr<Entity> bunny = Scene::GetScene()->CreateEntity();
-	bunny->AddComponent(CreatePtr<Mesh>("assets/models/teapot.obj"));
+	bunny->AddComponent(CreatePtr<Mesh>(bunny.get(), "assets/models/wooden watch tower2.obj"));
+	//auto m = bunny->GetFirstComponentOfType<Material>();
+	//m->LoadTexture("assets/textures/box.jpg", Material::DIFFUSE);
 	Ptr<Transform> bunnyTransform = bunny->GetFirstComponentOfType<Transform>();
 	bunnyTransform->setPositionX(30.0f);
 

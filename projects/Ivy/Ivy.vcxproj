@@ -60,6 +60,8 @@
       <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -98,6 +100,7 @@
     <ClInclude Include="source\Ivy.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
+    <ClInclude Include="source\core\ResourceManager.h" />
     <ClInclude Include="source\core\Timer.h" />
     <ClInclude Include="source\environment\Input.h" />
     <ClInclude Include="source\environment\KeyCodes.h" />

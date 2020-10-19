@@ -6,7 +6,7 @@
 
 namespace Ivy
 {
-	class Entity
+	class Entity : public std::enable_shared_from_this<Entity>
 	{
 	public:
 		// Make Scene a friend of this class so it has access to private members
@@ -25,8 +25,21 @@ namespace Ivy
 
 			mComponents[index].push_back(component);
 			component->SetEntityIndex(mIndex);
+			component->SetEntity(this);
 
 			return component;
+		}
+
+		template <typename T>
+		void RemoveComponentsOfType()
+		{
+			std::type_index const index = std::type_index(typeid(T));
+			if (mComponents.end() == mComponents.find(index))
+			{
+				mComponents[index] = {};
+			}
+
+			mComponents[index].clear();
 		}
 
 		template <typename T>

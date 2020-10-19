@@ -1,0 +1,27 @@
+-std=c++17 
+
+-target
+x86_64-w64-mingw32
+
+-Wall
+
+-pedantic
+
+-DDEBUG
+
+
+-IC:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include
+-IC:\Program Files\LLVM\lib\clang\11.0.0\include
+-IC:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\atlmfc\include
+-IC:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared
+-IC:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um
+
+
+-IE:\Projects\Ivy Engine\projects\Ivy\source
+-IE:\Projects\Ivy Engine\projects\Ivy\dependencies/GLFW/Include
+-IE:\Projects\Ivy Engine\projects\Ivy\dependencies/GLAD/include
+-IE:\Projects\Ivy Engine\projects\Ivy\dependencies/spdlog/include
+-IE:\Projects\Ivy Engine\projects\Ivy\dependencies/glm
+-IE:\Projects\Ivy Engine\projects\Ivy\dependencies/stb_image
+-IE:\Projects\Ivy Engine\projects\Ivy\dependencies/assimp/include
+-IE:\Projects\Ivy Engine\projects\Ivy\source

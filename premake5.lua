@@ -1,4 +1,5 @@
 -- Helper Functions
+require "export-compile-commands"
 
 function useIvyLib()
 	-- The library's public headers
@@ -34,6 +35,7 @@ workspace "Ivy"
 	filter { "configurations:Debug" }
 		-- We want debug symbols in our debug config
 		symbols "On"
+		flags{"MultiProcessorCompile"} 
 	
 	-- We now only set settings for Release
 	filter { "configurations:Release" }

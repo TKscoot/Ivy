@@ -9,12 +9,12 @@ namespace Ivy
 	class Material : public Component
 	{
 	public:
-		enum TextureMapType
+		enum class TextureMapType
 		{
-			DIFFUSE,
-			NORMAL,
-			ROUGHNESS,
-			METALLIC
+			DIFFUSE = 0,
+			NORMAL = 1,
+			ROUGHNESS = 2,
+			METALLIC = 3
 		};
 
 		Material();
@@ -95,6 +95,8 @@ namespace Ivy
 		}
 
 	private:
+		void SetDefaultShaderUniforms();
+		
 		UnorderedMap<TextureMapType, Ptr<Texture2D>> mTextures;
 		static UnorderedMap<String, Ivy::Ptr<Texture2D>> mLoadedTextures;
 
