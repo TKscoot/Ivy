@@ -33,6 +33,8 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 
 	Debug::Initialize();
 
+	CheckGLVersion(4, 0);
+
 	Input::Initialize(mWnd);
 	Input::SetMouseCursorVisible(false);
 
@@ -95,12 +97,46 @@ void Ivy::Engine::NewFrame()
 
 bool Ivy::Engine::ShouldTerminate()
 {
-	if(mWnd->ShouldClose())
+	if(mTerminate || mWnd->ShouldClose())
 	{
 		mWnd->Finalize();
+		std::cin.get();
+		exit(-1);
 		return true;
 	}
 
 	return false;
+}
+
+void Ivy::Engine::CheckGLVersion(int supportedMajor, int supportedMinor)
+{
+	int major = 0, minor = 0;
+	major = GLVersion.major;
+	minor = GLVersion.minor;
+
+	if(major == 0 && minor == 0)
+	{
+		Debug::CoreError("{}.{} -- OpenGL version is zero! Well try to run anyway!", major, minor);
+		return;
+	}
+
+	if(major < supportedMajor)
+	{
+		Debug::CoreCritical("{}.{} -- OpenGL version not supported! Engine will shutdown!\n (only versions >= {}.{} are supported)", 
+			major, minor, supportedMajor, supportedMinor);
+		mTerminate = true;
+		ShouldTerminate();
+		return;
+	}
+	else if(minor < supportedMinor)
+	{
+		Debug::CoreCritical("{}.{} -- OpenGL version not supported! Engine will shutdown!\n (only versions >= {}.{} are supported)", 
+			major, minor, supportedMajor, supportedMinor);
+		mTerminate = true;
+		ShouldTerminate();
+		return;
+	}
+
+	Debug::CoreInfo("{}.{} -- OpenGL version supported!", major, minor);
 }
 

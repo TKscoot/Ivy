@@ -19,6 +19,7 @@ namespace Ivy
 		Mat4 GetViewMatrix();
 
 		Vec3 GetPosition() { return mPosition; }
+		Vec3 GetFront() { return mFront; }
 
 	private:
 		void UpdateCameraVectors();

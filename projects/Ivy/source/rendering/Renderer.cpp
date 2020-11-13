@@ -4,10 +4,14 @@
 
 void Ivy::Renderer::Initialize()
 {
+	//String glVersion = String(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+
+
 	EnableDebugMessages();
 
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	mScene = Scene::GetScene();

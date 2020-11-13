@@ -71,12 +71,17 @@ namespace Ivy
 		 */
 		const float GetDeltaTime() { return mDeltaTime; }
 
+		static void Terminate() { mTerminate = true; }
+
 	private:
+		void CheckGLVersion(int supportedMajor, int supportedMinor);
+
 		Ptr<Window>   mWnd;
 		Ptr<Renderer> mRenderer;
 		Ptr<Entity>   mEntity;
 
 		float mDeltaTime = 0;
+		static inline bool mTerminate = false;
 
 	};
 }

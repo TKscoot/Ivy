@@ -18,6 +18,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h">
@@ -48,6 +49,9 @@
     <ClInclude Include="source\rendering\BufferLayout.h">
       <Filter>rendering</Filter>
     </ClInclude>
+    <ClInclude Include="source\rendering\Framebuffer.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
     <ClInclude Include="source\rendering\Renderer.h">
       <Filter>rendering</Filter>
     </ClInclude>
@@ -66,6 +70,9 @@
     <ClInclude Include="source\scene\Entity.h">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\Light.h">
+      <Filter>scene</Filter>
+    </ClInclude>
     <ClInclude Include="source\scene\Scene.h">
       <Filter>scene</Filter>
     </ClInclude>
@@ -81,6 +88,7 @@
     <ClInclude Include="source\scene\components\Transform.h">
       <Filter>scene\components</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\components\primitives\Cube.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">
@@ -97,6 +105,9 @@
     </ClCompile>
     <ClCompile Include="source\ivypch.cpp" />
     <ClCompile Include="source\rendering\Buffer.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="source\rendering\Framebuffer.cpp">
       <Filter>rendering</Filter>
     </ClCompile>
     <ClCompile Include="source\rendering\Renderer.cpp">
@@ -126,5 +137,6 @@
     <ClCompile Include="source\scene\components\Mesh.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
+    <ClCompile Include="source\scene\components\primitives\Cube.cpp" />
   </ItemGroup>
 </Project>

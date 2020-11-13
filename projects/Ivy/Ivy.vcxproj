@@ -97,7 +97,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
+    <ClInclude Include="source\scene\components\primitives\Cube.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\ResourceManager.h" />
@@ -109,12 +111,14 @@
     <ClInclude Include="source\ivypch.h" />
     <ClInclude Include="source\rendering\Buffer.h" />
     <ClInclude Include="source\rendering\BufferLayout.h" />
+    <ClInclude Include="source\rendering\Framebuffer.h" />
     <ClInclude Include="source\rendering\Renderer.h" />
     <ClInclude Include="source\rendering\Shader.h" />
     <ClInclude Include="source\rendering\Texture.h" />
     <ClInclude Include="source\rendering\VertexArray.h" />
     <ClInclude Include="source\scene\Camera.h" />
     <ClInclude Include="source\scene\Entity.h" />
+    <ClInclude Include="source\scene\Light.h" />
     <ClInclude Include="source\scene\Scene.h" />
     <ClInclude Include="source\scene\components\Component.h" />
     <ClInclude Include="source\scene\components\Material.h" />
@@ -130,11 +134,13 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="source\rendering\Buffer.cpp" />
+    <ClCompile Include="source\rendering\Framebuffer.cpp" />
     <ClCompile Include="source\rendering\Renderer.cpp" />
     <ClCompile Include="source\rendering\Shader.cpp" />
     <ClCompile Include="source\rendering\Texture.cpp" />
     <ClCompile Include="source\rendering\VertexArray.cpp" />
     <ClCompile Include="source\scene\Camera.cpp" />
+    <ClCompile Include="source\scene\components\primitives\Cube.cpp" />
     <ClCompile Include="source\scene\Entity.cpp" />
     <ClCompile Include="source\scene\Scene.cpp" />
     <ClCompile Include="source\scene\components\Material.cpp" />

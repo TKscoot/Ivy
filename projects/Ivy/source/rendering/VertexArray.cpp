@@ -15,11 +15,21 @@ Ivy::VertexArray::~VertexArray()
 void Ivy::VertexArray::Bind()
 {
 	glBindVertexArray(mID);
+	if (mVertexBuffer && mIndexBuffer)
+	{
+		mVertexBuffer->Bind();
+		mIndexBuffer->Bind();
+	}
 }
 
 void Ivy::VertexArray::Unbind()
 {
 	glBindVertexArray(0);
+	if (mVertexBuffer && mIndexBuffer)
+	{
+		mVertexBuffer->Unbind();
+		mIndexBuffer->Unbind();
+	}
 }
 
 void Ivy::VertexArray::SetVertexBuffer(Ptr<VertexBuffer>& vertexBuffer)

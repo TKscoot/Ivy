@@ -161,6 +161,12 @@ project "Sandbox"
             --"projects/Ivy/dependencies/GLAD/Lib",
             "projects/Ivy/dependencies/GLFW/lib"
         }
+
+		postbuildcommands{
+			"dir",
+			"cd \"$(SolutionDir)\"",
+			"xcopy projects\\%{prj.name}\\shaders\\ build\\Bin\\%{prj.name}\\%{cfg.longname}\\shaders\\ /R /S /Y /D /E /H"
+		}
     filter{}
 
     links "Ivy"

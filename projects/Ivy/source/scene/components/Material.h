@@ -14,7 +14,8 @@ namespace Ivy
 			DIFFUSE = 0,
 			NORMAL = 1,
 			ROUGHNESS = 2,
-			METALLIC = 3
+			METALLIC = 3,
+			AMBIENT_OCCLUSION = 4
 		};
 
 		Material();

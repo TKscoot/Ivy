@@ -71,6 +71,11 @@ void Ivy::Texture2D::Load(String filepath)
 	{
 		data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
 	}
+	if(!data)
+	{
+		Debug::CoreError("Couldn't load texture with path: {}", filepath);
+	}
+
 	mWidth = width;
 	mHeight = height;
 

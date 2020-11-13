@@ -13,14 +13,14 @@ Ivy::Mesh::Mesh(Entity* ent) : Ivy::Component::Component(ent)
     CreateResources();
 }
 
-Ivy::Mesh::Mesh(Entity* ent, String filepath) : Ivy::Component::Component(ent)
+Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Component::Component(ent)
 {
 	//uint32_t entidx = GetEntityIndex();
 	//Debug::CoreLog("entidx: {}", entidx);
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(entidx); //TODO: GetEntityIndex not working properly
 
     CreateResources();
-    Load(filepath);
+    Load(filepath, useMtlIfProvided);
 }
 
 Ivy::Mesh::Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices) : Ivy::Component::Component(ent)
@@ -28,8 +28,14 @@ Ivy::Mesh::Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices) 
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
 }
 
-void Ivy::Mesh::Load(String filepath)
+void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 {
+	mMeshName = filepath;
+
+	RemoveUntilCharacterInString(    mMeshName, '/' );
+	RemoveUntilCharacterInString(    mMeshName, '\\');
+	RemoveFromCharacterInStringToEnd(mMeshName, '.' );
+
 	uint32_t flags =
 		aiProcess_GenUVCoords |
 		aiProcess_GenNormals |
@@ -38,7 +44,6 @@ void Ivy::Mesh::Load(String filepath)
 		aiProcess_RemoveRedundantMaterials;
 
 	Assimp::Importer importer;
-
 	const aiScene* scene = importer.ReadFile(filepath.c_str(), flags);
 
 	if (!scene)
@@ -64,7 +69,6 @@ void Ivy::Mesh::Load(String filepath)
 
 		totalVertexCount += mesh->mNumVertices;
 		totalIndexCount += mesh->mNumFaces * 3;
-
 	}
 
 	mVertexBuffer->Bind();
@@ -77,6 +81,15 @@ void Ivy::Mesh::Load(String filepath)
 
 	Vector<Ptr<Material>> materials = mEntity->GetComponentsOfType<Material>();
 
+	float minX = std::numeric_limits<float>::max();
+	float minY = std::numeric_limits<float>::max();
+	float minZ = std::numeric_limits<float>::max();
+	float maxX = std::numeric_limits<float>::min();
+	float maxY = std::numeric_limits<float>::min();
+	float maxZ = std::numeric_limits<float>::min();
+	Vec3 minVec = Vec3(0.0f);
+	Vec3 maxVec = Vec3(0.0f);
+
 	for (uint32_t i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[i];
@@ -84,45 +97,92 @@ void Ivy::Mesh::Load(String filepath)
 		Submesh& submesh = mSubmeshes[i];
 
 		submesh.vertices.resize(mesh->mNumVertices);
-		submesh.indices.resize(mesh->mNumFaces * 3);
+		//submesh.indices.resize(mesh->mNumFaces * 3);
 		submesh.index = i;
 		submesh.materialIndex = mesh->mMaterialIndex;
 
-		for (uint32_t j = 0; j < mesh->mNumVertices; j++)
+		Vector<Vertex> vertices;
+		Vector<unsigned int> indices;
+
+		// walk through each of the mesh's vertices
+		for (unsigned int j = 0; j < mesh->mNumVertices; j++)
 		{
-			if (mesh->HasPositions())
-			{
-				submesh.vertices[j].position = Vec4(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z, 1.0f);
-			}
+			Vertex vertex;
+			glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+			// positions
+			vector.x = mesh->mVertices[j].x;
+			vector.y = mesh->mVertices[j].y;
+			vector.z = mesh->mVertices[j].z;
+			vertex.position = Vec4(vector, 1.0f);
+			// normals
 			if (mesh->HasNormals())
 			{
-				submesh.vertices[j].normal    = Vec3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
-			}																	   
-			if (mesh->HasTangentsAndBitangents())								   
-			{																	   
-				submesh.vertices[j].tangent   = Vec3(mesh->mTangents[j].x, mesh->mTangents[j].y, mesh->mTangents[j].z);
-																				   
-				submesh.vertices[j].bitangent = Vec3(mesh->mBitangents[j].x, mesh->mBitangents[j].y, mesh->mBitangents[j].z); 
+				vector.x = mesh->mNormals[j].x;
+				vector.y = mesh->mNormals[j].y;
+				vector.z = mesh->mNormals[j].z;
+				vertex.normal = vector;
 			}
-			if (mesh->HasTextureCoords(0))
+			// texture coordinates
+			if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
 			{
-				submesh.vertices[j].texcoord  = Vec2(mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y);
+				glm::vec2 vec;
+				// a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
+				// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+				vec.x = mesh->mTextureCoords[0][j].x;
+				vec.y = mesh->mTextureCoords[0][j].y;
+				vertex.texcoord = vec;
+				// tangent
+				vector.x = mesh->mTangents[j].x;
+				vector.y = mesh->mTangents[j].y;
+				vector.z = mesh->mTangents[j].z;
+				vertex.tangent = vector;
+				// bitangent
+				vector.x = mesh->mBitangents[j].x;
+				vector.y = mesh->mBitangents[j].y;
+				vector.z = mesh->mBitangents[j].z;
+				vertex.bitangent = vector;
 			}
-		}
+			else
+				vertex.texcoord = glm::vec2(0.0f, 0.0f);
 
-		for (uint32_t j = 0; j < mesh->mNumFaces; j++)
+			vertices.push_back(vertex);
+		}
+		// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+		for (unsigned int j = 0; j < mesh->mNumFaces; j++)
 		{
-			aiFace* face = mesh->mFaces + j;
-
-			for (uint32_t k = 0; k < face->mNumIndices; k++)
-			{
-				submesh.indices[((3 * j) + k)] = (*(face->mIndices + k));
-			}
+			aiFace face = mesh->mFaces[j];
+			// retrieve all indices of the face and store them in the indices vector
+			for (unsigned int k = 0; k < face.mNumIndices; k++)
+				indices.push_back(face.mIndices[k]);
 		}
+
+		submesh.vertices = vertices;
+		submesh.indices = indices;
+
+
+		// Bounding Box Calculation
+
+		/*
+		for (auto& vert : vertices)
+		{
+			Vec3 pos = vert.position;
+			if (pos.x < minX) minX = pos.x;
+			if (pos.y < minY) minY = pos.y;
+			if (pos.z < minZ) minZ = pos.z;
+
+			if (pos.x > maxX) maxX = pos.x;
+			if (pos.y > maxY) maxY = pos.y;
+			if (pos.z > maxZ) maxZ = pos.z;
+		}
+
+		minVec = Vec3(minX, minY, minZ);
+		maxVec = Vec3(maxX, maxY, maxZ);
+		*/
+
 
 		submesh.vertexOffset = currentVertexOffset * sizeof(Vertex);  // BUGGY: Eventuell = currentVertex(Index)Offset + 1;
-		submesh.indexOffset = currentIndexOffset * sizeof(uint32_t);
-
+		submesh.indexOffset  = currentIndexOffset * sizeof(uint32_t);
+			
 		BufferLayout layout =
 		{
 			{ShaderDataType::Float4, "aPosition", submesh.vertexOffset},
@@ -136,94 +196,117 @@ void Ivy::Mesh::Load(String filepath)
 		submesh.vertexArray->SetVertexAndIndexBuffer(mVertexBuffer, mIndexBuffer);
 		submesh.vertexArray->Bind();
 
-		mVertexBuffer->Bind();
-		mVertexBuffer->SetBufferSubData(submesh.vertexOffset, submesh.vertices.data(), submesh.vertices.size() * sizeof(Vertex));
-		mIndexBuffer->Bind();
-		mIndexBuffer->SetBufferSubData(submesh.indexOffset, submesh.indices.data(), submesh.indices.size());
+		submesh.vertexArray->GetVertexBuffer()->Bind();
+		submesh.vertexArray->GetVertexBuffer()->SetBufferSubData(submesh.vertexOffset, submesh.vertices.data(), submesh.vertices.size() * sizeof(Vertex));
+		submesh.vertexArray->GetIndexBuffer()->Bind();
+		submesh.vertexArray->GetIndexBuffer()->SetBufferSubData(submesh.indexOffset, submesh.indices.data(), submesh.indices.size());
 
-		currentVertexOffset += mesh->mNumVertices;
-		currentIndexOffset += mesh->mNumFaces * 3;
+		mVertexBuffer->Unbind();
+		mIndexBuffer->Unbind();
+		submesh.vertexArray->Unbind();
+
+		currentVertexOffset += submesh.vertices.size();
+		currentIndexOffset  += submesh.indices.size();
 	}
+
 	//material assignment
-	if (scene->HasMaterials())
+	if(useMtlIfProvided)
 	{
-		for (int i = 1; i < scene->mNumMaterials; i++)
+
+		if(scene->HasMaterials())
 		{
-			materials.push_back(mEntity->AddComponent(CreatePtr<Material>()));
+			for(int i = 1; i < scene->mNumMaterials; i++)
+			{
+				materials.push_back(mEntity->AddComponent(CreatePtr<Material>()));
+
+			}
+		}
+
+		for(uint32_t i = 0; i < scene->mNumMeshes; i++)
+		{
+			aiMesh* mesh = scene->mMeshes[i];
+
+			// Get the material
+			aiMaterial* assimpMaterial = scene->mMaterials[mesh->mMaterialIndex];
+			aiString diff;
+			aiString norm;
+			aiString rough;
+			aiString metal;
+			assimpMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diff);
+			assimpMaterial->GetTexture(aiTextureType_HEIGHT, 0, &norm);
+			assimpMaterial->GetTexture(aiTextureType_SHININESS, 0, &rough);
+			assimpMaterial->GetTexture(aiTextureType_AMBIENT, 0, &metal);
+
+			{
+				std::stringstream ss;
+				ss << "assets/textures/";
+				ss << mMeshName;
+				ss << "/";
+				ss << diff.C_Str();
+
+				if(diff.length > 0)
+				{
+					materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::DIFFUSE);
+				}
+			}
+			{
+				std::stringstream ss;
+				ss << "assets/textures/";
+				ss << mMeshName;
+				ss << "/";
+				ss << norm.C_Str();
+				if(norm.length > 0)
+				{
+					materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::NORMAL);
+				}
+			}
+			{
+				std::stringstream ss;
+				ss << "assets/textures/";
+				ss << mMeshName;
+				ss << "/";
+				ss << rough.C_Str();
+				if(rough.length > 0)
+				{
+					materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::ROUGHNESS);
+				}
+			}
+			{
+				std::stringstream ss;
+				ss << "assets/textures/";
+				ss << mMeshName;
+				ss << "/";
+				ss << metal.C_Str();
+				if(metal.length > 0)
+				{
+					materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::METALLIC);
+				}
+			}
 
 		}
 	}
-
-	for (uint32_t i = 0; i < scene->mNumMeshes; i++)
-	{
-		aiMesh* mesh = scene->mMeshes[i];
-
-		// Get the material
-		aiMaterial* assimpMaterial = scene->mMaterials[mesh->mMaterialIndex];
-		aiString diff;
-		aiString norm;
-		aiString rough;
-		aiString metal;
-		assimpMaterial->GetTexture(aiTextureType_DIFFUSE,   0, &diff);
-		assimpMaterial->GetTexture(aiTextureType_HEIGHT,    0, &norm);
-		assimpMaterial->GetTexture(aiTextureType_SHININESS, 0, &rough);
-		assimpMaterial->GetTexture(aiTextureType_AMBIENT,   0, &metal);
-
-		{
-			std::stringstream ss;
-			ss << "assets/textures/";
-			ss << diff.C_Str();
-
-			if (diff.length > 0)
-			{
-				materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::DIFFUSE);
-			}
-		}
-		{
-			std::stringstream ss;
-			ss << "assets/textures/";
-			ss << norm.C_Str();
-			if (norm.length > 0)
-			{
-				materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::NORMAL);
-			}
-		}
-		//
-		//ss.clear();
-		//ss << rough.C_Str();
-		//mat->LoadTexture(ss.str(), Material::TextureMapType::ROUGHNESS);
-		//
-		//ss.clear();
-		//ss << metal.C_Str();
-		//mat->LoadTexture(ss.str(), Material::TextureMapType::METALLIC);
-		
-	}
-	
 	// sorting submeshes for better texture binding performance
 	std::sort(mSubmeshes.begin(), mSubmeshes.end(), less_than_key());
 }
 
-void Ivy::Mesh::Draw()
+void Ivy::Mesh::Draw(bool bindTextures)
 {
-    //mVertexArray->Bind();
-    //glDrawElements(GL_TRIANGLES, mIndexBuffer->GetCount(), GL_UNSIGNED_INT, 0);
-	
+	if (!IsActive()) return;
+
 	auto& materials = mEntity->GetComponentsOfType<Material>();
 
 	static uint32_t lastMatIndex = 0;
-	int bindCount = 0;
 	for (int i = 0; i < mSubmeshes.size(); i++)
 	{
 
 		// TODO: VERY PERFORMANCE HUNGRY: FIX
-		if (materials.size() >= mSubmeshes[i].materialIndex)
+		if (bindTextures && materials.size() >= mSubmeshes[i].materialIndex)
 		{
 			for (auto& kv : materials[mSubmeshes[i].materialIndex]->GetTextures())
 			{
 				if (mSubmeshes[i].materialIndex != lastMatIndex || mSubmeshes[i].materialIndex == 0)
 				{
 					kv.second->Bind(static_cast<uint32_t>(kv.first));
-					bindCount++;
 				}
 			}
 
@@ -233,6 +316,7 @@ void Ivy::Mesh::Draw()
 
 		mSubmeshes[i].vertexArray->Bind();
 		glDrawElements(GL_TRIANGLES, mSubmeshes[i].indices.size(), GL_UNSIGNED_INT, (void*)mSubmeshes[i].indexOffset);
+		mSubmeshes[i].vertexArray->Unbind();
 	}
 }
 

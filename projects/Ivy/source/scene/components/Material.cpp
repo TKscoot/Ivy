@@ -10,16 +10,14 @@ Ivy::Material::Material()
 	, mShininess(32.0f)
 {
 	// Set default shader
-	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Normalmapped.vert", "shaders/Normalmapped.frag");
+	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Default.vert", "shaders/ShadowTesting.frag");
 	mShader = defaultShader;
 	// Set default color values
-	mShader->Bind();
 	SetAmbientColor(mAmbient);
 	SetDiffuseColor(mDiffuse);
 	SetSpecularColor(mSpecular);
 	SetShininess(mShininess);
 	SetDefaultShaderUniforms();
-	mShader->Unbind();
 
 	int width  = 2;
 	int height = 2;
@@ -107,11 +105,19 @@ Ivy::Ptr<Ivy::Texture2D> Ivy::Material::LoadTexture(String texturePath, TextureM
 
 void Ivy::Material::LoadShader(String vertexPath, String fragmentPath)
 {
+	mShader = CreatePtr<Shader>(vertexPath, fragmentPath);
 }
 
 void Ivy::Material::SetDefaultShaderUniforms()
 {
+	if (!mShader)
+	{
+		Debug::CoreError("Shader is null!");
+		return;
+	}
+	mShader->Bind();
 	mShader->SetUniformInt("useNormalMap",	  0);
 	mShader->SetUniformInt("useRoughnessMap", 0);
 	mShader->SetUniformInt("useMetallicMap",  0);
+	mShader->Unbind();
 }

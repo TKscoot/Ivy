@@ -1,14 +1,12 @@
 #pragma once
-
-
 #include "Types.h"
+#include "Helper.h"
 #include "rendering/Buffer.h"
 #include "rendering/VertexArray.h"
 #include "Component.h"
 #include "scene/Entity.h"
 #include "scene/components/Material.h"
 #include "scene/Scene.h"
-
 
 namespace Ivy
 {
@@ -44,15 +42,14 @@ namespace Ivy
 
 
         Mesh(Entity* ent);
-        Mesh(Entity* ent, String filepath);
+        Mesh(Entity* ent, String filepath, bool useMtlIfProvided = true);
         Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices);
 
-        //void Load(String filepath);
-		void Load(String filepath);
+		void Load(String filepath, bool useMtlIfProvided = true);
 
-    private:
+    protected:
         void CreateResources();
-        void Draw();
+        void Draw(bool bindTextures = true);
 
         //Vector<Vertex>   mVertices;
         //Vector<uint32_t> mIndices;
@@ -68,5 +65,7 @@ namespace Ivy
         BufferLayout      mBufferLayout;
 
 		Ptr<Entity> mEnt;
+
+		String mMeshName;
     };
 } // namespace Ivy
