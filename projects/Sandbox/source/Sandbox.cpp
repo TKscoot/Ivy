@@ -30,9 +30,9 @@ int main()
 		"assets/textures/skybox/Default/sky8_FR.jpg",
 	};
 	Scene::GetScene()->SetSkybox(skyboxTextures);
-	//Scene::GetScene()->SetDirectionalLightDirection(Vec3(-2.0f, 2, -0.0f));
+	Scene::GetScene()->SetDirectionalLightDirection(Vec3(0.5f, 2.0f, 2.0f));
 	//Scene::GetScene()->AddPointLight(
-	//	Vec3(5.0f, 3.0f, 0.0f),
+	//	Vec3(-2.0f, 15.0f, -1.0f),
 	//	1.0f,
 	//	0.09f,
 	//	0.032,
@@ -41,16 +41,16 @@ int main()
 	//	Vec3(1.0f, 1.0f, 1.0f));
 
 	Ptr<Entity> uvSphere = Scene::GetScene()->CreateEntity();
-	uvSphere->AddComponent(CreatePtr<Mesh>(uvSphere.get(), "assets/models/ShadowTest.obj"));
-	Vector<Ptr<Material>> uvMats = uvSphere->GetComponentsOfType<Material>();
-	for(auto& uvMat : uvMats)
-	{
-		uvMat->LoadTexture("assets/textures/Misc/box.jpg", Material::TextureMapType::DIFFUSE);
-	}
+	uvSphere->AddComponent(CreatePtr<Mesh>(uvSphere.get(), "assets/models/sponza.obj"));
+	//Vector<Ptr<Material>> uvMats = uvSphere->GetComponentsOfType<Material>();
+	//for(auto& uvMat : uvMats)
+	//{
+	//	uvMat->LoadTexture("assets/textures/Misc/box.jpg", Material::TextureMapType::DIFFUSE);
+	//}
 
 	//uvMat->LoadTexture("assets/textures/Misc/brick_normal.jpg", Material::TextureMapType::NORMAL);
 	//uvMat->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
-	//uvSphere->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
+	uvSphere->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	//uvSphere->GetFirstComponentOfType<Transform>()->setScale(20.0f, 20.0f, 20.0f);
 	//uvSphere->GetFirstComponentOfType<Transform>()->setRotation(-90.0f, 0.0f, 0.0f);
 
@@ -59,7 +59,7 @@ int main()
 	//Ptr<Material> towerMat = tower->GetFirstComponentOfType<Material>();
 	//towerMat->LoadTexture("assets/textures/sponza/sponza_fabric_green_diff.png", Material::TextureMapType::DIFFUSE);
 	Ptr<Transform> towerTransform = tower->GetFirstComponentOfType<Transform>();
-	towerTransform->setPositionX(40.0f);
+	//towerTransform->setPositionX(40.0f);
 	//towerTransform->setScale(10.0f, 10.0f, 10.0f);
 
 	float timer = 0.0f;
@@ -70,6 +70,19 @@ int main()
 		{
 			exit(0);
 		}
+		
+		if(timer <= 360.0f)
+		{
+			timer += engine->GetDeltaTime();
+		}
+		else
+		{ 
+			timer = 0.0f;
+		}
+
+
+		//towerTransform->setRotationY(timer * 10.0f);
+
 
 		// Animate the light source
 		//Vec3 lightPos = Vec3(0.0f,0.0f, 0.0f);

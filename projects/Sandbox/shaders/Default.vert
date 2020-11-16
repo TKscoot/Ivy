@@ -34,7 +34,8 @@ void main()
 
 	Normal = normalize(modelVector * aNormal);
 
-	FragPosLightSpace = lightSpaceMatrix * (model * vec4(aPosition.xyz, 1.0));
+	FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
+	//FragPosLightSpace = FragPosLightSpace * vec4(viewPos, 1.0);
         
     gl_Position = projection * view * model * vec4(aPosition.xyz, 1.0);
 

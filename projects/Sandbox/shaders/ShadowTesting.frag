@@ -88,7 +88,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, vec3 lightPos)
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(Normal);
-    vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 lightDir = lightPos;//normalize(lightPos - FragPos);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
     // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
@@ -109,6 +109,25 @@ float ShadowCalculation(vec4 fragPosLightSpace, vec3 lightPos)
     if(projCoords.z > 1.0)
         shadow = 0.0;
         
+    return shadow;
+}
+
+float ShadowCalculation1(vec4 fragPosLightSpace, float NdL, sampler2D shadowMap)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // Transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // Get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, projCoords.xy).r;
+    // Get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // Check whether current frag pos is in shadow
+
+    float bias = max(0.05 * (1.0 - NdL), 0.005);
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    //float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+
     return shadow;
 }
 

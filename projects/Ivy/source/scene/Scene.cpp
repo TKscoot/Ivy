@@ -159,7 +159,7 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 		shader->SetUniformFloat3("sunDirection", Vec3(-0.2f, -1.0f, -0.3f));
 		shader->SetUniformFloat3("sunColor", Vec3(252.0F, 212.0f, 64.0f));
 
-		glBindTextureUnit(8, mShadowFBO->GetDepthAttachmentID());
+		glBindTextureUnit(8, mShadowFBO->GetDepthTextureID());
 
 		PushLightParams(shader);
 
@@ -416,46 +416,40 @@ void Ivy::Scene::SetupShadows()
 
 void Ivy::Scene::RenderShadows()
 {
-	// TESTING point lights
-
-
 	Mat4 lightProjection, lightView, lightModel;
-
-	float nearPlane = 1.0f, farPlane = 7.5f;
-	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+	
+	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 20.0f);
 	//lightProjection = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 25.0f);
 	lightView = glm::lookAt(mDirLight.direction, Vec3(0.0f), Vec3(0.0f, 1.0f, 0.0f));
 	Mat4 bias = glm::scale(glm::translate(glm::mat4(1), glm::vec3(0.5, 0.5, 0.5)), glm::vec3(0.5, 0.5, 0.5));
 
-	Mat4 BP = bias * lightProjection;
 
-
-
-	lightSpaceMatrix = bias * lightProjection * lightView ;
-
+	
+	lightSpaceMatrix = lightProjection * lightView ;
+	
 	mDepthShader->Bind();
 	mDepthShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
-
-
+	
+	
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, mShadowFBO->GetDepthFboID());
 		glClear(GL_DEPTH_BUFFER_BIT);
 		//glCullFace(GL_FRONT);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mShadowFBO->GetDepthTextureID());
-
+	
 	for(int i = 0; i < mEntities.size(); i++)
 	{
 		Ptr<Transform> trans = mEntities[i]->GetFirstComponentOfType<Transform>();
 		mDepthShader->SetUniformMat4("model", trans->getComposed());
-
+	
 		Vector<Ptr<Mesh>> meshes = mEntities[i]->GetComponentsOfType<Mesh>();
 		for(int j = 0; j < meshes.size(); j++)
 		{
 			meshes[j]->Draw(false);
 		}
 	}
-
+	
 	mShadowFBO->Unbind();
 	//glCullFace(GL_BACK);
 }

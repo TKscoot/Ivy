@@ -5,10 +5,12 @@ layout (location = 2) in vec3 aTangent;
 layout (location = 3) in vec3 aBitangent;
 layout (location = 4) in vec2 aTexCoord;
 
-uniform mat4 lightSpaceMatrix;
 uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform mat4 lightSpaceMatrix;
 
 void main()
 {
-	gl_Position = lightSpaceMatrix * model * vec4(aPosition.xyz, 1.0);
+	gl_Position = lightSpaceMatrix *  model * vec4(aPosition.xyz, 1.0f);
 }
