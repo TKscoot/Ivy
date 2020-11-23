@@ -66,7 +66,7 @@ void Ivy::Engine::NewFrame()
 
 	mWnd->PollEvents();
 
-	Scene::GetScene()->Update();
+	Scene::GetScene()->Update(mDeltaTime);
 
 	mRenderer->Render(mDeltaTime);
 

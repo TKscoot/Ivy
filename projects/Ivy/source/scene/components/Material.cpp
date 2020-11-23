@@ -10,7 +10,7 @@ Ivy::Material::Material()
 	, mShininess(32.0f)
 {
 	// Set default shader
-	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Default.vert", "shaders/ShadowTesting.frag");
+	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Default.vert", "shaders/PBR.frag");
 	mShader = defaultShader;
 	// Set default color values
 	SetAmbientColor(mAmbient);
@@ -28,7 +28,7 @@ Ivy::Material::Material()
 	for (int i = 0; i < width * height; ++i)
 	{
 		pixelData[i * 4 + 0] = 255;
-		pixelData[i * 4 + 1] = 0;
+		pixelData[i * 4 + 1] = 255;
 		pixelData[i * 4 + 2] = 255;
 		pixelData[i * 4 + 3] = 255;
 	}
@@ -56,6 +56,9 @@ Ivy::Material::Material()
 		pixelData[i * 4 + 3] = 255;
 	}
 	mTextures[TextureMapType::NORMAL]	 = CreatePtr<Texture2D>(2, 2, pixelData);
+
+
+	mTextures[TextureMapType::BRDF_LUT]	 = CreatePtr<Texture2D>("assets/textures/Misc/brdf_lut.jpg");
 
 }
 

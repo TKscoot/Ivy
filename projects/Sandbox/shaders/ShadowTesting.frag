@@ -135,6 +135,14 @@ void main()
 {           
     vec3 color = texture(diffuseMap, TexCoords).rgb;
     vec3 normal = normalize(Normal);
+	if(useNormalMap == 1)
+	{
+		 // obtain normal from normal map in range [0,1]
+		normal = texture(normalMap, TexCoords).rgb;
+		// transform normal vector to range [-1,1]
+		normal = normal * 2.0 -1.0;
+		normal = normalize(TBN * normal);
+	}
     vec3 lightColor = vec3(0.3);
     // ambient
     vec3 ambient = 0.3 * color;

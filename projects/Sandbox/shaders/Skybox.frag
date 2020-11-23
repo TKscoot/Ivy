@@ -125,7 +125,7 @@ void main()
 	vec3 color = atmosphere(
         normalize(TexCoords),           // normalized ray direction
         vec3(0,6372e3,0),               // ray origin
-        sunPosition,                        // position of the sun
+        sunPosition,                    // position of the sun
         35.0,                           // intensity of the sun
         6371e3,                         // radius of the planet in meters
         6471e3,                         // radius of the atmosphere in meters
@@ -136,7 +136,8 @@ void main()
         0.758                           // Mie preferred scattering direction
     );
 
-	FragColor = mix(texture(skybox, TexCoords),vec4(color, 1.0f), .5);
+	//FragColor = mix(texture(skybox, TexCoords),vec4(color, 1.0f), .5);
+	FragColor = texture(skybox, TexCoords);
 
 	//FragColor = texture(skybox, TexCoords);
 }

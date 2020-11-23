@@ -22,7 +22,7 @@ out vec4 FragPosLightSpace;
 
 void main()
 {
-    FragPos = (model * vec4(aPosition.xyz, 1.0)).xyz;   
+    FragPos = vec3(model * vec4(aPosition.xyz, 1.0));   
     TexCoords = aTexCoord;
 
 	mat3 modelVector = transpose(inverse(mat3(model)));
@@ -32,7 +32,8 @@ void main()
 	vec3 N = normalize(modelVector * aNormal);
 	TBN = mat3(T, B, N); 
 
-	Normal = normalize(modelVector * aNormal);
+	//Normal = normalize(modelVector * aNormal);
+	Normal = mat3(model) * aNormal;
 
 	FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
 	//FragPosLightSpace = FragPosLightSpace * vec4(viewPos, 1.0);

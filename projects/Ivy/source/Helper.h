@@ -20,4 +20,9 @@ namespace Ivy
 			s = (includeCharacter) ? s.erase(pos) : s.erase(pos + 1);
 		}
 	}
+
+	inline Vec3 Lerp(const Vec3& A, const Vec3& B, float t)
+	{
+		return A + (B - A) * t;
+	}
 }

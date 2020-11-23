@@ -52,6 +52,13 @@ Ivy::Texture2D::Texture2D(String filepath)
 	Load(filepath);
 }
 
+Ivy::Texture2D::Texture2D(String filepath, GLenum internalFormat, GLenum dataFormat)
+	: mInternalFormat(internalFormat)
+	, mDataFormat(dataFormat)
+{
+	Load(filepath, internalFormat, dataFormat);
+}
+
 Ivy::Texture2D::~Texture2D()
 {
 	glDeleteTextures(1, &mID);
@@ -90,9 +97,54 @@ void Ivy::Texture2D::Load(String filepath)
 		internalFormat = GL_RGB8;
 		dataFormat = GL_RGB;
 	}
+	else if(channels = 2)
+	{
+		internalFormat = GL_RG16F;
+		dataFormat = GL_RG;
+	}
 
 	mInternalFormat = internalFormat;
 	mDataFormat = dataFormat;
+
+
+	glCreateTextures(GL_TEXTURE_2D, 1, &mID);
+	glTextureStorage2D(mID, 1, internalFormat, mWidth, mHeight);
+
+	glTextureParameteri(mID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTextureParameteri(mID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
+
+	stbi_image_free(data);
+}
+
+void Ivy::Texture2D::Load(String filepath, GLenum internalFormat, GLenum dataFormat)
+{
+	if(filepath.empty())
+	{
+		Debug::CoreError("Filepath is empty!");
+		return;
+	}
+
+	int width, height, channels;
+	stbi_set_flip_vertically_on_load(1);
+	stbi_uc* data = nullptr;
+	{
+		data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
+	}
+	if(!data)
+	{
+		Debug::CoreError("Couldn't load texture with path: {}", filepath);
+	}
+
+	mWidth  = width;
+	mHeight = height;
+
+	mInternalFormat = internalFormat;
+	mDataFormat		= dataFormat;
 
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &mID);

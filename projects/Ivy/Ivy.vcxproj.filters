@@ -16,6 +16,9 @@
     <Filter Include="scene\components">
       <UniqueIdentifier>{28A7FA07-14A0-195A-3DD2-FEDE292AF965}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scene\components\primitives">
+      <UniqueIdentifier>{2380A20A-8F8D-D0F0-1874-CCDB84809CA7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
@@ -88,7 +91,6 @@
     <ClInclude Include="source\scene\components\Transform.h">
       <Filter>scene\components</Filter>
     </ClInclude>
-    <ClInclude Include="source\scene\components\primitives\Cube.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">
@@ -137,6 +139,5 @@
     <ClCompile Include="source\scene\components\Mesh.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
-    <ClCompile Include="source\scene\components\primitives\Cube.cpp" />
   </ItemGroup>
 </Project>

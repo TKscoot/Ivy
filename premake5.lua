@@ -163,9 +163,9 @@ project "Sandbox"
         }
 
 		postbuildcommands{
-			"dir",
 			"cd \"$(SolutionDir)\"",
-			"xcopy projects\\%{prj.name}\\shaders\\ build\\Bin\\%{prj.name}\\%{cfg.longname}\\shaders\\ /R /S /Y /D /E /H"
+			"xcopy \"$(SolutionDir)projects\\Sandbox\\shaders\\*.*\" \"$(TargetDir)shaders\\\" /y /e /i /f"
+			--"xcopy \\projects\\Sandbox\\shaders\\ \\build\\Bin\\Sandbox\\$(TargetDir)\\shaders\\ /R /S /Y /D /E /H"
 		}
     filter{}
 

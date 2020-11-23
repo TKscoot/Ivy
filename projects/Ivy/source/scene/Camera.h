@@ -19,6 +19,14 @@ namespace Ivy
 		Mat4 GetViewMatrix();
 
 		Vec3 GetPosition() { return mPosition; }
+		void SetPosition(Vec3 position) { mPosition = position; }
+		void SetRotation(float rotation) 
+		{
+			mFront.x = glm::cos(glm::radians(rotation)) * glm::cos(glm::radians(rotation));
+			//mFront.y = glm::sin(glm::radians(rotation));
+			//mFront.z = glm::sin(glm::radians(mYaw)) * glm::cos(glm::radians(mPitch));
+			mFront = glm::normalize(mFront);
+		}
 		Vec3 GetFront() { return mFront; }
 
 	private:

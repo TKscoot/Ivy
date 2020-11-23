@@ -17,6 +17,21 @@ namespace Ivy
 		~Scene();
 
 		Ptr<Entity> CreateEntity();
+		
+		template <typename T, typename... Args>
+		Ptr<T> CreateEntity(Args&&... args)
+		{
+			Ptr<T> ent = CreatePtr<T>(std::forward<Args>(args)...);
+			ent->mIndex = mEntities.size();
+			ent->AddComponent(CreatePtr<Transform>());
+			ent->AddComponent(CreatePtr<Material>());
+			ent->OnCreate();
+			Debug::CoreLog("Created entity with index {}", ent->mIndex);
+
+			mEntities.push_back(ent);
+			return ent;
+		}
+
 
 		void SetSkybox(Vector<String> filepaths);
 		void SetSkybox(String right,
@@ -26,7 +41,7 @@ namespace Ivy
 			String back,
 			String front);
 
-		void Update();
+		void Update(float deltaTime);
 
 		void Render(float deltaTime, Vec2 currentWindowSize);
 		
@@ -104,6 +119,8 @@ namespace Ivy
 		Ptr<Shader>			mSkyboxShader		= nullptr;
 		Ptr<VertexBuffer>   mSkyboxVertexBuffer = nullptr;
 		Ptr<VertexArray>    mSkyboxVertexArray	= nullptr;
+
+		Ptr<Texture2D>		mBrdfLutTexture		= nullptr; //Todo: maybe in material packen?? ALSO ONLY RG Components of image
 
 		// Shadows
 		const unsigned int SHADOW_WIDTH  = 1024, SHADOW_HEIGHT = 1024;

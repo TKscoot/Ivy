@@ -7,14 +7,15 @@ Ivy::Scene::Scene()
 {
 	mCamera = CreatePtr<Camera>(Vec3(0.0f, 0.0f, 0.0f));
 
+	//mBrdfLutTexture = CreatePtr<Texture2D>("assets/textures/Misc/brdf_lut.jpg", GL_RGB8, GL_RGB);
 	SetupSkyboxShaders();
 	SetupShadows();
 
 	AddDirectionalLight(
-		Vec3(-2.0f, 4.0f, -1.0f),		//direction
-		Vec3(0.05f, 0.05f, 0.05f),		//ambient
-		Vec3(0.8f, 0.8f, 0.8f),		//diffuse
-		Vec3(0.5f, 0.5f, 0.5f));	//specular
+		Vec3(-2.0f, 4.0f, -1.0f),	//direction
+		Vec3( 0.1f, 0.1f,  0.1f),	//ambient
+		Vec3( 0.8f, 0.8f,  0.8f),	//diffuse
+		Vec3( 0.5f, 0.5f,  0.5f));	//specular
 }
 
 Ivy::Scene::~Scene()
@@ -53,64 +54,22 @@ void Ivy::Scene::SetSkybox(String right, String left, String top, String bottom,
 	SetSkybox(filenames);
 }
 
-void Ivy::Scene::Update()
+void Ivy::Scene::Update(float deltaTime)
 {
 	for(auto& e : mEntities)
 	{
-		e->OnUpdate();
+		e->OnUpdate(deltaTime);
 		e->UpdateComponents();
 	}
 }
 
 void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 {
-	// Shadow pass
 
-	//mShadowFBO->Bind();
-	//glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	//glCullFace(GL_FRONT);
-	//
-	//Mat4 lightProjection, lightView, lightSpaceMatrix;
-	//float nearPlane = 0.01f, farPlane = 96.0f;
-	//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
-	////lightProjection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 10.0f);
-	//lightView = glm::lookAt(mDirLight.direction, Vec3(0.0f), Vec3(0.0f, 1.0f, 0.0f));
-	//
-	//Mat4 biasMatrix(
-	//	0.5, 0.0, 0.0, 0.0,
-	//	0.0, 0.5, 0.0, 0.0,
-	//	0.0, 0.0, 0.5, 0.0,
-	//	0.5, 0.5, 0.5, 1.0
-	//);
-	//
-	//lightSpaceMatrix = lightProjection * lightView;
-	////lightSpaceMatrix = biasMatrix * lightSpaceMatrix;
-	//
-	//mDepthShader->Bind();
-	//mDepthShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
-	//
-	//
-	//for(int i = 0; i < mEntities.size(); i++)
-	//{
-	//	Ptr<Transform> trans = mEntities[i]->GetFirstComponentOfType<Transform>();
-	//	mDepthShader->SetUniformMat4("model", trans->getComposed());
-	//
-	//	Vector<Ptr<Mesh>> meshes = mEntities[i]->GetComponentsOfType<Mesh>();
-	//	for(int j = 0; j < meshes.size(); j++)
-	//	{
-	//		meshes[j]->Draw(false);
-	//	}
-	//}
-	//
-	//mShadowFBO->Unbind();
-	//
-	//glCullFace(GL_BACK);
-
+	// Shadow Pass
 	RenderShadows();
 
 	// Scene pass
-
-
 	glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
 
 	mCamera->Update(deltaTime);
@@ -124,16 +83,8 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 		Ptr<Shader> shader;
 		for(int j = 0; j < materials.size(); j++)
 		{
-			//Debug::CoreLog("entidx: {}", materials[j]->GetEntityIndex());
 			shader = materials[j]->GetShader();
 
-			// Bind Textures to specific slot (diff, norm, ...)
-			//for (auto& kv : materials[j]->GetTextures())
-			//{
-			//	kv.second->Bind(static_cast<int>(kv.first));
-			//}
-
-			// TODO: Compare if this shader is the default shader
 			if(shader->GetRendererID() != Shader::GetCurrentlyUsedShaderID())
 			{
 				shader->Bind();
@@ -160,6 +111,8 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 		shader->SetUniformFloat3("sunColor", Vec3(252.0F, 212.0f, 64.0f));
 
 		glBindTextureUnit(8, mShadowFBO->GetDepthTextureID());
+		mSkyboxCubeTexture->Bind(9);
+		//mBrdfLutTexture->Bind(16);
 
 		PushLightParams(shader);
 
@@ -254,8 +207,7 @@ void Ivy::Scene::SetupSkybox()
 
 	BufferLayout layout =
 	{
-		{ShaderDataType::Float3, "aPos", 0},
-
+		{ShaderDataType::Float3, "aPos", 0}
 	};
 
 	mSkyboxVertexArray = CreatePtr<VertexArray>(layout);
@@ -417,41 +369,43 @@ void Ivy::Scene::SetupShadows()
 void Ivy::Scene::RenderShadows()
 {
 	Mat4 lightProjection, lightView, lightModel;
-	
+
 	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 20.0f);
 	//lightProjection = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 25.0f);
 	lightView = glm::lookAt(mDirLight.direction, Vec3(0.0f), Vec3(0.0f, 1.0f, 0.0f));
+
+	Vec3 pos = mCamera->GetPosition();
+	Vec3 front = mCamera->GetFront();
+	//lightView = glm::lookAt(mDirLight.direction, pos + front, Vec3(0.0f, 1.0f, 0.0f));
 	Mat4 bias = glm::scale(glm::translate(glm::mat4(1), glm::vec3(0.5, 0.5, 0.5)), glm::vec3(0.5, 0.5, 0.5));
 
 
-	
-	lightSpaceMatrix = lightProjection * lightView ;
-	
+
+	lightSpaceMatrix = lightProjection * lightView;
+
 	mDepthShader->Bind();
 	mDepthShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
-	
-	
+
+
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, mShadowFBO->GetDepthFboID());
-		glClear(GL_DEPTH_BUFFER_BIT);
-		//glCullFace(GL_FRONT);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, mShadowFBO->GetDepthTextureID());
-	
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mShadowFBO->GetDepthTextureID());
+
 	for(int i = 0; i < mEntities.size(); i++)
 	{
 		Ptr<Transform> trans = mEntities[i]->GetFirstComponentOfType<Transform>();
 		mDepthShader->SetUniformMat4("model", trans->getComposed());
-	
+
 		Vector<Ptr<Mesh>> meshes = mEntities[i]->GetComponentsOfType<Mesh>();
 		for(int j = 0; j < meshes.size(); j++)
 		{
 			meshes[j]->Draw(false);
 		}
 	}
-	
+
 	mShadowFBO->Unbind();
-	//glCullFace(GL_BACK);
 }
 
 Ivy::DirectionalLight& Ivy::Scene::AddDirectionalLight(DirectionalLight lightParams)

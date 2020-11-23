@@ -82,9 +82,9 @@ namespace Ivy
 			return casted.front();
 		}
 
-		void OnUpdate()  {};
-		void OnDestroy() {};
-		void OnCreate()  {};
+		virtual void OnUpdate(float deltaTime)  {};
+		virtual void OnDestroy() {};
+		virtual void OnCreate()  {};
 
 	private:
 		void UpdateComponents();

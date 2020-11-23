@@ -71,8 +71,8 @@
       <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>dir
-cd "$(SolutionDir)"</Command>
+      <Command>cd "$(SolutionDir)"
+xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e /i /f</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -94,11 +94,12 @@ cd "$(SolutionDir)"</Command>
       <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>dir
-cd "$(SolutionDir)"</Command>
+      <Command>cd "$(SolutionDir)"
+xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e /i /f</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\CameraTracker.cpp" />
     <ClCompile Include="source\Sandbox.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +109,9 @@ cd "$(SolutionDir)"</Command>
     <ProjectReference Include="..\Ivy\dependencies\GLAD\GLAD.vcxproj">
       <Project>{5D4A857C-4981-860D-F26D-6C10DE83020F}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\CameraTracker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -38,6 +38,16 @@ namespace Ivy
 		 */
 		Texture2D(String filepath);		
 
+
+		/*!
+		 * Texture2D constructor
+		 * Creates and loads 2D texture object from a file
+		 *
+		 *
+		 * \param filepath the full path and filename of the texture to load
+		 */
+		Texture2D(String filepath, GLenum internalFormat, GLenum dataFormat);
+
 		~Texture2D();
 
 		/*!
@@ -47,6 +57,14 @@ namespace Ivy
 		 * \param filepath the full path and filename of the texture to load
 		 */
 		void Load(String filepath);
+
+		/*!
+		 * Loads a 2D texture from a file
+		 * almost all normal filetypes (.png, .jpg, .bmp) are supported
+		 *
+		 * \param filepath the full path and filename of the texture to load
+		 */
+		void Load(String filepath, GLenum internalFormat, GLenum dataFormat);
 
 		/*!
 		 * Sets the pixeldata of the texture

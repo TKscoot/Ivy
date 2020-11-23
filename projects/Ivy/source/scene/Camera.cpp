@@ -52,6 +52,7 @@ void Ivy::Camera::Update(float deltaTime)
 
 Ivy::Mat4 Ivy::Camera::GetViewMatrix()
 {
+	
 	return glm::lookAt(mPosition, mPosition + mFront, mUp);
 }
 

@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <set>
 #include <glm/glm.hpp>
+#include <ostream>
 
 namespace Ivy
 {
@@ -34,6 +35,13 @@ namespace Ivy
 	using Mat2 = glm::mat2;
 	using Mat3 = glm::mat3;
 	using Mat4 = glm::mat4;
+
+	// ostream operators
+	//std::ostream& operator<<(std::ostream& os, const Vec3& vec)
+	//{
+	//	os << "{x: " << vec.x << " y:" << vec.y << " z:" << vec.z <<"}";
+	//	return os;
+	//}
 
 	// Vertex
 	struct Vertex
