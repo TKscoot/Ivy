@@ -56,6 +56,13 @@ Ivy::Mat4 Ivy::Camera::GetViewMatrix()
 	return glm::lookAt(mPosition, mPosition + mFront, mUp);
 }
 
+Ivy::Mat4 Ivy::Camera::GetProjectionMatrix(Vec2 currentWindowSize)
+{
+	mProjection = glm::perspective(glm::radians(mFOV), currentWindowSize.x / currentWindowSize.y, mNear, mFar/*100000.0f*/);
+
+	return mProjection;
+}
+
 void Ivy::Camera::UpdateCameraVectors()
 {
 	// calculate the new Front vector

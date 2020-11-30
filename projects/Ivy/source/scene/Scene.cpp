@@ -10,12 +10,15 @@ Ivy::Scene::Scene()
 	//mBrdfLutTexture = CreatePtr<Texture2D>("assets/textures/Misc/brdf_lut.jpg", GL_RGB8, GL_RGB);
 	SetupSkyboxShaders();
 	SetupShadows();
+	mCSM = CreatePtr<ShadowRenderPass>(mCamera);
 
 	AddDirectionalLight(
 		Vec3(-2.0f, 4.0f, -1.0f),	//direction
 		Vec3( 0.1f, 0.1f,  0.1f),	//ambient
 		Vec3( 0.8f, 0.8f,  0.8f),	//diffuse
 		Vec3( 0.5f, 0.5f,  0.5f));	//specular
+
+	mCSM->SetDirLight(mDirLight);
 }
 
 Ivy::Scene::~Scene()
@@ -67,7 +70,8 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 {
 
 	// Shadow Pass
-	RenderShadows();
+	//RenderShadows();
+	mCSM->RenderShadows(currentWindowSize, mEntities);
 
 	// Scene pass
 	glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
@@ -75,7 +79,7 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 	mCamera->Update(deltaTime);
 	Mat4 view = mCamera->GetViewMatrix();
 
-	Mat4 projection = glm::perspective(glm::radians(45.0f), currentWindowSize.x / currentWindowSize.y, 0.1f, 100000.0f);
+	Mat4 projection = mCamera->GetProjectionMatrix(currentWindowSize);
 
 	for(int i = 0; i < mEntities.size(); i++)
 	{
@@ -89,20 +93,14 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 			{
 				shader->Bind();
 			}
-
+			materials[j]->UpdateShaderTextureBools();
 		}
 
 		shader->SetUniformMat4("view", view);
 		shader->SetUniformMat4("projection", projection);
 
-		glm::mat4 biasMatrix(
-			0.5, 0.0, 0.0, 0.0,
-			0.0, 0.5, 0.0, 0.0,
-			0.0, 0.0, 0.5, 0.0,
-			0.5, 0.5, 0.5, 1.0
-		);
-		glm::mat4 depthBiasMVP = biasMatrix * lightSpaceMatrix;
-		shader->SetUniformMat4("lightSpaceMatrix", depthBiasMVP);
+		// Updating cascaded shadow uniforms
+		mCSM->UpdateShaderUniforms(shader);
 
 		shader->SetUniformFloat3("viewPos", mCamera->GetPosition());
 
@@ -110,8 +108,9 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 		shader->SetUniformFloat3("sunDirection", Vec3(-0.2f, -1.0f, -0.3f));
 		shader->SetUniformFloat3("sunColor", Vec3(252.0F, 212.0f, 64.0f));
 
-		glBindTextureUnit(8, mShadowFBO->GetDepthTextureID());
-		mSkyboxCubeTexture->Bind(9);
+		//glBindTextureUnit(8, mShadowFBO->GetDepthTextureID());
+		//glBindTextureUnit(8, mCSM->GetTextureIDs()[0]);
+		mSkyboxCubeTexture->Bind(6);
 		//mBrdfLutTexture->Bind(16);
 
 		PushLightParams(shader);
@@ -324,8 +323,7 @@ void Ivy::Scene::RenderEntities()
 
 void Ivy::Scene::SetupShadows()
 {
-	mShadowFBO = CreatePtr<Framebuffer>(SHADOW_WIDTH, SHADOW_HEIGHT, 1);
-	//mShadowFBO->Prepare();
+	mShadowFBO = CreatePtr<Framebuffer>(SHADOW_WIDTH, SHADOW_HEIGHT);
 
 	String vertexFilepath = "shaders/Shadow.vert";
 	String fragmentFilepath = "shaders/Shadow.frag";
@@ -366,22 +364,175 @@ void Ivy::Scene::SetupShadows()
 	mDepthShader = CreatePtr<Shader>(vertexFilepath, fragmentFilepath);
 }
 
+
+
+Ivy::Mat4 Ivy::Scene::CalculateLightMatrix(const Vec3& lightDirection, Vec2 currentWindowSize)
+{
+	//FrustumBounds frustumBounds[3];
+	//
+	////auto& sceneCamera = s_Data.SceneData.SceneCamera;
+	////auto viewProjection = sceneCamera.Camera.GetProjectionMatrix() * sceneCamera.ViewMatrix;
+	//Mat4 projection = glm::perspective(glm::radians(45.0f), currentWindowSize.x / currentWindowSize.y, 0.1f, 100000.0f);
+	//
+	//auto viewProjection = projection * mCamera->GetViewMatrix();
+	//
+	//const int SHADOW_MAP_CASCADE_COUNT = 4;
+	//float cascadeSplits[SHADOW_MAP_CASCADE_COUNT];
+	//
+	//float nearClip = 0.1f;
+	//float farClip = 1000.0f;
+	//float clipRange = farClip - nearClip;
+	//
+	//float minZ = nearClip;
+	//float maxZ = nearClip + clipRange;
+	//
+	//float range = maxZ - minZ;
+	//float ratio = maxZ / minZ;
+	//
+	//glm::vec3 frustumCorners[8] =
+	//{
+	//	glm::vec3(-1.0f,  1.0f, -1.0f),
+	//	glm::vec3( 1.0f,  1.0f, -1.0f),
+	//	glm::vec3( 1.0f, -1.0f, -1.0f),
+	//	glm::vec3(-1.0f, -1.0f, -1.0f),
+	//	glm::vec3(-1.0f,  1.0f,  1.0f),
+	//	glm::vec3( 1.0f,  1.0f,  1.0f),
+	//	glm::vec3( 1.0f, -1.0f,  1.0f),
+	//	glm::vec3(-1.0f, -1.0f,  1.0f),
+	//};
+	//
+	//// Project frustum corners into world space
+	//glm::mat4 invCam = glm::inverse(viewProjection);
+	//for(uint32_t i = 0; i < 8; i++)
+	//{
+	//	glm::vec4 invCorner = invCam * glm::vec4(frustumCorners[i], 1.0f);
+	//	frustumCorners[i] = invCorner / invCorner.w;
+	//}
+	//
+	//// Get frustum center
+	//glm::vec3 frustumCenter = glm::vec3(0.0f);
+	//for(uint32_t i = 0; i < 8; i++)
+	//	frustumCenter += frustumCorners[i];
+	//
+	//frustumCenter /= 8.0f;
+	//
+	////frustumCenter *= 0.01f;
+	//
+	//float radius = 0.0f;
+	//for(uint32_t i = 0; i < 8; i++)
+	//{
+	//	float distance = glm::length(frustumCorners[i] - frustumCenter);
+	//	radius = glm::max(radius, distance);
+	//}
+	//radius = std::ceil(radius * 16.0f) / 16.0f;
+	//
+	//glm::vec3 maxExtents = glm::vec3(radius);
+	//glm::vec3 minExtents = -maxExtents;
+	//
+	//glm::vec3 lightDir = lightDirection;
+	//glm::mat4 lightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, glm::vec3(0.0f, 1.0f, 0.0f));
+	//glm::mat4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, 0.0f + (-15.0f), maxExtents.z - minExtents.z + 15.0f);
+	//
+	//return lightOrthoMatrix * lightViewMatrix;
+	
+	
+	Mat4 projection = mCamera->GetProjectionMatrix(currentWindowSize);
+
+	const int SHADOW_MAP_CASCADE_COUNT = 4;
+	float cascadeSplits[SHADOW_MAP_CASCADE_COUNT];
+
+	float nearClip = 0.1f;
+	float farClip = 512.0f;
+	float clipRange = farClip - nearClip;
+
+	float minZ = nearClip;
+	float maxZ = nearClip + clipRange;
+
+	float range = maxZ - minZ;
+	float ratio = maxZ / minZ;
+
+	float cascadeSplitLambda = 0.95f;
+	
+	// Calculate split depths based on view camera frustum
+	// Based on method presented in https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
+	for(uint32_t i = 0; i < SHADOW_MAP_CASCADE_COUNT; i++)
+	{
+		float p = (i + 1) / static_cast<float>(SHADOW_MAP_CASCADE_COUNT);
+		float log = minZ * std::pow(ratio, p);
+		float uniform = minZ + range * p;
+		float d = cascadeSplitLambda * (log - uniform) + uniform;
+		cascadeSplits[i] = (d - nearClip) / clipRange;
+	}
+
+	float lastSplitDist = 0.0;
+	float splitDist = cascadeSplits[0];
+
+
+		glm::vec3 frustumCorners[8] = {
+			glm::vec3(-1.0f,  1.0f, -1.0f),
+			glm::vec3(1.0f,  1.0f, -1.0f),
+			glm::vec3(1.0f, -1.0f, -1.0f),
+			glm::vec3(-1.0f, -1.0f, -1.0f),
+			glm::vec3(-1.0f,  1.0f,  1.0f),
+			glm::vec3(1.0f,  1.0f,  1.0f),
+			glm::vec3(1.0f, -1.0f,  1.0f),
+			glm::vec3(-1.0f, -1.0f,  1.0f),
+		};
+
+		// Project frustum corners into world space
+		glm::mat4 invCam = glm::inverse(projection * mCamera->GetViewMatrix());
+		for(uint32_t i = 0; i < 8; i++)
+		{
+			glm::vec4 invCorner = invCam * glm::vec4(frustumCorners[i], 1.0f);
+			frustumCorners[i] = invCorner / invCorner.w;
+		}
+
+		for(uint32_t i = 0; i < 4; i++)
+		{
+			glm::vec3 dist = frustumCorners[i + 4] - frustumCorners[i];
+			frustumCorners[i + 4] = frustumCorners[i] + (dist * splitDist);
+			//frustumCorners[i] = frustumCorners[i];// +(dist * lastSplitDist);
+		}
+
+		// Get frustum center
+		glm::vec3 frustumCenter = glm::vec3(0.0f);
+		for(uint32_t i = 0; i < 8; i++)
+		{
+			frustumCenter += frustumCorners[i];
+		}
+		frustumCenter /= 8.0f;
+
+		float radius = 0.0f;
+		for(uint32_t i = 0; i < 8; i++)
+		{
+			float distance = glm::length(frustumCorners[i] - frustumCenter);
+			radius = glm::max(radius, distance);
+		}
+		radius = std::ceil(radius * 16.0f) / 16.0f;
+
+		glm::vec3 maxExtents = glm::vec3(radius);
+		glm::vec3 minExtents = -maxExtents;
+
+		Vec3 lightDir = normalize(-lightDirection);
+		glm::mat4 lightViewMatrix  = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, 0.0f, maxExtents.z - minExtents.z);
+
+
+		glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 20.0f);// 
+		return lightOrthoMatrix * lightViewMatrix;
+}
+
 void Ivy::Scene::RenderShadows()
 {
-	Mat4 lightProjection, lightView, lightModel;
+	Mat4 lightProjection, lightView;
 
 	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 20.0f);
-	//lightProjection = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 25.0f);
 	lightView = glm::lookAt(mDirLight.direction, Vec3(0.0f), Vec3(0.0f, 1.0f, 0.0f));
 
-	Vec3 pos = mCamera->GetPosition();
-	Vec3 front = mCamera->GetFront();
-	//lightView = glm::lookAt(mDirLight.direction, pos + front, Vec3(0.0f, 1.0f, 0.0f));
 	Mat4 bias = glm::scale(glm::translate(glm::mat4(1), glm::vec3(0.5, 0.5, 0.5)), glm::vec3(0.5, 0.5, 0.5));
 
-
-
-	lightSpaceMatrix = lightProjection * lightView;
+	//lightSpaceMatrix = lightProjection * lightView;
+	lightSpaceMatrix = CalculateLightMatrix(mDirLight.direction, Vec2(1280, 720));
 
 	mDepthShader->Bind();
 	mDepthShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);

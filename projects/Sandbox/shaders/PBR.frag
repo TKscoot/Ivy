@@ -6,29 +6,49 @@ in vec3 FragPos;
 in vec2 TexCoords;
 in vec3 Normal;
 in mat3 TBN;
-in vec4 FragPosLightSpace;
+in vec4 FragPosLightSpace[4];
+in vec3 ViewPosition;
 
-layout(binding = 0) uniform sampler2D diffuseMap;
-layout(binding = 1) uniform sampler2D normalMap;
-layout(binding = 2) uniform sampler2D roughnessMap;
-layout(binding = 3) uniform sampler2D metallicMap;
-layout(binding = 4) uniform sampler2D aoMap;
-layout(binding = 5) uniform sampler2D brdfLutTexture;
-layout(binding = 8) uniform sampler2D shadowDepthMap;
-layout(binding = 9) uniform samplerCube skyboxTexture;
+layout(binding = 0) uniform sampler2D   diffuseMap;
+layout(binding = 1) uniform sampler2D   normalMap;
+layout(binding = 2) uniform sampler2D   roughnessMap;
+layout(binding = 3) uniform sampler2D   metallicMap;
+layout(binding = 4) uniform sampler2D   aoMap;
+layout(binding = 5) uniform sampler2D   brdfLutTexture;
+layout(binding = 6) uniform samplerCube skyboxTexture;
+layout(binding = 8) uniform sampler2D   shadowMap0;
+layout(binding = 9) uniform sampler2D   shadowMap1;
+layout(binding = 10) uniform sampler2D  shadowMap2;
+layout(binding = 11) uniform sampler2D  shadowMap3;
 
 
 //uniform vec3 lightPos;
 uniform vec3 viewPos;
-uniform int useNormalMap;
-uniform int useMetallicMap;
+uniform bool useNormalMap;
+uniform bool useMetallicMap;
+uniform bool useRoughnessMap;
+uniform bool useIBL;
 
 // Material
 struct Material {
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
-	float shininess;
+	float metallic;
+	float roughness;
+};
+
+struct CascadedShadowMapParams
+{
+	mat4  lightView;
+	bool  showCascades;
+	bool  softShadows;
+	float lightSize;
+	float maxShadowDistance;
+	float shadowFade;
+	bool  cascadeFading;
+	float cascadeTransitionFade;
+	vec4  cascadeSplits;
 };
 
 // Lights
@@ -37,19 +57,19 @@ struct DirLight {
 	
     vec3 ambient;
     vec3 diffuse;
-    vec3 specular;
+    vec3 specular; //-
 };
 
 struct PointLight {
     vec3 position;
     
-    float constant;
-    float linear;
-    float quadratic;
+    float constant;//-
+    float linear;//-
+    float quadratic;//-
 	
     vec3 ambient;
     vec3 diffuse;
-    vec3 specular;
+    vec3 specular;//-
 };
 
 struct SpotLight {
@@ -79,11 +99,17 @@ uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 uniform Material material;
 
+uniform CascadedShadowMapParams csm;
+
 const float PI = 3.14159265359;
 const float Epsilon = 0.00001;
 
+uint  CascadeIndex = 0;
+float ShadowFade   = 1.0;
+
 // Function Prototypes
-float CalcShadow(vec4 fragPosLightSpace, vec3 lightPos, vec3 N);
+float CalcShadow(sampler2D shadowMap, vec3 fragPosLightSpace, vec3 lightPos, vec3 N);
+float CalcCascadedShadows(vec3 N);
 vec3  PbrDirectionalLighting(DirLight light, float roughness, float metallic, vec3 albedo, vec3 N, vec3 V, vec3 F0);
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
@@ -97,26 +123,35 @@ vec3  fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
 void main()
 {		
     vec3 albedo     = pow(texture(diffuseMap, TexCoords).rgb, vec3(2.2));
-    float metallic  = texture(metallicMap, TexCoords).r;
-    float roughness = texture(roughnessMap, TexCoords).r;
-    //float ao        = texture(aoMap, TexCoords).r;
+    float metallic  = material.metallic;
+    float roughness = material.roughness;
+
 	vec3 N = Normal;
-	//if(useNormalMap == 1)
-	//{
-		 // obtain normal from normal map in range [0,1]
+	if(useNormalMap)
+	{
+		// obtain normal from normal map in range [0,1]
 		N = texture(normalMap, TexCoords).rgb;
 		// transform normal vector to range [-1,1]
 		N = normalize(N * 2.0 - 1.0);
 		N = normalize(TBN * N);
+	}
+	
+	//if(useMetallicMap)
+	//{
+		metallic = texture(metallicMap, TexCoords).r;
 	//}
 	
+	//if(useRoughnessMap)
+	//{
+		roughness = texture(roughnessMap, TexCoords).r;
+	//}
+
 	vec3 V = normalize(viewPos - FragPos);
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
     // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
     vec3 F0 = vec3(0.04); 
     F0 = mix(F0, albedo, metallic);
-
 
 	vec3 radiance = vec3(1.0);
 
@@ -166,7 +201,6 @@ void main()
     
 	vec3 ambient = vec3(0);
 
-	bool useIBL = true; //TODO: USE uniform
     if (useIBL) 
 	{
 	    vec3 R = -normalize(reflect(V, N));
@@ -203,18 +237,37 @@ void main()
     // gamma correct
     color = pow(color, vec3(1.0/2.2)); 
 
+	if (csm.showCascades)
+	{
+		switch(CascadeIndex)
+		{
+		case 0:
+			color.rgb *= vec3(1.0f, 0.25f, 0.25f);
+			break;
+		case 1:
+			color.rgb *= vec3(0.25f, 1.0f, 0.25f);
+			break;
+		case 2:
+			color.rgb *= vec3(0.25f, 0.25f, 1.0f);
+			break;
+		case 3:
+			color.rgb *= vec3(1.0f, 1.0f, 0.25f);
+			break;
+		}
+	}
+
 	FragColor = vec4(color, 1.0);
 }
 
-float CalcShadow(vec4 fragPosLightSpace, vec3 lightPos, vec3 N)
+float CalcShadow(sampler2D shadowMap, vec3 fragPosLightSpace, vec3 lightPos, vec3 N)
 {
 
     // perform perspective divide
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    vec3 projCoords =fragPosLightSpace;// fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     //projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(shadowDepthMap, projCoords.xy).r; 
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
@@ -225,12 +278,12 @@ float CalcShadow(vec4 fragPosLightSpace, vec3 lightPos, vec3 N)
     // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
     // PCF
     float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(shadowDepthMap, 0);
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = texture(shadowDepthMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
             shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
         }    
     }
@@ -241,6 +294,113 @@ float CalcShadow(vec4 fragPosLightSpace, vec3 lightPos, vec3 N)
         shadow = 0.0;
         
     return shadow;
+}
+
+// Leicht abgeänderte Implementation basierend auf Yan Chernikovs Hazel Engine (https://github.com/TheCherno/Hazel)
+float CalcCascadedShadows(vec3 N)
+{
+const uint SHADOW_MAP_CASCADE_COUNT = 4;
+	for(uint i = 0; i < SHADOW_MAP_CASCADE_COUNT - 1; i++)
+	{
+		if(ViewPosition.z < csm.cascadeSplits[i])
+			CascadeIndex = i + 1;
+	}
+
+	float shadowDistance = csm.maxShadowDistance;//u_CascadeSplits[3];
+	float transitionDistance = csm.shadowFade;
+	float distance = length(ViewPosition);	// TODO: eventuell buggy
+	ShadowFade = distance - (shadowDistance - transitionDistance);
+	ShadowFade /= transitionDistance;
+	ShadowFade = clamp(1.0 - ShadowFade, 0.0, 1.0);
+
+	bool fadeCascades = csm.cascadeFading;
+	float shadowAmount = 1.0;
+	if (fadeCascades)
+	{
+		float cascadeTransitionFade = csm.cascadeTransitionFade;
+		
+		float c0 = smoothstep(csm.cascadeSplits[0] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[0] - cascadeTransitionFade * 0.5f, ViewPosition.z);
+		float c1 = smoothstep(csm.cascadeSplits[1] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[1] - cascadeTransitionFade * 0.5f, ViewPosition.z);
+		float c2 = smoothstep(csm.cascadeSplits[2] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[2] - cascadeTransitionFade * 0.5f, ViewPosition.z);
+		if (c0 > 0.0 && c0 < 1.0)
+		{
+			// Sample 0 & 1
+			vec3 shadowMapCoords = (FragPosLightSpace[0].xyz / FragPosLightSpace[0].w);
+			float shadowAmount0 = CalcShadow(shadowMap0, shadowMapCoords, dirLight.direction, N);
+			shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
+			float shadowAmount1 = CalcShadow(shadowMap1, shadowMapCoords, dirLight.direction, N);
+
+			shadowAmount = mix(shadowAmount0, shadowAmount1, c0);
+		}
+		else if (c1 > 0.0 && c1 < 1.0)
+		{
+			// Sample 1 & 2
+			vec3 shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
+			float shadowAmount1 = CalcShadow(shadowMap1, shadowMapCoords, dirLight.direction, N);
+			shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
+			float shadowAmount2 = CalcShadow(shadowMap2, shadowMapCoords, dirLight.direction, N);
+
+			shadowAmount = mix(shadowAmount1, shadowAmount2, c1);
+		}
+		else if (c2 > 0.0 && c2 < 1.0)
+		{
+			// Sample 2 & 3
+			vec3 shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
+			float shadowAmount2 = CalcShadow(shadowMap2, shadowMapCoords, dirLight.direction, N);
+			shadowMapCoords = (FragPosLightSpace[3].xyz / FragPosLightSpace[3].w);
+			float shadowAmount3 = CalcShadow(shadowMap3, shadowMapCoords, dirLight.direction, N);
+
+			shadowAmount = mix(shadowAmount2, shadowAmount3, c2);
+		}
+		else
+		{
+			vec3 shadowMapCoords = (FragPosLightSpace[CascadeIndex].xyz / FragPosLightSpace[CascadeIndex].w);
+			if(CascadeIndex == 0)
+			{
+				shadowAmount = CalcShadow(shadowMap0, shadowMapCoords, dirLight.direction, N);
+			}
+			if(CascadeIndex == 1)
+			{
+				shadowAmount = CalcShadow(shadowMap1, shadowMapCoords, dirLight.direction, N);
+			}
+			if(CascadeIndex == 2)
+			{
+				shadowAmount = CalcShadow(shadowMap2, shadowMapCoords, dirLight.direction, N);
+			}
+			if(CascadeIndex == 3)
+			{
+				shadowAmount = CalcShadow(shadowMap3, shadowMapCoords, dirLight.direction, N);
+			}
+			//shadowAmount = u_SoftShadows ? PCSS_DirectionalLight(u_ShadowMapTexture[CascadeIndex], shadowMapCoords, u_LightSize) : HardShadows_DirectionalLight(u_ShadowMapTexture[CascadeIndex], shadowMapCoords);
+		}
+	}
+	else
+	{
+		vec3 shadowMapCoords = (FragPosLightSpace[CascadeIndex].xyz / FragPosLightSpace[CascadeIndex].w);
+			if(CascadeIndex == 0)
+			{
+				shadowAmount = CalcShadow(shadowMap0, shadowMapCoords, dirLight.direction, N);
+			}
+			if(CascadeIndex == 1)
+			{
+				shadowAmount = CalcShadow(shadowMap1, shadowMapCoords, dirLight.direction, N);
+			}
+			if(CascadeIndex == 2)
+			{
+				shadowAmount = CalcShadow(shadowMap2, shadowMapCoords, dirLight.direction, N);
+			}
+			if(CascadeIndex == 3)
+			{
+				shadowAmount = CalcShadow(shadowMap3, shadowMapCoords, dirLight.direction, N);
+			}
+		//shadowAmount = u_SoftShadows ? PCSS_DirectionalLight(u_ShadowMapTexture[CascadeIndex], shadowMapCoords, u_LightSize) : HardShadows_DirectionalLight(u_ShadowMapTexture[CascadeIndex], shadowMapCoords);
+	}
+
+	float NdotL = dot(N, dirLight.direction);
+	NdotL = smoothstep(0.0, 0.4, NdotL + 0.2);
+	shadowAmount *= (NdotL * 1.0);
+
+	return shadowAmount;
 }
 
 vec3 PbrDirectionalLighting(DirLight light, float roughness, float metallic, vec3 albedo, vec3 N, vec3 V, vec3 F0)
@@ -277,7 +437,8 @@ vec3 PbrDirectionalLighting(DirLight light, float roughness, float metallic, vec
     // scale light by NdotL
     float NdotL = max(dot(N, L), 0.0);  
 	
-	float shadow = CalcShadow(FragPosLightSpace, N, L);       
+	//float shadow = CalcShadow(FragPosLightSpace[0], N, L);       
+	float shadow = CalcCascadedShadows(N);
 
     // add to outgoing radiance Lo
 	directLighting = (kD * albedo / PI + specular) * radiance * NdotL * (1.0 - shadow);// * intensity;

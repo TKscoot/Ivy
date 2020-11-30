@@ -299,7 +299,7 @@ void Ivy::Mesh::Draw(bool bindTextures)
 	for (int i = 0; i < mSubmeshes.size(); i++)
 	{
 
-		// TODO: VERY PERFORMANCE HUNGRY: FIX
+		// TODO: VERY PERFORMANCE HUNGRY WHEN LOTS OF TEXTUREBINDS: FIX
 		if (bindTextures && materials.size() >= mSubmeshes[i].materialIndex)
 		{
 			for (auto& kv : materials[mSubmeshes[i].materialIndex]->GetTextures())

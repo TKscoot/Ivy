@@ -14,6 +14,10 @@ void Ivy::Renderer::Initialize()
     glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	int texture_units;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
+	Debug::CoreLog("Max texture units: {}", texture_units);
+
 	mScene = Scene::GetScene();
 
 }

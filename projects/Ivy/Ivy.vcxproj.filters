@@ -91,6 +91,7 @@
     <ClInclude Include="source\scene\components\Transform.h">
       <Filter>scene\components</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\ShadowRenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">
@@ -139,5 +140,6 @@
     <ClCompile Include="source\scene\components\Mesh.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
+    <ClCompile Include="source\scene\ShadowRenderPass.cpp" />
   </ItemGroup>
 </Project>
