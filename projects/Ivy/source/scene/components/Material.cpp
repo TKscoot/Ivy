@@ -7,7 +7,6 @@ Ivy::Material::Material()
 	: mAmbient(Vec3(0.5f, 0.5f, 0.5f))
 	, mDiffuse(Vec3(1.0f, 1.0f, 1.0f))
 	, mSpecular(Vec3(0.5f, 0.5f, 0.5f))
-	, mShininess(32.0f)
 {
 	// Set default shader
 	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Default.vert", "shaders/PBR.frag");
@@ -16,7 +15,9 @@ Ivy::Material::Material()
 	SetAmbientColor(mAmbient);
 	SetDiffuseColor(mDiffuse);
 	SetSpecularColor(mSpecular);
-	SetShininess(mShininess);
+	SetMetallic(0.5f);
+	SetRoughness(0.5f);
+	UseIBL(mUseIBL);
 	SetDefaultShaderUniforms();
 
 	int width  = 2;
@@ -60,6 +61,7 @@ Ivy::Material::Material()
 
 	mTextures[TextureMapType::BRDF_LUT]	 = CreatePtr<Texture2D>("assets/textures/Misc/brdf_lut.jpg");
 
+	mUsedTextureTypes.fill(false);
 }
 
 Ivy::Ptr<Ivy::Texture2D> Ivy::Material::LoadTexture(String texturePath, TextureMapType type)
@@ -85,15 +87,19 @@ Ivy::Ptr<Ivy::Texture2D> Ivy::Material::LoadTexture(String texturePath, TextureM
 
 		switch (type)
 		{
-		case Ivy::Material::TextureMapType::DIFFUSE:
+		case Material::TextureMapType::DIFFUSE:
+			mUsedTextureTypes[(size_t)Material::TextureMapType::DIFFUSE] = true;
 			break;
-		case Ivy::Material::TextureMapType::NORMAL:
+		case Material::TextureMapType::NORMAL:
+			mUsedTextureTypes[(size_t)Material::TextureMapType::NORMAL] = true;
 			mShader->SetUniformInt("useNormalMap", 1);
 			break;
-		case Ivy::Material::TextureMapType::ROUGHNESS:
+		case Material::TextureMapType::ROUGHNESS:
+			mUsedTextureTypes[(size_t)Material::TextureMapType::ROUGHNESS] = true;
 			mShader->SetUniformInt("useRoughnessMap", 1);
 			break;
-		case Ivy::Material::TextureMapType::METALLIC:
+		case Material::TextureMapType::METALLIC:
+			mUsedTextureTypes[(size_t)Material::TextureMapType::METALLIC] = true;
 			mShader->SetUniformInt("useMetallicMap", 1);
 			break;
 		default:
@@ -109,6 +115,13 @@ Ivy::Ptr<Ivy::Texture2D> Ivy::Material::LoadTexture(String texturePath, TextureM
 void Ivy::Material::LoadShader(String vertexPath, String fragmentPath)
 {
 	mShader = CreatePtr<Shader>(vertexPath, fragmentPath);
+}
+
+void Ivy::Material::UpdateShaderTextureBools()
+{
+	mShader->SetUniformInt("useNormalMap",		mUsedTextureTypes[1]);
+	mShader->SetUniformInt("useRoughnessMap",	mUsedTextureTypes[2]);
+	mShader->SetUniformInt("useMetallicMap",	mUsedTextureTypes[3]);
 }
 
 void Ivy::Material::SetDefaultShaderUniforms()

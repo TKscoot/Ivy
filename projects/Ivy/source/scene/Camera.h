@@ -17,6 +17,7 @@ namespace Ivy
 		void Update(float deltaTime);
 
 		Mat4 GetViewMatrix();
+		Mat4 GetProjectionMatrix(Vec2 currentWindowSize);
 
 		Vec3 GetPosition() { return mPosition; }
 		void SetPosition(Vec3 position) { mPosition = position; }
@@ -40,6 +41,11 @@ namespace Ivy
 		Vec3  mWorldUp	= Vec3(0.0f, 1.0f, 0.0f);
 
 		Vec3 mVelocity = Vec3(0.0f);
+
+		Mat4  mProjection = Mat4(0.0f);
+		float mFOV		  = 45.0f;
+		float mNear		  = 0.1f;
+		float mFar		  = 512.0f;
 
 		// euler Angles
 		float mYaw   = -90.0f;

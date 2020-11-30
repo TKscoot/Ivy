@@ -64,6 +64,9 @@ namespace Ivy
 	template<typename T>
 	using Vector = std::vector<T>;
 
+	//template<typename T, typename Count>
+	//using Array = std::array<T, Count>;
+
 	template<typename First, typename Second>
 	using UnorderedMap = std::unordered_map<First, Second>;
 

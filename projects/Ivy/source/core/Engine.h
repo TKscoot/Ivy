@@ -76,9 +76,8 @@ namespace Ivy
 	private:
 		void CheckGLVersion(int supportedMajor, int supportedMinor);
 
-		Ptr<Window>   mWnd;
-		Ptr<Renderer> mRenderer;
-		Ptr<Entity>   mEntity;
+		Ptr<Window>   mWnd = nullptr;
+		Ptr<Renderer> mRenderer = nullptr;
 
 		float mDeltaTime = 0;
 		static inline bool mTerminate = false;

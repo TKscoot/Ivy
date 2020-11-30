@@ -99,6 +99,7 @@
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
+    <ClInclude Include="source\scene\ShadowRenderPass.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\ResourceManager.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="source\scene\Scene.cpp" />
     <ClCompile Include="source\scene\components\Material.cpp" />
     <ClCompile Include="source\scene\components\Mesh.cpp" />
+    <ClCompile Include="source\scene\ShadowRenderPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="dependencies\GLAD\GLAD.vcxproj">

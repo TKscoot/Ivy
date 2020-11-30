@@ -6,12 +6,25 @@
 #include "Camera.h"
 #include "Light.h"
 #include "rendering/Framebuffer.h"
+#include "ShadowRenderPass.h"
 
 namespace Ivy
 {
 	class Scene
 	{
 	public:
+
+		struct FrustumBounds
+		{
+			float r, l, b, t, f, n;
+		};
+
+		struct CascadeData
+		{
+			glm::mat4 ViewProj;
+			glm::mat4 View;
+			float SplitDepth;
+		};
 		
 		Scene();
 		~Scene();
@@ -93,6 +106,9 @@ namespace Ivy
 
 		void SetDirectionalLightDirection(Vec3 direction) { mDirLight.direction = direction; }
 
+		Mat4 CalculateLightMatrix(const Vec3& lightDirection, Vec2 currentWindowSize);
+
+
 	private:
 		void SetupSkybox();
 		void SetupSkyboxShaders();
@@ -106,6 +122,7 @@ namespace Ivy
 		static Ptr<Scene>   mInstance;
 		Vector<Ptr<Entity>> mEntities = {};
 		Ptr<Camera>         mCamera = nullptr;
+		Ptr<ShadowRenderPass> mCSM = nullptr;
 
 		// Lights
 		DirectionalLight	mDirLight	 = {};

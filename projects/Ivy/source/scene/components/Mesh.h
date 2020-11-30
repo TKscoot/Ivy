@@ -6,7 +6,6 @@
 #include "Component.h"
 #include "scene/Entity.h"
 #include "scene/components/Material.h"
-#include "scene/Scene.h"
 
 namespace Ivy
 {
@@ -17,6 +16,7 @@ namespace Ivy
     public:
         friend class Renderer;
 		friend class Scene;
+		friend class ShadowRenderPass;
 
 		struct Submesh
 		{

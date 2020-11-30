@@ -55,12 +55,12 @@ int main()
 	{
 		//shadowTestMaterial->LoadTexture("assets/textures/Misc/box.jpg", Material::TextureMapType::DIFFUSE);
 		//shadowTestMaterial->LoadTexture("assets/textures/sponza/spnza_bricks_a_ddn.png", Material::TextureMapType::NORMAL);
-		//shadowTestMaterial->LoadTexture("assets/textures/Survival_BackPack_2/1001_metallic.jpg", Material::TextureMapType::METALLIC);
+		//shadowTestMaterial->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
 		//shadowTestMaterial->LoadTexture("assets/textures/Survival_BackPack_2/1001_roughness.jpg", Material::TextureMapType::ROUGHNESS);
 	}
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
-	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(20.0f, 20.0f, 20.0f);
-	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setRotation(-90.0f, 0.0f, 0.0f);
+	shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(20.0f, 20.0f, 20.0f);
+	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setPosition(100.0f, 0.0f, 0.0f); 
 
 	// General testing Entity
 	Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
@@ -81,14 +81,27 @@ int main()
 	cameraTracker->AddTrackingPoint(Vec3(  0.0f, 2.0f, -5.0f));
 	cameraTracker->AddTrackingPoint(Vec3( 10.0f, 2.0f, -20.0f));
 	cameraTracker->ShouldPlay(false);
-
+	float timer = 0.0f;
 	while(!engine->ShouldTerminate())
 	{
 		if(Input::IsKeyDown(KeyCode::Escape))
 		{
 			exit(0);
 		}
-		 
+		
+
+		//if(timer <= 10.0)
+		//{
+		//	timer += engine->GetDeltaTime();
+		//	Vec3 lightPos = Vec3(0.0f, glm::radians(glm::pi<float>() * 2 * timer), 0.0f);
+		//	Debug::Log(lightPos.y);
+		//	Scene::GetScene()->SetDirectionalLightDirection(lightPos);
+		//}
+		//else
+		//{
+		//	timer = 0;
+		//}
+
 		engine->NewFrame();
 		
 	}
