@@ -16,9 +16,9 @@ void Ivy::Renderer::Initialize()
 
 	int texture_units;
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
-	Debug::CoreLog("Max texture units: {}", texture_units);
 
 	mScene = Scene::GetScene();
+	mScene->InitializeGUI(mWindow);
 
 }
 

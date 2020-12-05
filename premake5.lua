@@ -80,6 +80,50 @@ project "GLAD"
 		
     filter{ }	
 
+project "ImGui"
+	
+	kind "StaticLib"
+	
+	location "projects/Ivy/dependencies/ImGui"
+
+	targetdir ("projects/Ivy/dependencies/ImGui/Lib")
+	objdir	  ("projects/Ivy/dependencies/ImGui/Lib")
+
+	files "projects/Ivy/dependencies/ImGui/**"
+	includedirs "projects/Ivy/dependencies/ImGui/"
+
+	includedirs
+	{
+		"projects/Ivy/dependencies/GLFW/Include",
+		"projects/Ivy/dependencies/GLAD/include"
+	}
+	
+	libdirs
+	{
+		"projects/Ivy/dependencies/GLFW/Lib",
+		"projects/Ivy/dependencies/GLAD/Lib"
+	}
+	
+    links "GLAD"
+
+    filter "system:linux"
+        links "glfw"
+    filter {}
+
+    filter "system:windows"
+        links "GLFW3"
+    filter {}
+
+	filter "configurations:Debug"
+        runtime "Debug"
+        symbols "on"
+
+    filter "configurations:Release"
+        runtime "Release"
+        optimize "on"
+		
+    filter{ }	
+
 -- The core engine, the static library
 project "Ivy"
 	
@@ -96,27 +140,33 @@ project "Ivy"
 		"projects/Ivy/dependencies/spdlog/include",
 		"projects/Ivy/dependencies/glm",
 		"projects/Ivy/dependencies/stb_image",
-		"projects/Ivy/dependencies/assimp/include"
+		"projects/Ivy/dependencies/assimp/include",
+		"projects/Ivy/dependencies/ImGui"
 	}
 	
 	libdirs
 	{
 		"projects/Ivy/dependencies/GLFW/Lib",
 		"projects/Ivy/dependencies/GLAD/Lib",
-		"projects/Ivy/dependencies/assimp/lib"
+		"projects/Ivy/dependencies/assimp/lib",
+		"projects/Ivy/dependencies/ImGui/lib"
 	}
 	
-        links "GLAD"
+    links 
+	{
+		"GLAD",
+		"ImGui"
+	}
 
-        filter "system:linux"
-            links "glfw"
-            links "assimp"
-        filter {}
+    filter "system:linux"
+        links "glfw"
+        links "assimp"
+    filter {}
 
-        filter "system:windows"
-            links "GLFW3"
-			links "assimp-vc140-mt"
-        filter {}
+	filter "system:windows"
+        links "GLFW3"
+		links "assimp-vc140-mt"
+    filter {}
 
     -- We specify where the source files are.
 	-- It would be better to separate header files in a folder and sources
@@ -144,33 +194,33 @@ project "Sandbox"
 		"projects/Ivy/dependencies/spdlog/include",
 		"projects/Ivy/dependencies/glm",
 		"projects/Ivy/dependencies/stb_image",
-		"projects/Ivy/dependencies/assimp/include"
+		"projects/Ivy/dependencies/assimp/include",
+		"projects/Ivy/dependencies/ImGui"
 	}
 	
 
 	libdirs
 	{
-		--"projects/Ivy/dependencies/GLFW/Lib",
-		"projects/Ivy/dependencies/GLAD/Lib"
+		"projects/Ivy/dependencies/GLAD/Lib",
+		"projects/Ivy/dependencies/ImGui/Lib"
 	}
 
     filter "system:windows"
         libdirs
         {
-			--"projects/Ivy/dependencies/GLAD/Lib",
-            --"projects/Ivy/dependencies/GLAD/Lib",
             "projects/Ivy/dependencies/GLFW/lib"
         }
 
 		postbuildcommands{
 			"cd \"$(SolutionDir)\"",
-			"xcopy \"$(SolutionDir)projects\\Sandbox\\shaders\\*.*\" \"$(TargetDir)shaders\\\" /y /e /i /f"
-			--"xcopy \\projects\\Sandbox\\shaders\\ \\build\\Bin\\Sandbox\\$(TargetDir)\\shaders\\ /R /S /Y /D /E /H"
+			-- copying shaders to build folder
+			"xcopy \"$(SolutionDir)projects\\Sandbox\\shaders\\*.*\" \"$(TargetDir)shaders\\\" /y /e /i /f" 
 		}
     filter{}
 
     links "Ivy"
     links "GLAD"
+	links "ImGui"
 
     filter "system:linux"
         links "dl"

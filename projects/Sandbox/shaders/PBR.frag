@@ -31,9 +31,10 @@ uniform bool useIBL;
 
 // Material
 struct Material {
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
+	vec2  tiling;
+	vec3  ambient;
+	vec3  diffuse;
+	vec3  specular;
 	float metallic;
 	float roughness;
 };
@@ -122,7 +123,9 @@ vec3  fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
 //MAIN
 void main()
 {		
-    vec3 albedo     = pow(texture(diffuseMap, TexCoords).rgb, vec3(2.2));
+	vec2 uv = TexCoords * material.tiling;
+    vec3 albedo     = pow(texture(diffuseMap, uv).rgb, vec3(2.2));
+	float alpha = texture(diffuseMap, uv).a;
     float metallic  = material.metallic;
     float roughness = material.roughness;
 
@@ -130,21 +133,21 @@ void main()
 	if(useNormalMap)
 	{
 		// obtain normal from normal map in range [0,1]
-		N = texture(normalMap, TexCoords).rgb;
+		N = texture(normalMap, uv).rgb;
 		// transform normal vector to range [-1,1]
 		N = normalize(N * 2.0 - 1.0);
 		N = normalize(TBN * N);
 	}
 	
-	//if(useMetallicMap)
-	//{
-		metallic = texture(metallicMap, TexCoords).r;
-	//}
+	if(useMetallicMap)
+	{
+		metallic = texture(metallicMap, uv).r;
+	}
 	
-	//if(useRoughnessMap)
-	//{
-		roughness = texture(roughnessMap, TexCoords).r;
-	//}
+	if(useRoughnessMap)
+	{
+		roughness = texture(roughnessMap, uv).r;
+	}
 
 	vec3 V = normalize(viewPos - FragPos);
 
@@ -256,7 +259,7 @@ void main()
 		}
 	}
 
-	FragColor = vec4(color, 1.0);
+	FragColor = vec4(color, alpha);
 }
 
 float CalcShadow(sampler2D shadowMap, vec3 fragPosLightSpace, vec3 lightPos, vec3 N)

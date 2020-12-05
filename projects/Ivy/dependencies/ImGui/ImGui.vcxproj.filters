@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{1C04880B-880D-887C-1189-9E7C7D91937C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Debug">
+      <UniqueIdentifier>{92B38358-FE1D-38CF-475C-E974B3051624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Debug\ImGui.tlog">
+      <UniqueIdentifier>{0031CD1E-ECBF-56E8-95DE-6AE3814C678E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="backends">
+      <UniqueIdentifier>{00057006-ECD1-CA11-15EB-B8B9011700A0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="docs">
+      <UniqueIdentifier>{CECA957C-BA01-970D-63EE-7C104F04130F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{B1A29A7C-9DD9-9B0D-46C6-811032DC170F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\cpp">
+      <UniqueIdentifier>{030DBAB9-EFD9-14C5-18F3-026D041F4A53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\fonts">
+      <UniqueIdentifier>{CA1DA710-B6D5-E85D-1FDD-C1B90BB4834E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\natvis">
+      <UniqueIdentifier>{F5163A37-61CC-B22C-EAC0-AC035675A930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc\single_file">
+      <UniqueIdentifier>{21FD0C4E-0DF6-2BA0-3628-112522800BAC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="backends\imgui_impl_glfw.h">
+      <Filter>backends</Filter>
+    </ClInclude>
+    <ClInclude Include="backends\imgui_impl_opengl3.h">
+      <Filter>backends</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imstb_rectpack.h" />
+    <ClInclude Include="imstb_textedit.h" />
+    <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="misc\cpp\imgui_stdlib.h">
+      <Filter>misc\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\single_file\imgui_single_file.h">
+      <Filter>misc\single_file</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="backends\imgui_impl_glfw.cpp">
+      <Filter>backends</Filter>
+    </ClCompile>
+    <ClCompile Include="backends\imgui_impl_opengl3.cpp">
+      <Filter>backends</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="imgui_demo.cpp" />
+    <ClCompile Include="imgui_draw.cpp" />
+    <ClCompile Include="imgui_tables.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="misc\cpp\imgui_stdlib.cpp">
+      <Filter>misc\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\fonts\binary_to_compressed_c.cpp">
+      <Filter>misc\fonts</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="ImGui.vcxproj" />
+    <None Include="ImGui.vcxproj.filters" />
+    <None Include="LICENSE.txt" />
+    <None Include="Lib\Debug\ImGui.idb">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.log">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.pdb">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\CL.275960.write.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\CL.read.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\ImGui.lastbuildstate">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\Lib-link.read.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\Lib-link.write.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\Lib.command.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\binary_to_compressed_c.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_demo.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_draw.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_dx10.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_dx11.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_dx9.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_glfw.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_opengl2.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_opengl3.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_win32.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_stdlib.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_tables.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_widgets.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\ImGui.lib">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="Lib\ImGui.pdb">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="docs\BACKENDS.md">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\CHANGELOG.txt">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\EXAMPLES.md">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\FAQ.md">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\FONTS.md">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\README.md">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\TODO.txt">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="misc\README.txt">
+      <Filter>misc</Filter>
+    </None>
+    <None Include="misc\cpp\README.txt">
+      <Filter>misc\cpp</Filter>
+    </None>
+    <None Include="misc\fonts\Cousine-Regular.ttf">
+      <Filter>misc\fonts</Filter>
+    </None>
+    <None Include="misc\fonts\DroidSans.ttf">
+      <Filter>misc\fonts</Filter>
+    </None>
+    <None Include="misc\fonts\Karla-Regular.ttf">
+      <Filter>misc\fonts</Filter>
+    </None>
+    <None Include="misc\fonts\ProggyClean.ttf">
+      <Filter>misc\fonts</Filter>
+    </None>
+    <None Include="misc\fonts\ProggyTiny.ttf">
+      <Filter>misc\fonts</Filter>
+    </None>
+    <None Include="misc\fonts\Roboto-Medium.ttf">
+      <Filter>misc\fonts</Filter>
+    </None>
+    <None Include="misc\natvis\README.txt">
+      <Filter>misc\natvis</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="misc\natvis\imgui.natvis">
+      <Filter>misc\natvis</Filter>
+    </Natvis>
+  </ItemGroup>
+</Project>

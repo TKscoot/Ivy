@@ -31,6 +31,7 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 		Debug::CoreError("Failed to initialize GLAD!");
 	}
 
+
 	Debug::Initialize();
 
 	CheckGLVersion(4, 0);
@@ -40,6 +41,7 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 
 	mRenderer = CreatePtr<Renderer>(mWnd);
 	mRenderer->Initialize();
+
 
 	Debug::CoreInfo(" *** Engine initialized! *** ");
 }

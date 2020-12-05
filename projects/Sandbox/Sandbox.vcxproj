@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -68,7 +68,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)"
@@ -79,7 +79,7 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -91,7 +91,7 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)"
@@ -99,6 +99,11 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="source\Application.h" />
+    <ClInclude Include="source\CameraTracker.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Application.cpp" />
     <ClCompile Include="source\CameraTracker.cpp" />
     <ClCompile Include="source\Sandbox.cpp" />
   </ItemGroup>
@@ -109,9 +114,9 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
     <ProjectReference Include="..\Ivy\dependencies\GLAD\GLAD.vcxproj">
       <Project>{5D4A857C-4981-860D-F26D-6C10DE83020F}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="source\CameraTracker.h" />
+    <ProjectReference Include="..\Ivy\dependencies\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

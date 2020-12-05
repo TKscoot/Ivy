@@ -139,7 +139,7 @@ void Ivy::ShadowRenderPass::CalculateCascades(Vec2 currentWindowSize, CascadeDat
 {
 	float cascadeSplits[4];
 
-	float nearClip = 0.1f;
+	float nearClip = 0.001f;
 	float farClip = 512.0f;
 	float clipRange = farClip - nearClip;
 

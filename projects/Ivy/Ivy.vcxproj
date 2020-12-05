@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ivypch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -70,7 +70,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>GLFW3.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -78,7 +78,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ivypch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -93,13 +93,13 @@
     </Link>
     <Lib>
       <AdditionalDependencies>GLFW3.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
-    <ClInclude Include="source\scene\ShadowRenderPass.h" />
+    <ClInclude Include="source\rendering\ImGuiHook.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\ResourceManager.h" />
@@ -119,7 +119,9 @@
     <ClInclude Include="source\scene\Camera.h" />
     <ClInclude Include="source\scene\Entity.h" />
     <ClInclude Include="source\scene\Light.h" />
+    <ClInclude Include="source\scene\ParticleSystem.h" />
     <ClInclude Include="source\scene\Scene.h" />
+    <ClInclude Include="source\scene\ShadowRenderPass.h" />
     <ClInclude Include="source\scene\components\Component.h" />
     <ClInclude Include="source\scene\components\Material.h" />
     <ClInclude Include="source\scene\components\Mesh.h" />
@@ -135,20 +137,25 @@
     </ClCompile>
     <ClCompile Include="source\rendering\Buffer.cpp" />
     <ClCompile Include="source\rendering\Framebuffer.cpp" />
+    <ClCompile Include="source\rendering\ImGuiHook.cpp" />
     <ClCompile Include="source\rendering\Renderer.cpp" />
     <ClCompile Include="source\rendering\Shader.cpp" />
     <ClCompile Include="source\rendering\Texture.cpp" />
     <ClCompile Include="source\rendering\VertexArray.cpp" />
     <ClCompile Include="source\scene\Camera.cpp" />
     <ClCompile Include="source\scene\Entity.cpp" />
+    <ClCompile Include="source\scene\ParticleSystem.cpp" />
     <ClCompile Include="source\scene\Scene.cpp" />
+    <ClCompile Include="source\scene\ShadowRenderPass.cpp" />
     <ClCompile Include="source\scene\components\Material.cpp" />
     <ClCompile Include="source\scene\components\Mesh.cpp" />
-    <ClCompile Include="source\scene\ShadowRenderPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="dependencies\GLAD\GLAD.vcxproj">
       <Project>{5D4A857C-4981-860D-F26D-6C10DE83020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="dependencies\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

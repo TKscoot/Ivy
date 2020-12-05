@@ -54,6 +54,12 @@ namespace Ivy
 		///
 		static void SetMouseCursorVisible(bool show = true);
 
+		///
+		/// Checks if cursor is visible
+		/// @return bool true = visible, false = hidden
+		///
+		static bool GetMouseCursorVisible();
+
 	private:
 		static void Initialize(Ptr<Window> mWnd);
 

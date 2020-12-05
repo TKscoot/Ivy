@@ -7,12 +7,15 @@
 #include "Light.h"
 #include "rendering/Framebuffer.h"
 #include "ShadowRenderPass.h"
+#include "rendering/ImGuiHook.h"
 
 namespace Ivy
 {
 	class Scene
 	{
 	public:
+
+		friend class Renderer;
 
 		struct FrustumBounds
 		{
@@ -118,11 +121,19 @@ namespace Ivy
 
 		void SetupShadows();
 		void RenderShadows();
+		void InitializeGUI(Ptr<Window> window) 
+		{
+			mImGuiHook = CreatePtr<ImGuiHook>(window->GetHandle());
+
+		}
 
 		static Ptr<Scene>   mInstance;
-		Vector<Ptr<Entity>> mEntities = {};
-		Ptr<Camera>         mCamera = nullptr;
-		Ptr<ShadowRenderPass> mCSM = nullptr;
+
+
+		Vector<Ptr<Entity>> mEntities	 = {};
+		Ptr<Camera>         mCamera		 = nullptr;
+		Ptr<ShadowRenderPass> mCSM		 = nullptr;
+		Ptr<ImGuiHook>		mImGuiHook   = nullptr;
 
 		// Lights
 		DirectionalLight	mDirLight	 = {};
@@ -140,7 +151,7 @@ namespace Ivy
 		Ptr<Texture2D>		mBrdfLutTexture		= nullptr; //Todo: maybe in material packen?? ALSO ONLY RG Components of image
 
 		// Shadows
-		const unsigned int SHADOW_WIDTH  = 1024, SHADOW_HEIGHT = 1024;
+		const unsigned int  SHADOW_WIDTH  = 1024, SHADOW_HEIGHT = 1024;
 		Ptr<Framebuffer>	mShadowFBO   = nullptr;
 		Ptr<Shader>			mDepthShader = nullptr;
 		Mat4 lightSpaceMatrix;

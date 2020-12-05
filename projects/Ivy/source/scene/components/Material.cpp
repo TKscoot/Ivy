@@ -7,16 +7,20 @@ Ivy::Material::Material()
 	: mAmbient(Vec3(0.5f, 0.5f, 0.5f))
 	, mDiffuse(Vec3(1.0f, 1.0f, 1.0f))
 	, mSpecular(Vec3(0.5f, 0.5f, 0.5f))
+	//, mMetallic(0.0f)
+	//, mRoughness(0.5f)
 {
 	// Set default shader
 	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Default.vert", "shaders/PBR.frag");
+	//SetShader(defaultShader);
 	mShader = defaultShader;
 	// Set default color values
+	SetTextureTiling(mTextureTiling);
 	SetAmbientColor(mAmbient);
 	SetDiffuseColor(mDiffuse);
 	SetSpecularColor(mSpecular);
-	SetMetallic(0.5f);
-	SetRoughness(0.5f);
+	SetMetallic(mMetallic);
+	SetRoughness(mRoughness);
 	UseIBL(mUseIBL);
 	SetDefaultShaderUniforms();
 
@@ -136,4 +140,16 @@ void Ivy::Material::SetDefaultShaderUniforms()
 	mShader->SetUniformInt("useRoughnessMap", 0);
 	mShader->SetUniformInt("useMetallicMap",  0);
 	mShader->Unbind();
+}
+
+void Ivy::Material::UpdateMaterialUniforms()
+{
+
+	mShader->SetUniformFloat2("material.tiling",	mTextureTiling);
+	mShader->SetUniformFloat3("material.ambient",   mAmbient);
+	mShader->SetUniformFloat3("material.diffuse",   mDiffuse);
+	mShader->SetUniformFloat3("material.specular",  mSpecular);
+	mShader->SetUniformFloat( "material.metallic",  mMetallic);
+	mShader->SetUniformFloat( "material.roughness", mRoughness);
+	//mShader->SetUniformInt(   "useIBL",		   (int)mUseIBL);
 }
