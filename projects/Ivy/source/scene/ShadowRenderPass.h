@@ -68,10 +68,9 @@ namespace Ivy
 		DirectionalLight    mDirLight	 = {};
 		std::array<Mat4, 4>	mLightSpaceMatrices;
 
-		float mCascadeSplitLambda = 0.91f;
-		float mCascadeFarPlaneOffset = 15.0f, mCascadeNearPlaneOffset = -15.0f;
-
 		// Params
+		float mCascadeSplitLambda	 = 0.91f;
+		float mCascadeFarPlaneOffset = 15.0f, mCascadeNearPlaneOffset = -15.0f;
 		bool  mShowCascades			 = false;
 		bool  mSoftShadows			 = true;
 		bool  mCascadeFading		 = true;

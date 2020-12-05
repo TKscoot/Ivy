@@ -19,6 +19,7 @@ Ivy::Scene::Scene()
 		Vec3( 0.5f, 0.5f,  0.5f));	//specular
 
 	mCSM->SetDirLight(mDirLight);
+
 }
 
 Ivy::Scene::~Scene()
@@ -68,6 +69,7 @@ void Ivy::Scene::Update(float deltaTime)
 
 void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 {
+	mImGuiHook->NotifyNewFrame();
 
 	// Shadow Pass
 	//RenderShadows();
@@ -93,7 +95,6 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 			{
 				shader->Bind();
 			}
-			materials[j]->UpdateShaderTextureBools();
 		}
 
 		shader->SetUniformMat4("view", view);
@@ -108,10 +109,7 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 		shader->SetUniformFloat3("sunDirection", Vec3(-0.2f, -1.0f, -0.3f));
 		shader->SetUniformFloat3("sunColor", Vec3(252.0F, 212.0f, 64.0f));
 
-		//glBindTextureUnit(8, mShadowFBO->GetDepthTextureID());
-		//glBindTextureUnit(8, mCSM->GetTextureIDs()[0]);
 		mSkyboxCubeTexture->Bind(6);
-		//mBrdfLutTexture->Bind(16);
 
 		PushLightParams(shader);
 
@@ -141,6 +139,14 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 		mSkyboxVertexArray->Unbind();
 		glDepthFunc(GL_LESS); // set depth function back to default
 	}
+
+	// render your GUI
+	ImGui::Begin("Demo window");
+	ImGui::Button("Hello!");
+	ImGui::End();
+	ImGui::ShowDemoWindow();
+
+	mImGuiHook->Render();
 
 
 }

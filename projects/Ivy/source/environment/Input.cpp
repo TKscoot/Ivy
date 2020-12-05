@@ -72,8 +72,22 @@ void Ivy::Input::SetMouseCursorVisible(bool show)
 	else
 	{
 		glfwSetInputMode(mGlfwWnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
 	}
+}
+
+bool Ivy::Input::GetMouseCursorVisible()
+{
+	auto cursor = glfwGetInputMode(mGlfwWnd, GLFW_CURSOR);
+	if(cursor == GLFW_CURSOR_DISABLED)
+	{
+		return false;
+	}
+	else if(cursor == GLFW_CURSOR_NORMAL)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void Ivy::Input::Initialize(Ptr<Window> wnd)

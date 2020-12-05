@@ -38,6 +38,7 @@ namespace Ivy
 
 			// Set default color values
 			mShader->Bind();
+			SetTextureTiling(mTextureTiling);
 			SetAmbientColor(mAmbient);
 			SetDiffuseColor(mDiffuse);
 			SetSpecularColor(mSpecular);
@@ -49,6 +50,11 @@ namespace Ivy
 
 		Ptr<Shader> GetShader() { return mShader; }
 		UnorderedMap<TextureMapType, Ptr<Texture2D>> GetTextures() { return mTextures; }
+
+		void SetTextureTiling(Vec2 tiling)
+		{
+			mTextureTiling = tiling;
+		}
 
 		void SetAmbientColor(Vec3 colorValue)
 		{
@@ -126,6 +132,7 @@ namespace Ivy
 		}
 
 		void UpdateShaderTextureBools();
+		void UpdateMaterialUniforms();
 
 	private:
 		void SetDefaultShaderUniforms();
@@ -137,12 +144,13 @@ namespace Ivy
 
 		Ptr<Shader> mShader = nullptr;
 
-		Vec3  mAmbient = Vec3(0.5f, 0.5f, 0.5f);
-		Vec3  mDiffuse = Vec3(1.0f, 1.0f, 1.0f);
-		Vec3  mSpecular = Vec3(0.5f, 0.5f, 0.5f);
-		float mMetallic = 0.5f;
-		float mRoughness = 0.5f;
-		bool  mUseIBL = true;
+		Vec3  mAmbient		 = Vec3(0.5f, 0.5f, 0.5f);
+		Vec3  mDiffuse		 = Vec3(1.0f, 1.0f, 1.0f);
+		Vec3  mSpecular		 = Vec3(0.5f, 0.5f, 0.5f);
+		float mMetallic		 = 0.001f;
+		float mRoughness	 = 1.0f;
+		bool  mUseIBL		 = true;
+		Vec2  mTextureTiling = Vec2(1.0f, 1.0f);
 
 	};
 }

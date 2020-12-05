@@ -76,7 +76,8 @@ void Ivy::Texture2D::Load(String filepath)
 	stbi_set_flip_vertically_on_load(1);
 	stbi_uc* data = nullptr;
 	{
-		data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
+		data = stbi_load(filepath.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+		
 	}
 	if(!data)
 	{
@@ -87,6 +88,7 @@ void Ivy::Texture2D::Load(String filepath)
 	mHeight = height;
 
 	GLenum internalFormat = 0, dataFormat = 0;
+	channels = 4;
 	if (channels == 4)
 	{
 		internalFormat = GL_RGBA8;
@@ -97,10 +99,15 @@ void Ivy::Texture2D::Load(String filepath)
 		internalFormat = GL_RGB8;
 		dataFormat = GL_RGB;
 	}
-	else if(channels = 2)
+	else if(channels == 2)
 	{
-		internalFormat = GL_RG16F;
+		internalFormat = GL_RG8;
 		dataFormat = GL_RG;
+	}
+	else if(channels == 1)
+	{
+		internalFormat = GL_R8;
+		dataFormat = GL_R;
 	}
 
 	mInternalFormat = internalFormat;

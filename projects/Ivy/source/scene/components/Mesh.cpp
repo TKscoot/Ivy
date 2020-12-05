@@ -309,7 +309,11 @@ void Ivy::Mesh::Draw(bool bindTextures)
 					kv.second->Bind(static_cast<uint32_t>(kv.first));
 				}
 			}
-
+			
+			materials[mSubmeshes[i].materialIndex]->GetShader()->Bind();
+			materials[mSubmeshes[i].materialIndex]->UpdateShaderTextureBools();
+			materials[mSubmeshes[i].materialIndex]->UpdateMaterialUniforms();
+			
 			lastMatIndex = mSubmeshes[i].materialIndex;
 		}
 		// ENDTODO
