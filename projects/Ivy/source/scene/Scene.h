@@ -6,7 +6,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "rendering/Framebuffer.h"
-#include "ShadowRenderPass.h"
+#include "renderpasses/ShadowRenderPass.h"
 #include "rendering/ImGuiHook.h"
 
 namespace Ivy

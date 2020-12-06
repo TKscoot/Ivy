@@ -100,6 +100,7 @@
     <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
     <ClInclude Include="source\rendering\ImGuiHook.h" />
+    <ClInclude Include="source\scene\renderpasses\SceneRenderPass.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\ResourceManager.h" />
@@ -121,7 +122,7 @@
     <ClInclude Include="source\scene\Light.h" />
     <ClInclude Include="source\scene\ParticleSystem.h" />
     <ClInclude Include="source\scene\Scene.h" />
-    <ClInclude Include="source\scene\ShadowRenderPass.h" />
+    <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h" />
     <ClInclude Include="source\scene\components\Component.h" />
     <ClInclude Include="source\scene\components\Material.h" />
     <ClInclude Include="source\scene\components\Mesh.h" />
@@ -146,7 +147,7 @@
     <ClCompile Include="source\scene\Entity.cpp" />
     <ClCompile Include="source\scene\ParticleSystem.cpp" />
     <ClCompile Include="source\scene\Scene.cpp" />
-    <ClCompile Include="source\scene\ShadowRenderPass.cpp" />
+    <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp" />
     <ClCompile Include="source\scene\components\Material.cpp" />
     <ClCompile Include="source\scene\components\Mesh.cpp" />
   </ItemGroup>

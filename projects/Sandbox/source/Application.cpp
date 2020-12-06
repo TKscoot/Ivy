@@ -54,7 +54,7 @@ void Application::SetupEntities()
 	shadowTestEntity->GetFirstComponentOfType<Transform>()->setPosition(-2.0f, 4.0f, -3.0f);
 
 	// General testing Entity
-	//Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
+	Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
 	//towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
 	//Ptr<Material> towerMat = towerEntity->GetFirstComponentOfType<Material>();
 	//towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);
@@ -114,7 +114,9 @@ void Application::Run()
 		}
 		cursorKeyPressed = cursorKeyCurrentlyPressed;
 
+
 		// Begin new frame
 		mEngine->NewFrame();
+
 	}
 }

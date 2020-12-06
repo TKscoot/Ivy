@@ -304,11 +304,14 @@ void Ivy::Mesh::Draw(bool bindTextures)
 		{
 			for (auto& kv : materials[mSubmeshes[i].materialIndex]->GetTextures())
 			{
-				if (mSubmeshes[i].materialIndex != lastMatIndex || mSubmeshes[i].materialIndex == 0)
-				{
-					kv.second->Bind(static_cast<uint32_t>(kv.first));
-				}
+				//if (mSubmeshes[i].materialIndex != lastMatIndex || mSubmeshes[i].materialIndex == 0)
+				//{
+				//	kv.second->Bind(static_cast<uint32_t>(kv.first));
+				//}
+				textures[static_cast<uint32_t>(kv.first)] = kv.second->GetRendererID();
 			}
+
+			glBindTextures(0, textures.size(), textures.data());
 			
 			materials[mSubmeshes[i].materialIndex]->GetShader()->Bind();
 			materials[mSubmeshes[i].materialIndex]->UpdateShaderTextureBools();

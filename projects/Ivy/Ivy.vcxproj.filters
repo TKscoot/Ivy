@@ -79,9 +79,6 @@
     <ClInclude Include="source\scene\Scene.h">
       <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="source\scene\ShadowRenderPass.h">
-      <Filter>scene</Filter>
-    </ClInclude>
     <ClInclude Include="source\scene\components\Component.h">
       <Filter>scene\components</Filter>
     </ClInclude>
@@ -95,6 +92,10 @@
       <Filter>scene\components</Filter>
     </ClInclude>
     <ClInclude Include="source\rendering\ImGuiHook.h" />
+    <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\renderpasses\SceneRenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">
@@ -140,9 +141,6 @@
     <ClCompile Include="source\scene\Scene.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="source\scene\ShadowRenderPass.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
     <ClCompile Include="source\scene\components\Material.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
@@ -150,5 +148,8 @@
       <Filter>scene\components</Filter>
     </ClCompile>
     <ClCompile Include="source\rendering\ImGuiHook.cpp" />
+    <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
