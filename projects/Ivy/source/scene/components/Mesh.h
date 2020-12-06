@@ -67,5 +67,8 @@ namespace Ivy
 		Ptr<Entity> mEnt;
 
 		String mMeshName;
+
+		std::array<GLuint, 5> textures;
+
     };
 } // namespace Ivy

@@ -13,6 +13,8 @@ void CameraTracker::OnCreate()
 
 void CameraTracker::OnUpdate(float deltaTime)
 {
+
+
 	if(!mShouldPlay) return;
 
 	if(mTrackingIndex >= mTrackingPoints.size())
@@ -34,6 +36,8 @@ void CameraTracker::OnUpdate(float deltaTime)
 		mTrackingIndex++;
 		mTimer = 0.0f;
 	}
+
+
 }
 
 void CameraTracker::OnDestroy()

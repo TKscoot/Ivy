@@ -60,16 +60,18 @@ void Ivy::Scene::SetSkybox(String right, String left, String top, String bottom,
 
 void Ivy::Scene::Update(float deltaTime)
 {
+	mImGuiHook->NotifyNewFrame();
+
 	for(auto& e : mEntities)
 	{
 		e->OnUpdate(deltaTime);
 		e->UpdateComponents();
 	}
+
 }
 
 void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 {
-	mImGuiHook->NotifyNewFrame();
 
 	// Shadow Pass
 	//RenderShadows();
@@ -123,6 +125,7 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 		}
 	}
 
+
 	//Draw skybox
 	if(mShouldRenderSkybox)
 	{
@@ -144,7 +147,6 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 	ImGui::Begin("Demo window");
 	ImGui::Button("Hello!");
 	ImGui::End();
-	ImGui::ShowDemoWindow();
 
 	mImGuiHook->Render();
 

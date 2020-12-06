@@ -53,10 +53,11 @@ void Ivy::ShadowRenderPass::RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>&
 void Ivy::ShadowRenderPass::UpdateShaderUniforms(Ptr<Shader> shader)
 {
 	// Textures
-	glBindTextureUnit(8, mTextures[0]);
-	glBindTextureUnit(9, mTextures[1]);
-	glBindTextureUnit(10, mTextures[2]);
-	glBindTextureUnit(11, mTextures[3]);
+	//glBindTextureUnit(8, mTextures[0]);
+	//glBindTextureUnit(9, mTextures[1]);
+	//glBindTextureUnit(10, mTextures[2]);
+	//glBindTextureUnit(11, mTextures[3]);
+	glBindTextures(8, mTextures.size(), mTextures.data());
 
 	// Light Space Matrices
 	Mat4 biasMatrix(
