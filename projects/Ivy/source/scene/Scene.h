@@ -7,6 +7,8 @@
 #include "Light.h"
 #include "rendering/Framebuffer.h"
 #include "renderpasses/ShadowRenderPass.h"
+#include "renderpasses/SceneRenderPass.h"
+#include "renderpasses/PostprocessingRenderPass.h"
 #include "rendering/ImGuiHook.h"
 
 namespace Ivy
@@ -109,52 +111,37 @@ namespace Ivy
 
 		void SetDirectionalLightDirection(Vec3 direction) { mDirLight.direction = direction; }
 
-		Mat4 CalculateLightMatrix(const Vec3& lightDirection, Vec2 currentWindowSize);
-
-
 	private:
-		void SetupSkybox();
-		void SetupSkyboxShaders();
-		void PushLightParams(Ptr<Shader> shader);
-
-		void RenderEntities();
-
-		void SetupShadows();
-		void RenderShadows();
 		void InitializeGUI(Ptr<Window> window) 
 		{
 			mImGuiHook = CreatePtr<ImGuiHook>(window->GetHandle());
+		}
+		void InitializeScenePass(Ptr<Window> window)
+		{
+			mScenePass = CreatePtr<SceneRenderPass>(
+				mCamera,
+				window,
+				mEntities,
+				mCSM,
+				mDirLight,
+				mSpotLights,
+				mPointLights);
 
+			mPostprocessPass = CreatePtr<PostprocessingRenderPass>(mScenePass);
 		}
 
 		static Ptr<Scene>   mInstance;
 
-
-		Vector<Ptr<Entity>> mEntities	 = {};
-		Ptr<Camera>         mCamera		 = nullptr;
+		Vector<Ptr<Entity>>   mEntities	 = {};
+		Ptr<Camera>           mCamera	 = nullptr;
 		Ptr<ShadowRenderPass> mCSM		 = nullptr;
-		Ptr<ImGuiHook>		mImGuiHook   = nullptr;
+		Ptr<SceneRenderPass>  mScenePass = nullptr;
+		Ptr<PostprocessingRenderPass> mPostprocessPass = nullptr;
+		Ptr<ImGuiHook>		  mImGuiHook = nullptr;
 
 		// Lights
 		DirectionalLight	mDirLight	 = {};
 		Vector<SpotLight>	mSpotLights  = {};
 		Vector<PointLight>	mPointLights = {};
-
-		// Skybox
-		bool			    mShouldRenderSkybox = false;
-		Vector<String>		mSkyboxFilepaths	= {};
-		Ptr<TextureCube>    mSkyboxCubeTexture	= nullptr;
-		Ptr<Shader>			mSkyboxShader		= nullptr;
-		Ptr<VertexBuffer>   mSkyboxVertexBuffer = nullptr;
-		Ptr<VertexArray>    mSkyboxVertexArray	= nullptr;
-
-		Ptr<Texture2D>		mBrdfLutTexture		= nullptr; //Todo: maybe in material packen?? ALSO ONLY RG Components of image
-
-		// Shadows
-		const unsigned int  SHADOW_WIDTH  = 1024, SHADOW_HEIGHT = 1024;
-		Ptr<Framebuffer>	mShadowFBO   = nullptr;
-		Ptr<Shader>			mDepthShader = nullptr;
-		Mat4 lightSpaceMatrix;
-
 	};
 }

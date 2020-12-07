@@ -2,11 +2,11 @@
 #include "Types.h"
 #include "rendering/Framebuffer.h"
 #include "rendering/Shader.h"
-#include "Camera.h"
-#include "Light.h"
-#include "Entity.h"
-#include "components/Transform.h"
-#include "components/Mesh.h"
+#include "scene/Camera.h"
+#include "scene/Light.h"
+#include "scene/Entity.h"
+#include "scene/components/Transform.h"
+#include "scene/components/Mesh.h"
 
 namespace Ivy
 {

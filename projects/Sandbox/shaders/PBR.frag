@@ -173,7 +173,7 @@ void main()
         
 		float dist		  = length(lightPosition - FragPos);
         float attenuation = 1.0 / (dist * dist);
-        vec3 radiance	  = lightDiffuse * attenuation;
+        vec3 radiance	  = lightDiffuse * attenuation * 15;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);   

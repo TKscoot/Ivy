@@ -96,6 +96,7 @@
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="source\scene\renderpasses\SceneRenderPass.h" />
+    <ClInclude Include="source\scene\renderpasses\PostprocessingRenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">
@@ -151,5 +152,7 @@
     <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="source\scene\renderpasses\SceneRenderPass.cpp" />
+    <ClCompile Include="source\scene\renderpasses\PostprocessingRenderPass.cpp" />
   </ItemGroup>
 </Project>

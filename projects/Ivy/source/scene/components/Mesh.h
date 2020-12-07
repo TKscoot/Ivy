@@ -17,6 +17,7 @@ namespace Ivy
         friend class Renderer;
 		friend class Scene;
 		friend class ShadowRenderPass;
+		friend class SceneRenderPass;
 
 		struct Submesh
 		{
