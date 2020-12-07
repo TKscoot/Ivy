@@ -19,6 +19,7 @@ void Ivy::Renderer::Initialize()
 
 	mScene = Scene::GetScene();
 	mScene->InitializeGUI(mWindow);
+	mScene->InitializeScenePass(mWindow);
 
 }
 

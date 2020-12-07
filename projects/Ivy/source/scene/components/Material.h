@@ -147,8 +147,8 @@ namespace Ivy
 		Vec3  mAmbient		 = Vec3(0.5f, 0.5f, 0.5f);
 		Vec3  mDiffuse		 = Vec3(1.0f, 1.0f, 1.0f);
 		Vec3  mSpecular		 = Vec3(0.5f, 0.5f, 0.5f);
-		float mMetallic		 = 0.001f;
-		float mRoughness	 = 1.0f;
+		float mMetallic		 = 0.1f;
+		float mRoughness	 = 0.9f;
 		bool  mUseIBL		 = true;
 		Vec2  mTextureTiling = Vec2(1.0f, 1.0f);
 

@@ -27,60 +27,78 @@ void Application::SetupScene()
 
 	// Adding lights to the scene
 	mScene->AddPointLight(
-		Vec3(3.0f, 1.0f, 0.0f),
+		Vec3(-1.0f, 1.0f, 0.0f),
 		1.0f,
 		0.09f,
 		0.032,
 		Vec3(0.05f, 0.05f, 0.05f),
-		Vec3(0.8f, 0.8f, 0.8f),
+		Vec3(1.0f, 0.0f, 0.0f),
+		Vec3(1.0f, 1.0f, 1.0f));
+	mScene->AddPointLight(
+		Vec3(1.0f, 1.0f, 0.0f),
+		1.0f,
+		0.09f,
+		0.032,
+		Vec3(0.05f, 0.05f, 0.05f),
+		Vec3(0.0f, 1.0f, 0.0f),
+		Vec3(1.0f, 1.0f, 1.0f));
+	mScene->AddPointLight(
+		Vec3(0.0f, 1.0f, 1.0f),
+		1.0f,
+		0.09f,
+		0.032,
+		Vec3(0.05f, 0.05f, 0.05f),
+		Vec3(0.0f, 0.0f, 1.0f),
 		Vec3(1.0f, 1.0f, 1.0f));
 }
 
 void Application::SetupEntities()
 {
 	// Object to test shadowmap
-	Ptr<Entity> shadowTestEntity = Scene::GetScene()->CreateEntity();
-	shadowTestEntity->AddComponent(CreatePtr<Mesh>(shadowTestEntity.get(), "assets/models/sphere.obj"));
-	Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
-	for(auto& shadowTestMaterial : shadowTestMaterials)
-	{
-		shadowTestMaterial->LoadTexture("assets/textures/Misc/box.jpg", Material::TextureMapType::DIFFUSE);
-		shadowTestMaterial->LoadTexture("assets/textures/Misc/brick_normal.jpg", Material::TextureMapType::NORMAL);
-		shadowTestMaterial->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
-		//shadowTestMaterial->LoadTexture("assets/textures/Survival_BackPack_2/1001_roughness.jpg", Material::TextureMapType::ROUGHNESS);
-	}
+	//Ptr<Entity> shadowTestEntity = Scene::GetScene()->CreateEntity();
+	//shadowTestEntity->AddComponent(CreatePtr<Mesh>(shadowTestEntity.get(), "assets/models/sponza.obj"));
+	//Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
+	//for(auto& shadowTestMaterial : shadowTestMaterials)
+	//{
+	//	//shadowTestMaterial->LoadTexture("assets/textures/Misc/box.jpg", Material::TextureMapType::DIFFUSE);
+	//	//shadowTestMaterial->LoadTexture("assets/textures/Misc/brick_normal.jpg", Material::TextureMapType::NORMAL);
+	//	//shadowTestMaterial->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
+	//	//shadowTestMaterial->LoadTexture("assets/textures/Survival_BackPack_2/1001_roughness.jpg", Material::TextureMapType::ROUGHNESS);
+	//	shadowTestMaterial->SetMetallic(0.1f);
+	//	shadowTestMaterial->SetRoughness(0.9f);
+	//}
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(20.0f, 20.0f, 20.0f);
-	shadowTestEntity->GetFirstComponentOfType<Transform>()->setPosition(-2.0f, 4.0f, -3.0f);
+	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setPosition(-2.0f, 4.0f, -3.0f);
 
 	// General testing Entity
 	Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
-	//towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
-	//Ptr<Material> towerMat = towerEntity->GetFirstComponentOfType<Material>();
-	//towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);
-	//towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
-	//towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_R.tga", Material::TextureMapType::ROUGHNESS);
-	//
-	//Ptr<Transform> towerTransform = towerEntity->GetFirstComponentOfType<Transform>();
-	//towerTransform->setPosition(1.0f, 1.0f, 0.0f);
-	////towerTransform->setScale(100.0f, 100.0f, 100.0f); 
-	//towerTransform->setScale(0.025f, 0.025f, 0.025f);
-	//towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
-
-	Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
-	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
-	Vector<Ptr<Material>> sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
-
-	sceneBaseMaterials[0]->SetTextureTiling(Vec2(5.0f, 5.0f));
-	sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_diffuse.png", Material::TextureMapType::DIFFUSE);
-	sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_normal.png", Material::TextureMapType::NORMAL);
-	sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_roughness.png", Material::TextureMapType::ROUGHNESS);
+	towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
+	Ptr<Material> towerMat = towerEntity->GetFirstComponentOfType<Material>();
+	towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);
+	towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
+	towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_R.tga", Material::TextureMapType::ROUGHNESS);
 	
-	sceneBaseMaterials[1]->SetTextureTiling(Vec2(5.0f, 5.0f));
-	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Base_Color.jpg", Material::TextureMapType::DIFFUSE);
-	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Normal.jpg", Material::TextureMapType::NORMAL);
-	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Metallic.jpg", Material::TextureMapType::METALLIC);
-	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
+	Ptr<Transform> towerTransform = towerEntity->GetFirstComponentOfType<Transform>();
+	towerTransform->setPosition(3.0f, 3.0f, 0.0f);
+	//towerTransform->setScale(100.0f, 100.0f, 100.0f); 
+	towerTransform->setScale(0.05f, 0.05f, 0.05f);
+	towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
+	
+	Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
+	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base_Enclosed.obj"));
+	Vector<Ptr<Material>> sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
+	
+	//sceneBaseMaterials[0]->SetTextureTiling(Vec2(5.0f, 5.0f));
+	//sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_diffuse.png", Material::TextureMapType::DIFFUSE);
+	//sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_normal.png", Material::TextureMapType::NORMAL);
+	//sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_roughness.png", Material::TextureMapType::ROUGHNESS);
+	//
+	//sceneBaseMaterials[1]->SetTextureTiling(Vec2(5.0f, 5.0f));
+	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Base_Color.jpg", Material::TextureMapType::DIFFUSE);
+	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Normal.jpg", Material::TextureMapType::NORMAL);
+	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Metallic.jpg", Material::TextureMapType::METALLIC);
+	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
 
 	Ptr<CameraTracker> cameraTracker = Scene::GetScene()->CreateEntity<CameraTracker>(Scene::GetScene()->GetCamera());
 	cameraTracker->AddTrackingPoint(Vec3(-10.0f, 2.0f, -10.0f));
@@ -114,9 +132,17 @@ void Application::Run()
 		}
 		cursorKeyPressed = cursorKeyCurrentlyPressed;
 
+		float v[3];
+
 
 		// Begin new frame
 		mEngine->NewFrame();
-
+		// render your GUI
+		//ImGui::Begin("Scene Settings!");
+		//if(ImGui::InputFloat3("Sun direction", v))
+		//{
+		//	mScene->SetDirectionalLightDirection(Vec3(v[0], v[1], v[2]));
+		//}
+		//ImGui::End();
 	}
 }
