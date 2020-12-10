@@ -30,6 +30,10 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 	{
 		mWindowSize = currentWindowSize;
 		// TODO: Framebuffer resize
+		glBindTexture(GL_TEXTURE_2D, mDepthTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, mWindowSize.x, mWindowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
 		glBindTexture(GL_TEXTURE_2D, mColorTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWindowSize.x, mWindowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -43,8 +47,15 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
 
+	//mRenderData.previousViewProj = mRenderData.view * mRenderData.proj;
+
 	Mat4 view = mCamera->GetViewMatrix();
 	Mat4 projection = mCamera->GetProjectionMatrix(currentWindowSize);
+
+	//mRenderData.view		= view;
+	//mRenderData.proj		= projection;
+	//Mat4 viewProj		    = view * projection;
+	//mRenderData.invViewProj = glm::inverse(viewProj);
 
 	for(int i = 0; i < mEntities.size(); i++)
 	{
@@ -85,6 +96,8 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 			meshes[j]->Draw();
 		}
 	}
+
+
 
 
 	//Draw skybox
@@ -286,8 +299,6 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 	glGenFramebuffers(1, &mFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 
-	// Create the depth buffer
-	//glGenTextures(mTextures.size(), mTextures.data());
 	glCreateTextures(GL_TEXTURE_2D, 1, &mDepthTexture);
 	glCreateTextures(GL_TEXTURE_2D, 1, &mColorTexture);
 
@@ -307,18 +318,18 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	/* Depth buffer */
+	// Depth buffer 
 	glGenRenderbuffers(1, &mRBO);
 	glBindRenderbuffer(GL_RENDERBUFFER, mRBO);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, mWindowSize.x, mWindowSize.y);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mRBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mDepthTexture, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorTexture, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mRBO);
 	// Set the list of draw buffers.
-	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0};
+	glDrawBuffers(1, DrawBuffers); 
 
 
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);

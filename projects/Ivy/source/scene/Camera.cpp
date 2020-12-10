@@ -46,8 +46,10 @@ void Ivy::Camera::Update(float deltaTime)
 		mPitch = 89.0f;
 	if (mPitch < -89.0f)
 		mPitch = -89.0f;
-
-	UpdateCameraVectors();
+	if(mHandleInput)
+	{
+		UpdateCameraVectors();
+	}
 }
 
 Ivy::Mat4 Ivy::Camera::GetViewMatrix()

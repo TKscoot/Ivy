@@ -1,6 +1,20 @@
 #include "ivypch.h"
 #include "ShadowRenderPass.h"
 
+void Ivy::ShadowRenderPass::Update()
+{
+	ImGui::Begin("Shadow Settings!");
+	ImGui::Checkbox("Show Cascades", &mShowCascades);
+	ImGui::Checkbox("Cascade fading", &mCascadeFading);
+	ImGui::SliderFloat("Cascade Split Lambda", &mCascadeSplitLambda, 0.0f, 1.0f);
+	ImGui::SliderFloat("Light Size", &mLightSize, 0.0f, 1.0f);
+	ImGui::SliderFloat("Max shadow distance", &mMaxShadowDistance, 0.0f, 1000.0f);
+	ImGui::SliderFloat("Shadow Fade", &mShadowFade, 0.0f, 250.0f);
+	ImGui::SliderFloat("Far plane offset", &mCascadeFarPlaneOffset, 0.0f, 100.0f);
+	ImGui::SliderFloat("Near plane offset", &mCascadeNearPlaneOffset, -100.0f, mCascadeFarPlaneOffset);
+	ImGui::End();
+}
+
 void Ivy::ShadowRenderPass::RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>& entities)
 {
 	//Mat4 lightProjection, lightView, lightModel;
@@ -68,6 +82,7 @@ void Ivy::ShadowRenderPass::UpdateShaderUniforms(Ptr<Shader> shader)
 	);
 	Mat4 bias = glm::scale(glm::translate(glm::mat4(1), glm::vec3(0.5, 0.5, 0.5)), glm::vec3(0.5, 0.5, 0.5));
 
+
 	
 	shader->SetUniformMat4("lightSpaceMatrix0", bias * mLightSpaceMatrices[0]);
 	shader->SetUniformMat4("lightSpaceMatrix1", bias * mLightSpaceMatrices[1]);
@@ -92,6 +107,8 @@ void Ivy::ShadowRenderPass::UpdateShaderUniforms(Ptr<Shader> shader)
 	shader->SetUniformFloat("csm.cascadeTransitionFade", mCascadeTransitionFade);
 
 	shader->SetUniformFloat4("csm.cascadeSplits", mCascadeSplits);
+
+
 }
 
 void Ivy::ShadowRenderPass::SetupShader()

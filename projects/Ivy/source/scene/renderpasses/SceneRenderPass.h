@@ -12,6 +12,16 @@ namespace Ivy
 	class SceneRenderPass
 	{
 	public:
+		//struct SceneRenderData
+		//{
+		//	Mat4 world;
+		//	Mat4 view;
+		//	Mat4 proj;
+		//	Mat4 wvp;
+		//	Mat4 invViewProj;
+		//	Mat4 previousViewProj;
+		//};
+
 		SceneRenderPass(Ptr<Camera> camera, 
 			Ptr<Window>				window,
 			Vector<Ptr<Entity>>&	entities,
@@ -50,6 +60,8 @@ namespace Ivy
 		GLuint mRBO = 0;
 		GLuint mDepthTexture = 0;
 		GLuint mColorTexture = 0;
+
+		//SceneRenderData mRenderData = {};
 
 		// Lights
 		DirectionalLight&	mDirLight;
