@@ -59,12 +59,29 @@ void Ivy::Scene::Update(float deltaTime)
 {
 	mImGuiHook->NotifyNewFrame();
 
+	mCamera->Update(deltaTime);
+
 	for(auto& e : mEntities)
 	{
 		e->OnUpdate(deltaTime);
 		e->UpdateComponents();
 	}
 
+	mCSM->Update();
+
+	// render your GUI
+	ImGui::Begin("Scene Settings!");
+	float v[3];
+	v[0] = mDirLight.direction.x;
+	v[1] = mDirLight.direction.y;
+	v[2] = mDirLight.direction.z;
+
+	if(ImGui::SliderFloat3("Sun direction", v, -6.28319f, 6.28319f))
+	{
+		mDirLight.direction = (Vec3(v[0],v[1], v[2]));
+		mCSM->SetDirLight(mDirLight);
+	}
+	ImGui::End();
 }
 
 void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
@@ -75,7 +92,6 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 	mCSM->RenderShadows(currentWindowSize, mEntities);
 
 	// Scene pass
-	mCamera->Update(deltaTime);
 
 	mScenePass->Render(currentWindowSize);
 

@@ -7,6 +7,7 @@
 #include "scene/Entity.h"
 #include "scene/components/Transform.h"
 #include "scene/components/Mesh.h"
+#include <imgui.h>
 
 namespace Ivy
 {
@@ -33,6 +34,8 @@ namespace Ivy
 			SetupShader();
 			CreateFramebuffer();
 		}
+
+		void Update();
 
 		void RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>& entities);
 		void UpdateShaderUniforms(Ptr<Shader> shader);
@@ -69,7 +72,7 @@ namespace Ivy
 		std::array<Mat4, 4>	mLightSpaceMatrices;
 
 		// Params
-		float mCascadeSplitLambda	 = 0.91f;
+		float mCascadeSplitLambda	 = 0.7f;
 		float mCascadeFarPlaneOffset = 15.0f, mCascadeNearPlaneOffset = -15.0f;
 		bool  mShowCascades			 = false;
 		bool  mSoftShadows			 = true;

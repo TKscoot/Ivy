@@ -30,6 +30,8 @@ namespace Ivy
 		}
 		Vec3 GetFront() { return mFront; }
 
+		void HandleInput(bool shouldHandle) { mHandleInput = shouldHandle; }
+
 	private:
 		void UpdateCameraVectors();
 
@@ -66,6 +68,8 @@ namespace Ivy
 		bool mFastMove     = false;
 
 		float mTopSpeed = 350.0f;
+
+		bool mHandleInput = true;
 
 	};
 }

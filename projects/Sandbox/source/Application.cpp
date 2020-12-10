@@ -86,7 +86,7 @@ void Application::SetupEntities()
 	towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
 	
 	Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
-	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base_Enclosed.obj"));
+	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
 	Vector<Ptr<Material>> sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
 	
 	//sceneBaseMaterials[0]->SetTextureTiling(Vec2(5.0f, 5.0f));
@@ -127,22 +127,16 @@ void Application::Run()
 
 		if(!cursorKeyPressed && cursorKeyCurrentlyPressed)
 		{ 
+			mScene->GetCamera()->HandleInput(cursorVisible);
 			Input::SetMouseCursorVisible(!cursorVisible);
 			cursorVisible = !cursorVisible;
 		}
 		cursorKeyPressed = cursorKeyCurrentlyPressed;
 
-		float v[3];
 
 
 		// Begin new frame
 		mEngine->NewFrame();
-		// render your GUI
-		//ImGui::Begin("Scene Settings!");
-		//if(ImGui::InputFloat3("Sun direction", v))
-		//{
-		//	mScene->SetDirectionalLightDirection(Vec3(v[0], v[1], v[2]));
-		//}
-		//ImGui::End();
+
 	}
 }

@@ -12,6 +12,24 @@ It can be used as a rendering and ecs backend for your game or simulation.
 Supported platforms are Windows 10 and GNU/Linux with a kernel >= 5.0.
 Note that this is my honours project for my bachelors degree in Games Programming at SAE Institute Munich.
 
+## Features
+
+- Multiplatform (Linux & Windows)
+- ECS
+- Multiple mesh and texture formats
+- Easy material and shader pipeline
+- Input system, window management, fast logging
+- Integrated ImGui
+- PBR lighting for directional lights and spot lights
+- PBR roughness & metallic workflow with texture support
+- Image based lighting
+- Cascaded shadow mapping
+- Postprocessing pass
+- Motion blur & depth of field (todo)
+- Atmospheric scattering (disabled by default)
+- Skeletal animation (todo)
+- API Documentation
+
 # Getting Started
 
 Get started by cloning this repository: `git clone https://github.com/TKscoot/Ivy/`
@@ -60,11 +78,11 @@ The .lib files of the external libraries can be found in projects/Ivy/dependenci
 
 ## Building Ivy on Linux
 
-Make sure you have the correct GCC version and premake5 installed.
+Make sure you have the correct GCC version, premake5 and all dependencies installed.
 
 ### Geting Premake
 
-**Ubuntu (20.04)**
+**Every distribution**
 
 Download premake-5.0.0-alpha15-linux.tar.gz from the [Premake
 Homepage](https://premake.github.io/download.html)\. Unpack the content to your
@@ -92,3 +110,12 @@ make
 ```
 
 The demo program can be run from Build/Bin/Sandbox/\<configuration\>.
+
+## Usage
+
+To use the framework you have to link against following libraries: `Ivy GLAD ImGui glfw assimp`
+
+Linking only to `Ivy` is coming soon™.
+
+If you want to use premake for your project you can use the "Sandbox" template
+project from the premake5.lua file in the root of the repo.

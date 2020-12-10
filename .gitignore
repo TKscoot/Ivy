@@ -389,5 +389,5 @@ MigrationBackup/
 .ionide/
 
 # !*/models/*.obj
-Docs/
+Docs/html
 
