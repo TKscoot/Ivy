@@ -14,19 +14,20 @@ namespace Ivy
 		PostprocessingRenderPass(Ptr<SceneRenderPass> scenePass);
 
 		void Render(Vec2 currentWindowSize);
-
+		void UploadUniforms();
 
 	private:
-
 		GLuint mSceneColorTexture = 0;
 		GLuint mSceneDepthTexture = 0;
 
 		Ptr<SceneRenderPass> mScenePass = nullptr;
 
+		SceneRenderPass::SceneRenderData& mSceneData;
+
 		Ptr<Shader>		  mShader		= nullptr;
 		Ptr<VertexBuffer> mVertexBuffer = nullptr;
 		Ptr<VertexArray>  mVertexArray  = nullptr;
 
-
+		int mToneMapIndex = 4;
 	};
 }

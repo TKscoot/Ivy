@@ -5,6 +5,44 @@ in vec2 TexCoords;
 
 layout(binding = 0) uniform sampler2D sceneColorMap;
 
+uniform mat4 World;		
+uniform mat4 View;						
+uniform mat4 Projection;				
+uniform mat4 WorldViewProjection;		
+uniform mat4 PreviousWorldViewProjection;
+uniform mat4 InverseViewProjection;	
+uniform vec2 WindowResolution;	
+uniform int  Tonemap;			
+
+// Tonemapping implementation from shadow-swan by Tobias Arrskog (https://github.com/topfs2/shadow-swan/blob/master/shaders/tonemap.glsl)
+vec3 simpleReinhardToneMapping(vec3 color)
+{
+    float exposure = 1.5;
+    color *= exposure/(1. + color / exposure);
+    return color;
+}
+
+vec3 lumaBasedReinhardToneMapping(vec3 color)
+{
+    float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
+    float toneMappedLuma = luma / (1. + luma);
+    color *= toneMappedLuma / luma;
+    return color;
+}
+
+vec3 RomBinDaHouseToneMapping(vec3 color)
+{
+    color = exp( -1.0 / ( 2.72*color + 0.15 ) );
+    return color;
+}
+
+vec3 filmicToneMapping(vec3 color)
+{
+    color = max(vec3(0.), color - vec3(0.004));
+    color = (color * (6.2 * color + .5)) / (color * (6.2 * color + 1.7) + 0.06);
+    return color;
+}
+
 vec3 Uncharted2ToneMapping(vec3 color)
 {
     float A = 0.15;
@@ -22,19 +60,37 @@ vec3 Uncharted2ToneMapping(vec3 color)
     return color;
 }
 
+vec3 tonemapAuto(vec3 color)
+{
+    switch (Tonemap) {
+	case 0:
+		break;
+    case 1:
+        color = simpleReinhardToneMapping(color);
+        break;
+    case 2:
+        color = lumaBasedReinhardToneMapping(color);
+        break;
+    case 3:
+        color = RomBinDaHouseToneMapping(color);
+        break;
+    case 4:
+        color = filmicToneMapping(color);
+        break;
+    case 5:
+        color = Uncharted2ToneMapping(color);
+        break;
+	}
+	return color;
+}
+// End of Tonemapping implementation
+
 void main()
 {
 	const float gamma     = 2.2;
 	const float pureWhite = 1.0;
 	
 	vec3 color = texture2D(sceneColorMap, TexCoords).rgb;
-	
-	float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
-	float mappedLuminance = (luminance * (1.0 + luminance / (pureWhite * pureWhite))) / (1.0 + luminance);
-	
-	// Scale color by ratio of average luminances.
-	vec3 mappedColor = (mappedLuminance / luminance) * color;
-
 
 
 
@@ -61,10 +117,13 @@ void main()
     //    }
     //}
     //
-    //// Output to screen
     //result /= Quality * Directions - 15.0;
 
+    // gamma correct
+    color = pow(color, vec3(1.0/2.2)); 
 
-	// Gamma correction.
+	vec3 mappedColor = tonemapAuto(color);
+
+	// Final color output!
 	FragColor = vec4(mappedColor, 1.0f);
 }
