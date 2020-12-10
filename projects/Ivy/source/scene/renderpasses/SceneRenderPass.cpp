@@ -47,15 +47,16 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
 
-	//mRenderData.previousViewProj = mRenderData.view * mRenderData.proj;
+	mRenderData.previousViewProj = mRenderData.view * mRenderData.proj;
 
 	Mat4 view = mCamera->GetViewMatrix();
 	Mat4 projection = mCamera->GetProjectionMatrix(currentWindowSize);
 
-	//mRenderData.view		= view;
-	//mRenderData.proj		= projection;
-	//Mat4 viewProj		    = view * projection;
-	//mRenderData.invViewProj = glm::inverse(viewProj);
+	mRenderData.view			 = view;
+	mRenderData.proj			 = projection;
+	Mat4 viewProj				 = view * projection;
+	mRenderData.invViewProj		 = glm::inverse(viewProj);
+	mRenderData.windowResolution = mWindowSize;
 
 	for(int i = 0; i < mEntities.size(); i++)
 	{
@@ -328,7 +329,7 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mDepthTexture, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorTexture, 0);
 	// Set the list of draw buffers.
-	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0};
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, DrawBuffers); 
 
 
@@ -343,9 +344,6 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 void Ivy::SceneRenderPass::BindFramebufferForWrite()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
-	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mRBO);
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mDepthTexture, 0);
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorTexture, 0);
 }
 
 

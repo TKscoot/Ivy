@@ -12,16 +12,17 @@ namespace Ivy
 	class SceneRenderPass
 	{
 	public:
-		//struct SceneRenderData
-		//{
-		//	Mat4 world;
-		//	Mat4 view;
-		//	Mat4 proj;
-		//	Mat4 wvp;
-		//	Mat4 invViewProj;
-		//	Mat4 previousViewProj;
-		//};
-
+		struct SceneRenderData
+		{
+			Mat4 world;
+			Mat4 view;
+			Mat4 proj;
+			Mat4 wvp;
+			Mat4 invViewProj;
+			Mat4 previousViewProj;
+			Vec2 windowResolution;
+		};
+	
 		SceneRenderPass(Ptr<Camera> camera, 
 			Ptr<Window>				window,
 			Vector<Ptr<Entity>>&	entities,
@@ -38,6 +39,8 @@ namespace Ivy
 		{
 			return mColorTexture;
 		}
+
+		SceneRenderData& GetSceneRenderData() { return mRenderData; }
 
 	private:
 		void PushLightParams(Ptr<Shader> shader);
@@ -61,7 +64,7 @@ namespace Ivy
 		GLuint mDepthTexture = 0;
 		GLuint mColorTexture = 0;
 
-		//SceneRenderData mRenderData = {};
+		SceneRenderData mRenderData;
 
 		// Lights
 		DirectionalLight&	mDirLight;
