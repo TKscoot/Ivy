@@ -89,16 +89,16 @@ void Application::SetupEntities()
 	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
 	Vector<Ptr<Material>> sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
 	
-	//sceneBaseMaterials[0]->SetTextureTiling(Vec2(5.0f, 5.0f));
-	//sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_diffuse.png", Material::TextureMapType::DIFFUSE);
-	//sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_normal.png", Material::TextureMapType::NORMAL);
-	//sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_roughness.png", Material::TextureMapType::ROUGHNESS);
-	//
-	//sceneBaseMaterials[1]->SetTextureTiling(Vec2(5.0f, 5.0f));
-	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Base_Color.jpg", Material::TextureMapType::DIFFUSE);
-	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Normal.jpg", Material::TextureMapType::NORMAL);
-	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Metallic.jpg", Material::TextureMapType::METALLIC);
-	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
+	sceneBaseMaterials[0]->SetTextureTiling(Vec2(5.0f, 5.0f));
+	sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_diffuse.png", Material::TextureMapType::DIFFUSE);
+	sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_normal.png", Material::TextureMapType::NORMAL);
+	sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_roughness.png", Material::TextureMapType::ROUGHNESS);
+	
+	sceneBaseMaterials[1]->SetTextureTiling(Vec2(5.0f, 5.0f));
+	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Base_Color.jpg", Material::TextureMapType::DIFFUSE);
+	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Normal.jpg", Material::TextureMapType::NORMAL);
+	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Metallic.jpg", Material::TextureMapType::METALLIC);
+	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
 
 	Ptr<CameraTracker> cameraTracker = Scene::GetScene()->CreateEntity<CameraTracker>(Scene::GetScene()->GetCamera());
 	cameraTracker->AddTrackingPoint(Vec3(-10.0f, 2.0f, -10.0f));

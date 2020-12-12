@@ -41,6 +41,7 @@ workspace "Ivy"
 	filter { "configurations:Release" }
 		-- Release should be optimized
 		optimize "On"
+		flags{"MultiProcessorCompile"} 
 	
 	-- Reset the filter for other settings
 	filter { }
@@ -163,9 +164,14 @@ project "Ivy"
         links "assimp"
     filter {}
 
-	filter "system:windows"
+	filter{ "system:windows", "configurations:Debug"}
         links "GLFW3"
-		links "assimp-vc140-mt"
+		links "assimp-vc141-mt"
+    filter {}
+	
+	filter{ "system:windows", "configurations:Release"}
+        links "GLFW3"
+		links "assimp-vc141-mt"
     filter {}
 
     -- We specify where the source files are.

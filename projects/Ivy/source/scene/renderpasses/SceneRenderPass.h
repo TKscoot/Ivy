@@ -40,6 +40,16 @@ namespace Ivy
 			return mColorTexture;
 		}
 
+		GLuint GetGodrayOcclusionTextureID()
+		{
+			return mGodrayOcclusionTexture;
+		}
+
+		GLuint GetDepthTextureID()
+		{
+			return mDepthTexture;
+		}
+
 		SceneRenderData& GetSceneRenderData() { return mRenderData; }
 
 	private:
@@ -63,6 +73,7 @@ namespace Ivy
 		GLuint mRBO = 0;
 		GLuint mDepthTexture = 0;
 		GLuint mColorTexture = 0;
+		GLuint mGodrayOcclusionTexture = 0;
 
 		SceneRenderData mRenderData;
 

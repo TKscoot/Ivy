@@ -31,12 +31,15 @@ Ivy::PostprocessingRenderPass::PostprocessingRenderPass(Ptr<SceneRenderPass> sce
 	mVertexBuffer->SetBufferData(&vertices, sizeof(vertices));
 
 	mSceneColorTexture = mScenePass->GetColorTextureID();
+	mSceneDepthTexture = mScenePass->GetDepthTextureID();
 
 }
 
 void Ivy::PostprocessingRenderPass::Render(Vec2 currentWindowSize)
 {
 	ImGui::Begin("Postprocessing Settings!");
+	ImGui::Checkbox("Use depth of field", &mUseDoF);
+	ImGui::Checkbox("Use motion blur", &mUseMotionBlur);
 	ImGui::SliderInt("Tonemap index", &mToneMapIndex, 0, 5);
 	ImGui::End();
 
@@ -49,6 +52,7 @@ void Ivy::PostprocessingRenderPass::Render(Vec2 currentWindowSize)
 
 	glBindTextureUnit(0, mSceneColorTexture);
 	glBindTextureUnit(1, mSceneDepthTexture);
+	glBindTextureUnit(2, mScenePass->GetGodrayOcclusionTextureID());
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -64,12 +68,14 @@ void Ivy::PostprocessingRenderPass::UploadUniforms()
 	mSceneData = mScenePass->GetSceneRenderData();
 
 	mShader->SetUniformMat4(  "World",						mSceneData.world);
-	mShader->SetUniformMat4(  "View",							mSceneData.view);
+	mShader->SetUniformMat4(  "View",						mSceneData.view);
 	mShader->SetUniformMat4(  "Projection",					mSceneData.proj);
-	mShader->SetUniformMat4(  "WorldViewProjection",			mSceneData.wvp);
-	mShader->SetUniformMat4(  "PreviousWorldViewProjection",  mSceneData.previousViewProj);
+	mShader->SetUniformMat4(  "WorldViewProjection",		mSceneData.wvp);
+	mShader->SetUniformMat4(  "PreviousWorldViewProjection",mSceneData.previousViewProj);
 	mShader->SetUniformMat4(  "InverseViewProjection",		mSceneData.invViewProj);
 	mShader->SetUniformFloat2("WindowResolution",			mSceneData.windowResolution);
-	mShader->SetUniformInt(	  "Tonemap",						mToneMapIndex);
+	mShader->SetUniformInt(	  "Tonemap",					mToneMapIndex);
+	mShader->SetUniformInt(	  "UseDepthOfField",	        mUseDoF);
+	mShader->SetUniformInt(	  "UseMotionBlur",				mUseMotionBlur);
 
 }
