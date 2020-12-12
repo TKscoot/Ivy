@@ -14,11 +14,6 @@ namespace Ivy
 	class ShadowRenderPass
 	{
 	public:
-		struct FrustumBounds
-		{
-			float r, l, b, t, f, n;
-		};
-
 		struct CascadeData
 		{
 			glm::mat4 ViewProj;

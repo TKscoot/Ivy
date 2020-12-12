@@ -16,7 +16,6 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Ivy</RootNamespace>
     <LatestTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</LatestTargetPlatformVersion>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -70,7 +69,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>GLFW3.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -85,6 +84,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -93,16 +93,13 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>GLFW3.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
-    <ClInclude Include="source\rendering\ImGuiHook.h" />
-    <ClInclude Include="source\scene\renderpasses\PostprocessingRenderPass.h" />
-    <ClInclude Include="source\scene\renderpasses\SceneRenderPass.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\ResourceManager.h" />
@@ -115,6 +112,7 @@
     <ClInclude Include="source\rendering\Buffer.h" />
     <ClInclude Include="source\rendering\BufferLayout.h" />
     <ClInclude Include="source\rendering\Framebuffer.h" />
+    <ClInclude Include="source\rendering\ImGuiHook.h" />
     <ClInclude Include="source\rendering\Renderer.h" />
     <ClInclude Include="source\rendering\Shader.h" />
     <ClInclude Include="source\rendering\Texture.h" />
@@ -124,11 +122,13 @@
     <ClInclude Include="source\scene\Light.h" />
     <ClInclude Include="source\scene\ParticleSystem.h" />
     <ClInclude Include="source\scene\Scene.h" />
-    <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h" />
     <ClInclude Include="source\scene\components\Component.h" />
     <ClInclude Include="source\scene\components\Material.h" />
     <ClInclude Include="source\scene\components\Mesh.h" />
     <ClInclude Include="source\scene\components\Transform.h" />
+    <ClInclude Include="source\scene\renderpasses\PostprocessingRenderPass.h" />
+    <ClInclude Include="source\scene\renderpasses\SceneRenderPass.h" />
+    <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp" />
@@ -148,12 +148,12 @@
     <ClCompile Include="source\scene\Camera.cpp" />
     <ClCompile Include="source\scene\Entity.cpp" />
     <ClCompile Include="source\scene\ParticleSystem.cpp" />
-    <ClCompile Include="source\scene\renderpasses\PostprocessingRenderPass.cpp" />
-    <ClCompile Include="source\scene\renderpasses\SceneRenderPass.cpp" />
     <ClCompile Include="source\scene\Scene.cpp" />
-    <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp" />
     <ClCompile Include="source\scene\components\Material.cpp" />
     <ClCompile Include="source\scene\components\Mesh.cpp" />
+    <ClCompile Include="source\scene\renderpasses\PostprocessingRenderPass.cpp" />
+    <ClCompile Include="source\scene\renderpasses\SceneRenderPass.cpp" />
+    <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="dependencies\GLAD\GLAD.vcxproj">

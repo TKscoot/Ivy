@@ -10,6 +10,12 @@
     <Filter Include="Lib\Debug\ImGui.tlog">
       <UniqueIdentifier>{0031CD1E-ECBF-56E8-95DE-6AE3814C678E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Release">
+      <UniqueIdentifier>{4C579ABE-B80C-13B4-4101-0D8BADB509B8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Release\ImGui.tlog">
+      <UniqueIdentifier>{7ACC6950-66C6-92A2-4F33-29B33BCCF80E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="backends">
       <UniqueIdentifier>{00057006-ECD1-CA11-15EB-B8B9011700A0}</UniqueIdentifier>
     </Filter>
@@ -77,6 +83,7 @@
     <None Include=".gitignore" />
     <None Include="ImGui.vcxproj" />
     <None Include="ImGui.vcxproj.filters" />
+    <None Include="ImGui.vcxproj.user" />
     <None Include="LICENSE.txt" />
     <None Include="Lib\Debug\ImGui.idb">
       <Filter>Lib\Debug</Filter>
@@ -87,7 +94,7 @@
     <None Include="Lib\Debug\ImGui.pdb">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\ImGui.tlog\CL.275960.write.1.tlog">
+    <None Include="Lib\Debug\ImGui.tlog\CL.17468.write.1.tlog">
       <Filter>Lib\Debug\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog">
@@ -156,6 +163,61 @@
     <None Include="Lib\ImGui.pdb">
       <Filter>Lib</Filter>
     </None>
+    <None Include="Lib\Release\ImGui.log">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.pdb">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\CL.read.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\CL.write.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\ImGui.lastbuildstate">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\Lib-link.read.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\Lib-link.write.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\Lib.command.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\binary_to_compressed_c.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_demo.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_draw.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_impl_glfw.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_impl_opengl3.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_stdlib.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_tables.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_widgets.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Makefile" />
     <None Include="docs\BACKENDS.md">
       <Filter>docs</Filter>
     </None>

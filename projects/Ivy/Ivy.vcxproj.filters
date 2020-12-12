@@ -16,6 +16,9 @@
     <Filter Include="scene\components">
       <UniqueIdentifier>{28A7FA07-14A0-195A-3DD2-FEDE292AF965}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scene\renderpasses">
+      <UniqueIdentifier>{115E2D3A-FD41-EE8F-66A2-E8E252A5D811}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
@@ -50,6 +53,9 @@
       <Filter>rendering</Filter>
     </ClInclude>
     <ClInclude Include="source\rendering\Framebuffer.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rendering\ImGuiHook.h">
       <Filter>rendering</Filter>
     </ClInclude>
     <ClInclude Include="source\rendering\Renderer.h">
@@ -91,12 +97,15 @@
     <ClInclude Include="source\scene\components\Transform.h">
       <Filter>scene\components</Filter>
     </ClInclude>
-    <ClInclude Include="source\rendering\ImGuiHook.h" />
-    <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h">
-      <Filter>scene</Filter>
+    <ClInclude Include="source\scene\renderpasses\PostprocessingRenderPass.h">
+      <Filter>scene\renderpasses</Filter>
     </ClInclude>
-    <ClInclude Include="source\scene\renderpasses\SceneRenderPass.h" />
-    <ClInclude Include="source\scene\renderpasses\PostprocessingRenderPass.h" />
+    <ClInclude Include="source\scene\renderpasses\SceneRenderPass.h">
+      <Filter>scene\renderpasses</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h">
+      <Filter>scene\renderpasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">
@@ -116,6 +125,9 @@
       <Filter>rendering</Filter>
     </ClCompile>
     <ClCompile Include="source\rendering\Framebuffer.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="source\rendering\ImGuiHook.cpp">
       <Filter>rendering</Filter>
     </ClCompile>
     <ClCompile Include="source\rendering\Renderer.cpp">
@@ -148,11 +160,14 @@
     <ClCompile Include="source\scene\components\Mesh.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
-    <ClCompile Include="source\rendering\ImGuiHook.cpp" />
-    <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp">
-      <Filter>scene</Filter>
+    <ClCompile Include="source\scene\renderpasses\PostprocessingRenderPass.cpp">
+      <Filter>scene\renderpasses</Filter>
     </ClCompile>
-    <ClCompile Include="source\scene\renderpasses\SceneRenderPass.cpp" />
-    <ClCompile Include="source\scene\renderpasses\PostprocessingRenderPass.cpp" />
+    <ClCompile Include="source\scene\renderpasses\SceneRenderPass.cpp">
+      <Filter>scene\renderpasses</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp">
+      <Filter>scene\renderpasses</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

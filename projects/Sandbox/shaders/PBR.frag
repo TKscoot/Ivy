@@ -1,6 +1,7 @@
 #version 450 core
  
 out vec4 FragColor;
+out vec4 GodRayOcclusionColor;
 
 in vec3 FragPos;
 in vec2 TexCoords;
@@ -260,6 +261,7 @@ void main()
 	}
 
 	FragColor = vec4(color, alpha);
+	GodRayOcclusionColor = vec4(0.0, 0.0, 0.0, 1.0);
 }
 
 float CalcShadow(sampler2D shadowMap, vec3 fragPosLightSpace, vec3 lightPos, vec3 N)

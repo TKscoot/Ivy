@@ -44,6 +44,7 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 	}
 
 	BindFramebufferForWrite();
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
 
@@ -97,7 +98,6 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 			meshes[j]->Draw();
 		}
 	}
-
 
 
 
@@ -302,6 +302,7 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &mDepthTexture);
 	glCreateTextures(GL_TEXTURE_2D, 1, &mColorTexture);
+	glCreateTextures(GL_TEXTURE_2D, 1, &mGodrayOcclusionTexture);
 
 	glBindTexture(GL_TEXTURE_2D, mDepthTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, mWindowSize.x, mWindowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -319,6 +320,13 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+	glBindTexture(GL_TEXTURE_2D, mGodrayOcclusionTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWindowSize.x, mWindowSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 	// Depth buffer 
 	glGenRenderbuffers(1, &mRBO);
 	glBindRenderbuffer(GL_RENDERBUFFER, mRBO);
@@ -328,9 +336,10 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mRBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mDepthTexture, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mGodrayOcclusionTexture, 0);
 	// Set the list of draw buffers.
-	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, DrawBuffers); 
+	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, DrawBuffers); 
 
 
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
