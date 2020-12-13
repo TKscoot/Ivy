@@ -11,15 +11,143 @@ uniform mat4 World;
 uniform mat4 View;						
 uniform mat4 Projection;				
 uniform mat4 WorldViewProjection;		
+uniform mat4 PreviousView;
+uniform mat4 PreviousProjection;
 uniform mat4 PreviousWorldViewProjection;
 uniform mat4 InverseViewProjection;	
 uniform vec2 WindowResolution;	
+uniform vec3 CameraPosition;
+uniform vec3 PreviousCameraPosition;
+uniform float NearPlane;
+uniform float FarPlane;
+uniform float FrameTime;
 uniform int  Tonemap;	
 uniform bool UseDepthOfField;
 uniform bool UseMotionBlur;
+uniform float MotionBlurIntensity;
+uniform float DofThreshold;
 
 
 // Tonemapping implementation from shadow-swan by Tobias Arrskog (https://github.com/topfs2/shadow-swan/blob/master/shaders/tonemap.glsl)
+vec3 simpleReinhardToneMapping(vec3 color);
+vec3 lumaBasedReinhardToneMapping(vec3 color);
+vec3 RomBinDaHouseToneMapping(vec3 color);
+vec3 filmicToneMapping(vec3 color);
+vec3 Uncharted2ToneMapping(vec3 color);
+vec3 tonemapAuto(vec3 color);
+
+// Depth of field and motion blur
+void DoF(inout vec3 color);
+void motionBlur(inout vec3 color);
+void SEUSmotionBlur(inout vec3 color, float depth);
+vec3 GaussianBlur();
+
+
+//Godrays
+vec3 godrays(
+    float density,
+    float weight,
+    float decay,
+    float exposure,
+    int numSamples,
+    sampler2D occlusionTexture,
+    vec2 screenSpaceLightPos,
+    vec2 uv);
+
+// Helper functions
+float rand(vec2 co);
+
+float focusDistance =  10.0f;
+float farDof = 5.0f;
+float nearDof = 0.0001f;
+float falloff = 2.0f;
+float minStrength = 0.0f;
+
+float depthStrength(){
+    float dist = texture2D(sceneDepthMap, TexCoords).r;
+	float centerDepth = texture2D(sceneDepthMap, vec2(.5, .5)).r;
+
+    float z = (2 * NearPlane) / (FarPlane + NearPlane - dist * (FarPlane - NearPlane));
+    float centerZ = (2 * NearPlane) / (FarPlane + NearPlane - centerDepth * (FarPlane - NearPlane));
+    //float clipZ = (distance - 0.5f) * 2.0f;
+    //float z = 2 * (nearPlane*farPlane) / (clipZ*(farPlane-nearPlane) - (farPlane + nearPlane));
+    
+    float dofStrength = 1;
+    
+    float sFarDof = (focusDistance+farDof)/FarPlane;
+    float sNearDof = (focusDistance-nearDof)/FarPlane;    
+     
+    if(z > sFarDof){
+       //dofStrength = ((sFarDof)/(z));
+        dofStrength = ((sFarDof)/(z));
+    }else if (z < sNearDof) {
+       dofStrength = ((z)/(sNearDof));
+    }    
+    
+
+    dofStrength = clamp(1-dofStrength,0.0f,1.0f);
+    dofStrength *= falloff;
+    dofStrength =clamp(1-dofStrength,0.0f,1.0f);
+
+	if(centerDepth > DofThreshold)
+	{
+		dofStrength = 1.0;
+	}
+
+
+    return mix(minStrength, 1.0f,dofStrength);
+}
+
+
+// =====================MAIN=====================
+void main()
+{
+	const float gamma     = 2.2;
+	const float pureWhite = 1.0;
+	
+	vec3 color = texture2D(sceneColorMap, TexCoords).rgb;
+	float depth = texture2D(sceneDepthMap, TexCoords).r;
+
+	if(UseMotionBlur)
+	{
+		SEUSmotionBlur(color, depth);
+	}
+	if(UseDepthOfField)
+	{
+		float dofStrength = depthStrength();
+		vec3 blurred = GaussianBlur();
+
+		color = mix(blurred, color, dofStrength);
+    }
+
+	vec4 sunPos = Projection * View * vec4(-2.0, 4.0, -1.0, 1.0);
+	vec2 screenSpaceSunPos = vec2(0.0);
+	screenSpaceSunPos.x = sunPos.x / sunPos.w;
+	screenSpaceSunPos.y = sunPos.y / sunPos.w;
+
+	//color += godrays(
+	//1.0,
+	//0.01,
+	//1.0,
+	//1.0,
+	//128,
+	//godrayOcclusionMap,
+	//screenSpaceSunPos,
+	//TexCoords
+	//);
+
+
+	
+	// gamma correct
+    color = pow(color, vec3(1.0/2.2)); 
+	
+	// tonemapping
+	vec3 mappedColor = tonemapAuto(color);
+
+	// Final color output!
+	FragColor = vec4(mappedColor, 1.0f);
+}
+
 vec3 simpleReinhardToneMapping(vec3 color)
 {
     float exposure = 1.5;
@@ -88,8 +216,8 @@ vec3 tonemapAuto(vec3 color)
 	}
 	return color;
 }
-// End of Tonemapping implementation
 
+// Depth of Field and Motion Blur
 
 void DoF(inout vec3 color)
 {
@@ -115,26 +243,9 @@ void DoF(inout vec3 color)
 	//return col.rgb;
 }
 
-
-vec4 motionBlur(sampler2D color, vec2 uv, float intensity)
-{
-    vec2 speed = vec2(0.05, 0.0);
-    vec2 offset = intensity * speed;
-    vec3 c = vec3(0.);
-    float inc = 0.1;
-    float weight = 0.;
-    for (float i = 0.; i <= 1.; i += inc)
-    {
-        c += texture2D(color, uv + i * offset).rgb;
-        weight += 1.;
-    }
-    c /= weight;
-    return vec4(c, 1.);
-}
-
 // Motion Blur effect used and customized from GPU Gems 3 
 // (https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-27-motion-blur-post-processing-effect)
-void motionBlur1(inout vec3 color)
+void motionBlur(inout vec3 color)
 {
 	vec2 texCoord = TexCoords;
 
@@ -186,7 +297,7 @@ void motionBlur1(inout vec3 color)
 	color = color / 10;
 }
 
-  
+// godrays
 vec3 godrays(
     float density,
     float weight,
@@ -196,7 +307,8 @@ vec3 godrays(
     sampler2D occlusionTexture,
     vec2 screenSpaceLightPos,
     vec2 uv
-    ) {
+    ) 
+	{
 
     vec3 fragColor = vec3(0.0,0.0,0.0);
 
@@ -236,87 +348,89 @@ vec3 godrays(
 
 }
 
-void main()
-{
-	const float gamma     = 2.2;
-	const float pureWhite = 1.0;
-	
-	vec3 color = texture2D(sceneColorMap, TexCoords).rgb;
-	float depth = texture2D(sceneDepthMap, TexCoords).r;
+// Helper functions
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
+
+void SEUSmotionBlur(inout vec3 color, float depth) 
+{
+	//float depth = GetDepth(texcoord.st);
+
+	//vec2 nearFragment = GetNearFragment(texcoord.st, depth);
+	//depth = GetDepth(nearFragment);
+
+
+
+	vec4 currentPosition = vec4(TexCoords.x * 2.0f - 1.0f, TexCoords.y * 2.0f - 1.0f, 2.0f * depth - 1.0f, 1.0f);
+
+
+	vec4 fragposition = inverse(Projection) * currentPosition;
+	fragposition = inverse(View) * fragposition;
+	fragposition /= fragposition.w;
+	fragposition.xyz += CameraPosition;
+
+	vec4 previousPosition = fragposition;
+	previousPosition.xyz -= PreviousCameraPosition;
+	previousPosition = PreviousView * previousPosition;
+	previousPosition = PreviousProjection * previousPosition;
+	previousPosition /= previousPosition.w;
+
+	vec2 velocity = (currentPosition - previousPosition).st * 0.1f * (1.0 / FrameTime) * 0.012 * MotionBlurIntensity;
+	float maxVelocity = 0.05f;
+		 velocity = clamp(velocity, vec2(-maxVelocity), vec2(maxVelocity));
+
+	int samples = 0;
+
+	float dither = rand(TexCoords.st).x * 1.0;
+
+	color.rgb = vec3(0.0f);
+
+	for (int i = -2; i <= 2; ++i) {
+		vec2 coord = TexCoords.st + velocity * (float(i + dither) / 2.0);
+			 //coord += vec2(dither) * 1.0f * velocity;
+
+		if (coord.x > 0.0f && coord.x < 1.0f && coord.y > 0.0f && coord.y < 1.0f) {
+
+			color += texture(sceneColorMap, coord).rgb;
+			samples += 1;
+
+		}
+	}
+
+	color.rgb /= samples;
+
+
+}
 
 
 	// WORKING BLUR (NOT MOTION BLUR!) From https://www.shadertoy.com/view/Xltfzj
-
-	//float Pi = 6.28318530718; // Pi*2
-    //
-    //// GAUSSIAN BLUR SETTINGS {{{
-    //float Directions =32.0; // BLUR DIRECTIONS (Default 16.0 - More is better but slower)
-    //float Quality = 6.0; // BLUR QUALITY (Default 4.0 - More is better but slower)
-    //float Size = 16.0; // BLUR SIZE (Radius)
-    //// GAUSSIAN BLUR SETTINGS }}}
-   	//
-    //vec2 Radius = Size/textureSize(sceneColorMap, 0);
-	//
-    //vec3 result = texture(sceneColorMap, TexCoords).rgb;
-    //vec2 uv = TexCoords;
-    //// Blur calculations
-    //for( float d=0.0; d<Pi; d+=Pi/Directions)
-    //{
-	//	for(float i=1.0/Quality; i<=1.0; i+=1.0/Quality)
-    //    {
-	//		result += texture( sceneColorMap, uv+vec2(cos(d),sin(d))*Radius*i).rgb;
-    //    }
-    //}
-    //
-    //result /= Quality * Directions - 15.0;
-	//
-	//color = result;
-
-	if(UseMotionBlur)
+vec3 GaussianBlur()
+{
+	float Pi = 6.28318530718; // Pi*2
+	
+	// GAUSSIAN BLUR SETTINGS {{{
+	float Directions =32.0; // BLUR DIRECTIONS (Default 16.0 - More is better but slower)
+	float Quality = 6.0; // BLUR QUALITY (Default 4.0 - More is better but slower)
+	float Size = 16.0; // BLUR SIZE (Radius)
+	// GAUSSIAN BLUR SETTINGS }}}
+	
+	vec2 Radius = Size/textureSize(sceneColorMap, 0);
+	
+	vec3 result = texture(sceneColorMap, TexCoords).rgb;
+	vec2 uv = TexCoords;
+	// Blur calculations
+	for( float d=0.0; d<Pi; d+=Pi/Directions)
 	{
-		motionBlur1(color);
+	for(float i=1.0/Quality; i<=1.0; i+=1.0/Quality)
+	{
+		result += texture( sceneColorMap, uv+vec2(cos(d),sin(d))*Radius*i).rgb;
 	}
-	if(UseDepthOfField)
-	{
-		DoF(color);
-    }
-	//color += mb + dof;
-
-	//vec3 fragColor = godrays(
-    //uDensity,
-    //uWeight,
-    //uDecay,
-    //uExposure,
-    //uNumSamples,
-    //uOcclusionTexture,
-    //uScreenSpaceSunPos,
-    //vUv
-    //);
-
-	vec4 sunPos = Projection * View * vec4(-2.0, 4.0, -1.0, 1.0);
-	vec2 screenSpaceSunPos = vec2(0.0);
-	screenSpaceSunPos.x = sunPos.x / sunPos.w;
-	screenSpaceSunPos.y = sunPos.y / sunPos.w;
-
-	//color += godrays(
-	//1.0,
-	//0.01,
-	//1.0,
-	//1.0,
-	//128,
-	//godrayOcclusionMap,
-	//screenSpaceSunPos,
-	//TexCoords
-	//);
+	}
 	
-	// gamma correct
-    color = pow(color, vec3(1.0/2.2)); 
+	result /= Quality * Directions - 15.0;
 	
-	vec3 mappedColor = tonemapAuto(color);
+	return result;
 
-	// Final color output!
-	//FragColor = vec4(mappedColor, 1.0f);
-
-	FragColor = vec4(mappedColor, 1.0f);
 }

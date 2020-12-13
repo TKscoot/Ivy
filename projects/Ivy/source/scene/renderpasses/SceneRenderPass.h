@@ -19,8 +19,17 @@ namespace Ivy
 			Mat4 proj;
 			Mat4 wvp;
 			Mat4 invViewProj;
+			Mat4 previousProj;
+			Mat4 previousView;
 			Mat4 previousViewProj;
+
 			Vec2 windowResolution;
+
+			Vec3 cameraPosition;
+			Vec3 previousCameraPosition;
+
+			float nearPlane;
+			float farPlane;
 		};
 	
 		SceneRenderPass(Ptr<Camera> camera, 
