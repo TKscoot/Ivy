@@ -95,7 +95,7 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 
 	mScenePass->Render(currentWindowSize);
 
-	mPostprocessPass->Render(currentWindowSize);
+	mPostprocessPass->Render(currentWindowSize, deltaTime);
 
 
 

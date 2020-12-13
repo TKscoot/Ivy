@@ -35,11 +35,13 @@ Ivy::PostprocessingRenderPass::PostprocessingRenderPass(Ptr<SceneRenderPass> sce
 
 }
 
-void Ivy::PostprocessingRenderPass::Render(Vec2 currentWindowSize)
+void Ivy::PostprocessingRenderPass::Render(Vec2 currentWindowSize, float deltaTime)
 {
 	ImGui::Begin("Postprocessing Settings!");
 	ImGui::Checkbox("Use depth of field", &mUseDoF);
+	ImGui::SliderFloat("DoF Threshold", &mDofThreshold, 0, 1);
 	ImGui::Checkbox("Use motion blur", &mUseMotionBlur);
+	ImGui::SliderFloat("Motion blur intensity", &mMotionBlurIntensity, 1.0f, 30.0f);
 	ImGui::SliderInt("Tonemap index", &mToneMapIndex, 0, 5);
 	ImGui::End();
 
@@ -48,7 +50,7 @@ void Ivy::PostprocessingRenderPass::Render(Vec2 currentWindowSize)
 	mShader->Bind();
 	mVertexArray->Bind();
 
-	UploadUniforms();
+	UploadUniforms(deltaTime);
 
 	glBindTextureUnit(0, mSceneColorTexture);
 	glBindTextureUnit(1, mSceneDepthTexture);
@@ -59,7 +61,7 @@ void Ivy::PostprocessingRenderPass::Render(Vec2 currentWindowSize)
 	mVertexArray->Unbind();
 }
 
-void Ivy::PostprocessingRenderPass::UploadUniforms()
+void Ivy::PostprocessingRenderPass::UploadUniforms(float deltaTime)
 {
 	if(!mShader)
 	{
@@ -71,11 +73,20 @@ void Ivy::PostprocessingRenderPass::UploadUniforms()
 	mShader->SetUniformMat4(  "View",						mSceneData.view);
 	mShader->SetUniformMat4(  "Projection",					mSceneData.proj);
 	mShader->SetUniformMat4(  "WorldViewProjection",		mSceneData.wvp);
-	mShader->SetUniformMat4(  "PreviousWorldViewProjection",mSceneData.previousViewProj);
+	mShader->SetUniformMat4(  "PreviousView",				mSceneData.previousView);
+	mShader->SetUniformMat4(  "PreviousProjection",			mSceneData.previousProj);
+	mShader->SetUniformMat4(  "PreviousViewProjection",		mSceneData.previousViewProj);
 	mShader->SetUniformMat4(  "InverseViewProjection",		mSceneData.invViewProj);
 	mShader->SetUniformFloat2("WindowResolution",			mSceneData.windowResolution);
+	mShader->SetUniformFloat3("CameraPositon",				mSceneData.cameraPosition);
+	mShader->SetUniformFloat3("PreviousCameraPositon",		mSceneData.previousCameraPosition);
+	mShader->SetUniformFloat( "NearPlane",					mSceneData.nearPlane);
+	mShader->SetUniformFloat( "FarPlane",					mSceneData.farPlane);
+	mShader->SetUniformFloat( "FrameTime",					deltaTime);
 	mShader->SetUniformInt(	  "Tonemap",					mToneMapIndex);
 	mShader->SetUniformInt(	  "UseDepthOfField",	        mUseDoF);
 	mShader->SetUniformInt(	  "UseMotionBlur",				mUseMotionBlur);
+	mShader->SetUniformFloat("MotionBlurIntensity",			mMotionBlurIntensity);
+	mShader->SetUniformFloat("DofThreshold",				mDofThreshold);
 
 }

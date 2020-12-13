@@ -32,6 +32,9 @@ namespace Ivy
 
 		void HandleInput(bool shouldHandle) { mHandleInput = shouldHandle; }
 
+		float GetNearPlane() { return mNear; }
+		float GetFarPlane() { return mFar; }
+
 	private:
 		void UpdateCameraVectors();
 

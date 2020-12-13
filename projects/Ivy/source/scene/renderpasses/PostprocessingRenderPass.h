@@ -13,8 +13,8 @@ namespace Ivy
 	public:
 		PostprocessingRenderPass(Ptr<SceneRenderPass> scenePass);
 
-		void Render(Vec2 currentWindowSize);
-		void UploadUniforms();
+		void Render(Vec2 currentWindowSize, float deltaTime);
+		void UploadUniforms(float deltaTime);
 
 	private:
 		GLuint mSceneColorTexture = 0;
@@ -29,7 +29,9 @@ namespace Ivy
 		Ptr<VertexArray>  mVertexArray  = nullptr;
 
 		int  mToneMapIndex	= 3;
-		bool mUseDoF		= false;
-		bool mUseMotionBlur = false;
+		bool mUseDoF		= true;
+		bool mUseMotionBlur = true;
+		float mMotionBlurIntensity = 5.0f;
+		float mDofThreshold = 0.0;
 	};
 }

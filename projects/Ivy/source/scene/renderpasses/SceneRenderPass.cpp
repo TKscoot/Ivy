@@ -26,29 +26,33 @@ Ivy::SceneRenderPass::SceneRenderPass(Ptr<Camera> camera,
 
 void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 {
+	BindFramebufferForWrite();
+
 	if(mWindowSize != (VecI2)currentWindowSize)
 	{
 		mWindowSize = currentWindowSize;
 		// TODO: Framebuffer resize
 		glBindTexture(GL_TEXTURE_2D, mDepthTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, mWindowSize.x, mWindowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glBindTexture(GL_TEXTURE_2D, mColorTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWindowSize.x, mWindowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glBindTexture(GL_TEXTURE_2D, mGodrayOcclusionTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWindowSize.x, mWindowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, mRBO);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, mWindowSize.x, mWindowSize.y);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, mWindowSize.x, mWindowSize.y);
 	}
 
-	BindFramebufferForWrite();
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
 
+	mRenderData.previousProj = mRenderData.proj;
+	mRenderData.previousView = mRenderData.view;
 	mRenderData.previousViewProj = mRenderData.view * mRenderData.proj;
+	mRenderData.previousCameraPosition = mRenderData.cameraPosition;
 
 	Mat4 view = mCamera->GetViewMatrix();
 	Mat4 projection = mCamera->GetProjectionMatrix(currentWindowSize);
@@ -58,6 +62,11 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 	Mat4 viewProj				 = view * projection;
 	mRenderData.invViewProj		 = glm::inverse(viewProj);
 	mRenderData.windowResolution = mWindowSize;
+
+	mRenderData.cameraPosition = mCamera->GetPosition();
+
+	mRenderData.nearPlane = mCamera->GetNearPlane();
+	mRenderData.farPlane = mCamera->GetFarPlane();
 
 	for(int i = 0; i < mEntities.size(); i++)
 	{
