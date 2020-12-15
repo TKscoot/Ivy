@@ -16,6 +16,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ImGui</RootNamespace>
     <LatestTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</LatestTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -64,6 +65,13 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <DCompile>
+      <CRuntimeLibrary>MultiThreadedDebug</CRuntimeLibrary>
+      <ObjectFileName>Lib/ImGui.obj</ObjectFileName>
+      <DebugCode>Debug</DebugCode>
+      <DebugInfo>Mago</DebugInfo>
+      <AdditionalOptions>-extern-std=c++17 %(AdditionalOptions)</AdditionalOptions>
+    </DCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -87,6 +95,13 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <DCompile>
+      <Optimizer>true</Optimizer>
+      <CRuntimeLibrary>MultiThreaded</CRuntimeLibrary>
+      <ObjectFileName>Lib/ImGui.obj</ObjectFileName>
+      <DebugCode>Release</DebugCode>
+      <AdditionalOptions>-extern-std=c++17 %(AdditionalOptions)</AdditionalOptions>
+    </DCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -121,6 +136,35 @@
     <ClCompile Include="misc\fonts\binary_to_compressed_c.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <DCompile Include="Lib\Debug\binary_to_compressed_c.d">
+      <DebugCode>Release</DebugCode>
+    </DCompile>
+    <DCompile Include="Lib\Debug\imgui.d">
+      <DebugCode>Release</DebugCode>
+    </DCompile>
+    <DCompile Include="Lib\Debug\imgui_demo.d">
+      <DebugCode>Release</DebugCode>
+    </DCompile>
+    <DCompile Include="Lib\Debug\imgui_draw.d">
+      <DebugCode>Release</DebugCode>
+    </DCompile>
+    <DCompile Include="Lib\Debug\imgui_impl_glfw.d">
+      <DebugCode>Release</DebugCode>
+    </DCompile>
+    <DCompile Include="Lib\Debug\imgui_impl_opengl3.d">
+      <DebugCode>Release</DebugCode>
+    </DCompile>
+    <DCompile Include="Lib\Debug\imgui_stdlib.d">
+      <DebugCode>Release</DebugCode>
+    </DCompile>
+    <DCompile Include="Lib\Debug\imgui_tables.d">
+      <DebugCode>Release</DebugCode>
+    </DCompile>
+    <DCompile Include="Lib\Debug\imgui_widgets.d">
+      <DebugCode>Release</DebugCode>
+    </DCompile>
+  </ItemGroup>
+  <ItemGroup>
     <None Include=".editorconfig" />
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
@@ -131,47 +175,34 @@
     <None Include="Lib\Debug\ImGui.idb" />
     <None Include="Lib\Debug\ImGui.log" />
     <None Include="Lib\Debug\ImGui.pdb" />
-    <None Include="Lib\Debug\ImGui.tlog\CL.17468.write.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\CL.10324.write.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\CL.read.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\ImGui.lastbuildstate" />
     <None Include="Lib\Debug\ImGui.tlog\Lib-link.read.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\Lib-link.write.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\Lib.command.1.tlog" />
+    <None Include="Lib\Debug\binary_to_compressed_c.o" />
     <None Include="Lib\Debug\binary_to_compressed_c.obj" />
+    <None Include="Lib\Debug\imgui.o" />
     <None Include="Lib\Debug\imgui.obj" />
+    <None Include="Lib\Debug\imgui_demo.o" />
     <None Include="Lib\Debug\imgui_demo.obj" />
+    <None Include="Lib\Debug\imgui_draw.o" />
     <None Include="Lib\Debug\imgui_draw.obj" />
-    <None Include="Lib\Debug\imgui_impl_dx10.obj" />
-    <None Include="Lib\Debug\imgui_impl_dx11.obj" />
-    <None Include="Lib\Debug\imgui_impl_dx9.obj" />
+    <None Include="Lib\Debug\imgui_impl_glfw.o" />
     <None Include="Lib\Debug\imgui_impl_glfw.obj" />
-    <None Include="Lib\Debug\imgui_impl_opengl2.obj" />
+    <None Include="Lib\Debug\imgui_impl_opengl3.o" />
     <None Include="Lib\Debug\imgui_impl_opengl3.obj" />
-    <None Include="Lib\Debug\imgui_impl_win32.obj" />
+    <None Include="Lib\Debug\imgui_stdlib.o" />
     <None Include="Lib\Debug\imgui_stdlib.obj" />
+    <None Include="Lib\Debug\imgui_tables.o" />
     <None Include="Lib\Debug\imgui_tables.obj" />
+    <None Include="Lib\Debug\imgui_widgets.o" />
     <None Include="Lib\Debug\imgui_widgets.obj" />
     <None Include="Lib\ImGui.lib" />
     <None Include="Lib\ImGui.pdb" />
-    <None Include="Lib\Release\ImGui.log" />
-    <None Include="Lib\Release\ImGui.pdb" />
-    <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog" />
-    <None Include="Lib\Release\ImGui.tlog\CL.read.1.tlog" />
-    <None Include="Lib\Release\ImGui.tlog\CL.write.1.tlog" />
-    <None Include="Lib\Release\ImGui.tlog\ImGui.lastbuildstate" />
-    <None Include="Lib\Release\ImGui.tlog\Lib-link.read.1.tlog" />
-    <None Include="Lib\Release\ImGui.tlog\Lib-link.write.1.tlog" />
-    <None Include="Lib\Release\ImGui.tlog\Lib.command.1.tlog" />
-    <None Include="Lib\Release\binary_to_compressed_c.obj" />
-    <None Include="Lib\Release\imgui.obj" />
-    <None Include="Lib\Release\imgui_demo.obj" />
-    <None Include="Lib\Release\imgui_draw.obj" />
-    <None Include="Lib\Release\imgui_impl_glfw.obj" />
-    <None Include="Lib\Release\imgui_impl_opengl3.obj" />
-    <None Include="Lib\Release\imgui_stdlib.obj" />
-    <None Include="Lib\Release\imgui_tables.obj" />
-    <None Include="Lib\Release\imgui_widgets.obj" />
+    <None Include="Lib\libImGui.a" />
     <None Include="Makefile" />
     <None Include="docs\BACKENDS.md" />
     <None Include="docs\CHANGELOG.txt" />
