@@ -24,7 +24,6 @@ void Application::SetupScene()
 		"assets/textures/skybox/back.jpg"
 	};
 	mScene->SetSkybox(skyboxTextures);
-
 	// Adding lights to the scene
 	mScene->AddPointLight(
 		Vec3(-1.0f, 1.0f, 0.0f),
