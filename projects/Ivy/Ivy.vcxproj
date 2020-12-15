@@ -120,7 +120,6 @@
     <ClInclude Include="source\scene\Camera.h" />
     <ClInclude Include="source\scene\Entity.h" />
     <ClInclude Include="source\scene\Light.h" />
-    <ClInclude Include="source\scene\ParticleSystem.h" />
     <ClInclude Include="source\scene\Scene.h" />
     <ClInclude Include="source\scene\components\Component.h" />
     <ClInclude Include="source\scene\components\Material.h" />
@@ -147,7 +146,6 @@
     <ClCompile Include="source\rendering\VertexArray.cpp" />
     <ClCompile Include="source\scene\Camera.cpp" />
     <ClCompile Include="source\scene\Entity.cpp" />
-    <ClCompile Include="source\scene\ParticleSystem.cpp" />
     <ClCompile Include="source\scene\Scene.cpp" />
     <ClCompile Include="source\scene\components\Material.cpp" />
     <ClCompile Include="source\scene\components\Mesh.cpp" />
