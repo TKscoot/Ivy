@@ -28,6 +28,8 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 {
 	BindFramebufferForWrite();
 
+
+
 	if(mWindowSize != (VecI2)currentWindowSize)
 	{
 		mWindowSize = currentWindowSize;
@@ -67,6 +69,28 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 
 	mRenderData.nearPlane = mCamera->GetNearPlane();
 	mRenderData.farPlane = mCamera->GetFarPlane();
+
+
+	//Draw skybox
+	if(mShouldRenderSkybox)
+	{
+		//glDepthFunc(GL_LEQUAL);
+		glDepthMask(GL_FALSE);
+		mSkyboxShader->Bind();
+		mSkyboxShader->SetUniformMat4("view", glm::mat4(glm::mat3(mCamera->GetViewMatrix())));
+		mSkyboxShader->SetUniformMat4("projection", projection);
+		mSkyboxShader->SetUniformFloat3("sunPosition", mDirLight.direction);
+		mSkyboxVertexArray->Bind();
+		mSkyboxCubeTexture->Bind(0);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		mSkyboxVertexArray->Unbind();
+		//glDepthFunc(GL_LESS); // set depth function back to default
+
+		glDepthMask(GL_TRUE);
+	}
+
+
 
 	for(int i = 0; i < mEntities.size(); i++)
 	{
@@ -110,22 +134,6 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 
 
 
-	//Draw skybox
-	if(mShouldRenderSkybox)
-	{
-		glDepthFunc(GL_LEQUAL);
-		mSkyboxShader->Bind();
-		view = Mat4(Mat3(mCamera->GetViewMatrix()));
-		mSkyboxShader->SetUniformMat4("view", view);
-		mSkyboxShader->SetUniformMat4("projection", projection);
-		mSkyboxShader->SetUniformFloat3("sunPosition", mDirLight.direction);
-		mSkyboxVertexArray->Bind();
-		mSkyboxCubeTexture->Bind(0);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-		mSkyboxVertexArray->Unbind();
-		glDepthFunc(GL_LESS); // set depth function back to default
-	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

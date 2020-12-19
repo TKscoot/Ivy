@@ -2,6 +2,8 @@
 #include "Types.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/euler_angles.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/norm.hpp>
 
 #include "scene/components/Component.h"
 
@@ -96,6 +98,7 @@ namespace Ivy
 			mComposed = trans * scale * rot;
 
 		}
+
 
 
 	private:

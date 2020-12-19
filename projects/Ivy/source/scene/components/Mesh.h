@@ -55,6 +55,9 @@ namespace Ivy
         //Vector<Vertex>   mVertices;
         //Vector<uint32_t> mIndices;
 
+		static UnorderedMap<String, Ivy::Ptr<Mesh>> mLoadedMeshes;
+
+
 		Vector<Submesh> mSubmeshes;
 		UnorderedMap<String, Ivy::Ptr<Texture2D>> mLoadedTextures;
 

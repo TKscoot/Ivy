@@ -69,6 +69,9 @@ namespace Ivy
 
 		void BindFramebufferForWrite();
 
+
+
+
 		Ptr<Camera>			  mCamera = nullptr;
 		Ptr<Window>			  mWindow = nullptr;
 		Vector<Ptr<Entity>>&  mEntities;

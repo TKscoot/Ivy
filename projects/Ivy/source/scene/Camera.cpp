@@ -5,13 +5,13 @@ void Ivy::Camera::Update(float deltaTime)
 {
 
 	// Checks if movement keys are being pressed
-	if(Input::IsKeyDown(W))		    mGoingForward = true;
-	if(Input::IsKeyDown(S))	        mGoingBack	  = true;
-	if(Input::IsKeyDown(A))	        mGoingLeft	  = true;
-	if(Input::IsKeyDown(D))	        mGoingRight   = true;
-	if(Input::IsKeyDown(Q))	        mGoingUp      = true;
-	if(Input::IsKeyDown(E))	        mGoingDown    = true;
-	if(Input::IsKeyDown(LeftShift)) mFastMove	  = true;
+	if(Input::IsKeyBeingPressed(W))		    mGoingForward = true;
+	if(Input::IsKeyBeingPressed(S))	        mGoingBack	  = true;
+	if(Input::IsKeyBeingPressed(A))	        mGoingLeft	  = true;
+	if(Input::IsKeyBeingPressed(D))	        mGoingRight   = true;
+	if(Input::IsKeyBeingPressed(Q))	        mGoingUp      = true;
+	if(Input::IsKeyBeingPressed(E))	        mGoingDown    = true;
+	if(Input::IsKeyBeingPressed(LeftShift)) mFastMove	  = true;
 
 	// Checks if movement keys are being released
 	if(Input::IsKeyUp(LeftShift)) mFastMove	    = false;

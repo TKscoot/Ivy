@@ -1,6 +1,6 @@
 #pragma once
 #include <Ivy.h>
-
+#include <sstream>
 using namespace Ivy;
 
 class CameraTracker : public Entity

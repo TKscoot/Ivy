@@ -5,11 +5,26 @@ GLFWwindow*  Ivy::Input::mGlfwWnd	= nullptr;
 float		 Ivy::Input::lastX		= 0;
 float		 Ivy::Input::lastY	    = 0;
 bool		 Ivy::Input::firstMouse = true;
+Ivy::UnorderedMap<Ivy::KeyCode, bool> Ivy::Input::mKeyDown = {};
 
-bool Ivy::Input::IsKeyDown(KeyCode key)
+bool Ivy::Input::IsKeyBeingPressed(KeyCode key)
 {
 	auto state = glfwGetKey(mGlfwWnd, key);
 	return state == GLFW_PRESS || state == GLFW_REPEAT;
+}
+
+bool Ivy::Input::IsKeyDown(KeyCode key)
+{
+	bool keyCurrentlyPressed = Input::IsKeyBeingPressed(key);
+	bool returnTrue = false;
+
+	if(!mKeyDown[key] && keyCurrentlyPressed)
+	{
+		returnTrue = true;
+	}
+	mKeyDown[key] = keyCurrentlyPressed;
+
+	return returnTrue;
 }
 
 bool Ivy::Input::IsKeyUp(KeyCode key)

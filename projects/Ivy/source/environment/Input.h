@@ -16,6 +16,11 @@ namespace Ivy
 		///
 		/// Checks if the specified key is being pressed right now
 		///
+		static bool  IsKeyBeingPressed(KeyCode key);
+
+		///
+		/// Checks if the specified key is being pressed down. Only returns true once the key is being pressed down.
+		///
 		static bool  IsKeyDown(KeyCode key);
 
 		///
@@ -70,5 +75,7 @@ namespace Ivy
 		static float lastX;
 		static float lastY;
 		static bool  firstMouse;
+
+		static UnorderedMap<KeyCode, bool> mKeyDown;
 	};
 }

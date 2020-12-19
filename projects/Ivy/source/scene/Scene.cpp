@@ -27,12 +27,15 @@ Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
 {
 	Ptr<Entity> ent = CreatePtr<Entity>();
 	ent->mIndex = mEntities.size();
+	ent->mCamera = mCamera;
 	ent->AddComponent(CreatePtr<Transform>());
 	ent->AddComponent(CreatePtr<Material>());
 	ent->OnCreate();
 	Debug::CoreLog("Created entity with index {}", ent->mIndex);
 
 	mEntities.push_back(ent);
+
+	//SortEntitiesForAlpha();
 	return ent;
 }
 

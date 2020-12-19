@@ -13,9 +13,29 @@ void CameraTracker::OnCreate()
 
 void CameraTracker::OnUpdate(float deltaTime)
 {
+	ImGui::Begin("CameraTracker");
+	ImGui::Checkbox("Play", &mShouldPlay);
+	ImGui::SliderFloat("Speed", &mDuration, 0.01f, 10.0f);
+	if(ImGui::Button("Add current camera position"))
+	{
+		AddTrackingPoint(mCamera->GetPosition());
+	}
+	ImGui::BeginChild("child_2", { 0, 0 }, false, ImGuiWindowFlags_HorizontalScrollbar);
+	for(int i = 0; i < mTrackingPoints.size(); i++)
+	{
+		bool isCurrent = false;
+		if(i == mTrackingIndex) isCurrent = true;
 
+		std::stringstream ss;
+		ss << "x: " << mTrackingPoints[i].x;
+		ss << " y: " << mTrackingPoints[i].y;
+		ss << " z: " << mTrackingPoints[i].z;
+		ImGui::Selectable(ss.str().c_str(), &isCurrent); 
+	}
+	ImGui::EndChild();
+	ImGui::End();
 
-	if(!mShouldPlay) return;
+	if(!mShouldPlay || mTrackingPoints.size() == 0) return;
 
 	if(mTrackingIndex >= mTrackingPoints.size())
 	{
@@ -26,10 +46,9 @@ void CameraTracker::OnUpdate(float deltaTime)
 	{
 		mTimer += deltaTime;
 		Vec3 position = mCamera->GetPosition();
-
-		position = Lerp(position, mTrackingPoints[mTrackingIndex], mTimer * 0.05);
+		position = Lerp(position, mTrackingPoints[mTrackingIndex], mTimer);
 		mCamera->SetPosition(position);
-		Debug::Log("x:{} y:{} z{}", position.x, position.y, position.z);
+		Debug::Log("{}", mTimer);
 	}
 	else
 	{
