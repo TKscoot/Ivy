@@ -14,8 +14,8 @@ end
 workspace "Ivy"
 	-- We set the location of the files Premake will generate
 	
-        --configuration { "linux", "gmake" }
-            --buildoptions { "-j 4" } 
+    --configuration { "linux", "gmake" }
+    --buildoptions { "-j 4" } 
 	-- We indicate that all the projects are C++ only
 	language "C++"
 	-- Language standard should be C++17

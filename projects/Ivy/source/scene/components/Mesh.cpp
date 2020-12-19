@@ -7,6 +7,9 @@
 #include <assimp/scene.h>
 #include <assimp/cimport.h>
 
+Ivy::UnorderedMap<Ivy::String, Ivy::Ptr<Ivy::Mesh>> Ivy::Mesh::mLoadedMeshes = {};
+
+
 Ivy::Mesh::Mesh(Entity* ent) : Ivy::Component::Component(ent)
 {
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());

@@ -3,6 +3,8 @@
 
 #include "Types.h"
 #include "components/Component.h"
+#include "components/Transform.h"
+#include "scene/Camera.h"
 
 namespace Ivy
 {
@@ -13,6 +15,29 @@ namespace Ivy
 		// because userspace should not get access of UpdateComponents() but it needs to
 		// be called in core
 		friend class Scene;
+
+		float GetCameraDistance()
+		{
+			Vec3 camPos = mCamera->GetPosition();
+			Vec3 position = GetFirstComponentOfType<Transform>()->getPosition();
+			float dist = glm::length2(position - camPos);
+
+			return dist;
+		}
+
+		bool operator<(Entity& that)
+		{
+			// Sort in reverse order : far particles drawn first.
+			return this->GetCameraDistance() > that.GetCameraDistance();
+		}
+
+		struct alpha_sort_key
+		{
+			inline bool operator() (Ptr<Ivy::Entity> entity1, Ptr<Ivy::Entity> entity2)
+			{
+				return (entity1->GetCameraDistance() > entity2->GetCameraDistance());
+			}
+		};
 
 		template <typename T>
 		Ptr<T> AddComponent(Ptr<T> component)
@@ -89,8 +114,9 @@ namespace Ivy
 	private:
 		void UpdateComponents();
 		UnorderedMap<std::type_index, Vector<Ptr<Component>>> mComponents;
-
+		
 		uint32_t mIndex = 0;
+		Ptr<Camera> mCamera = nullptr;
 
 	};
 }

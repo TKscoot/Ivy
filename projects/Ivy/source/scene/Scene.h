@@ -111,6 +111,20 @@ namespace Ivy
 
 		void SetDirectionalLightDirection(Vec3 direction) { mDirLight.direction = direction; }
 
+		void SortEntitiesForAlpha()
+		{
+			for(auto& ent : mEntities)
+			{
+				ent->mCamera = mCamera;
+				Debug::CoreLog("Distance to entity {} is {}", ent->mIndex, ent->GetCameraDistance());
+			}
+			std::sort(mEntities.begin(), mEntities.end(), Entity::alpha_sort_key());
+			for(auto& ent : mEntities)
+			{
+				Debug::CoreLog("sorted: {}", ent->mIndex);
+			}
+		}
+
 	private:
 		void InitializeGUI(Ptr<Window> window) 
 		{
@@ -129,6 +143,8 @@ namespace Ivy
 
 			mPostprocessPass = CreatePtr<PostprocessingRenderPass>(mScenePass);
 		}
+
+
 
 		static Ptr<Scene>   mInstance;
 

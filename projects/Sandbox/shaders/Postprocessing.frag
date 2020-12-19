@@ -145,7 +145,7 @@ void main()
 	vec3 mappedColor = tonemapAuto(color);
 
 	// Final color output!
-	FragColor = vec4(mappedColor, 1.0f);
+	FragColor = vec4(mappedColor, texture2D(sceneColorMap, TexCoords).a);
 }
 
 vec3 simpleReinhardToneMapping(vec3 color)
