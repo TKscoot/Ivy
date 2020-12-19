@@ -119,3 +119,79 @@ Linking only to `Ivy` is coming soon™.
 
 If you want to use premake for your project you can use the "Sandbox" template
 project from the premake5.lua file in the root of the repo.
+
+### Code sample
+
+``` c++
+#include <Ivy.h>
+
+using namespace Ivy;
+
+int main()
+{
+	// Creating the Engine object
+	Ptr<Engine> engine = CreatePtr<Engine>();
+
+	// Initializing Ivy and creating a window
+	engine->Initialize(1280, 720, "Sample App");
+
+	// Getting the pointer to the scene
+	Ptr<Scene> scene = Scene::GetScene();
+
+	// Setting up skybox with 6 textures for the cubetexture
+	Vector<String> skyboxTextures =
+	{
+		"assets/textures/skybox/right.jpg",
+		"assets/textures/skybox/left.jpg",
+		"assets/textures/skybox/top.jpg",
+		"assets/textures/skybox/bottom.jpg",
+		"assets/textures/skybox/front.jpg",
+		"assets/textures/skybox/back.jpg"
+	};
+
+	// Telling the scene to use these textures as skybox
+	scene->SetSkybox(skyboxTextures);
+
+	// Changing the direction of the default directional light
+	scene->SetDirectionalLightDirection(Vec3(-2.0f, 4.0f, -1.0f));
+	
+	// Adding a pointlight to our scene
+	scene->AddPointLight(
+		Vec3(-1.0f, 1.0f, 0.0f),
+		1.0f,
+		0.09f,
+		0.032,
+		Vec3(0.05f, 0.05f, 0.05f),
+		Vec3(1.0f, 0.0f, 0.0f),
+		Vec3(1.0f, 1.0f, 1.0f));
+		
+	// Adding an entity to our scene
+	Ptr<Entity> sampleEntity = scene->CreateEntity();
+	
+	// Attaching a Mesh component to our sample entity
+	sampleEntity->AddComponent(CreatePtr<Mesh>(sampleEntity.get(), "assets/models/Cerberus.FBX"));
+	
+	// Getting the default Material component from our entity
+	Ptr<Material> sampleMat = towerEntity->GetFirstComponentOfType<Material>();
+	
+	// Assigning normal, metallic and roughness PBR textures to the material
+	sampleMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);
+	sampleMat->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
+	sampleMat->LoadTexture("assets/textures/Cerberus/Cerberus_R.tga", Material::TextureMapType::ROUGHNESS);
+	
+	
+	// Game loop while the engine shouldn't terminate
+	while(!engine->ShouldTerminate())
+	{
+		// Exit our program when the escape key is pressed down
+		if(Input::IsKeyDown(KeyCode::Escape))
+		{
+			exit(0);
+		}
+
+		// Telling Ivy to begin the new frame
+		engine->NewFrame();
+
+	}
+}
+```

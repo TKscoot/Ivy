@@ -45,14 +45,14 @@ vec3 GaussianBlur();
 
 //Godrays
 vec3 godrays(
-    float density,
-    float weight,
-    float decay,
-    float exposure,
-    int numSamples,
-    sampler2D occlusionTexture,
-    vec2 screenSpaceLightPos,
-    vec2 uv);
+	float density,
+	float weight,
+	float decay,
+	float exposure,
+	int numSamples,
+	sampler2D occlusionTexture,
+	vec2 screenSpaceLightPos,
+	vec2 uv);
 
 // Helper functions
 float rand(vec2 co);
@@ -64,30 +64,30 @@ float falloff = 2.0f;
 float minStrength = 0.0f;
 
 float depthStrength(){
-    float dist = texture2D(sceneDepthMap, TexCoords).r;
+	float dist = texture2D(sceneDepthMap, TexCoords).r;
 	float centerDepth = texture2D(sceneDepthMap, vec2(.5, .5)).r;
 
-    float z = (2 * NearPlane) / (FarPlane + NearPlane - dist * (FarPlane - NearPlane));
-    float centerZ = (2 * NearPlane) / (FarPlane + NearPlane - centerDepth * (FarPlane - NearPlane));
-    //float clipZ = (distance - 0.5f) * 2.0f;
-    //float z = 2 * (nearPlane*farPlane) / (clipZ*(farPlane-nearPlane) - (farPlane + nearPlane));
-    
-    float dofStrength = 1;
-    
-    float sFarDof = (focusDistance+farDof)/FarPlane;
-    float sNearDof = (focusDistance-nearDof)/FarPlane;    
-     
-    if(z > sFarDof){
-       //dofStrength = ((sFarDof)/(z));
-        dofStrength = ((sFarDof)/(z));
-    }else if (z < sNearDof) {
-       dofStrength = ((z)/(sNearDof));
-    }    
-    
+	float z = (2 * NearPlane) / (FarPlane + NearPlane - dist * (FarPlane - NearPlane));
+	float centerZ = (2 * NearPlane) / (FarPlane + NearPlane - centerDepth * (FarPlane - NearPlane));
+	//float clipZ = (distance - 0.5f) * 2.0f;
+	//float z = 2 * (nearPlane*farPlane) / (clipZ*(farPlane-nearPlane) - (farPlane + nearPlane));
+	
+	float dofStrength = 1;
+	
+	float sFarDof = (focusDistance+farDof)/FarPlane;
+	float sNearDof = (focusDistance-nearDof)/FarPlane;    
+	 
+	if(z > sFarDof){
+	   //dofStrength = ((sFarDof)/(z));
+		dofStrength = ((sFarDof)/(z));
+	}else if (z < sNearDof) {
+	   dofStrength = ((z)/(sNearDof));
+	}    
+	
 
-    dofStrength = clamp(1-dofStrength,0.0f,1.0f);
-    dofStrength *= falloff;
-    dofStrength =clamp(1-dofStrength,0.0f,1.0f);
+	dofStrength = clamp(1-dofStrength,0.0f,1.0f);
+	dofStrength *= falloff;
+	dofStrength =clamp(1-dofStrength,0.0f,1.0f);
 
 	if(centerDepth > DofThreshold)
 	{
@@ -95,7 +95,7 @@ float depthStrength(){
 	}
 
 
-    return mix(minStrength, 1.0f,dofStrength);
+	return mix(minStrength, 1.0f,dofStrength);
 }
 
 
@@ -118,7 +118,7 @@ void main()
 		vec3 blurred = GaussianBlur();
 
 		color = mix(blurred, color, dofStrength);
-    }
+	}
 
 	vec4 sunPos = Projection * View * vec4(-2.0, 4.0, -1.0, 1.0);
 	vec2 screenSpaceSunPos = vec2(0.0);
@@ -139,7 +139,7 @@ void main()
 
 	
 	// gamma correct
-    color = pow(color, vec3(1.0/2.2)); 
+	color = pow(color, vec3(1.0/2.2)); 
 	
 	// tonemapping
 	vec3 mappedColor = tonemapAuto(color);
@@ -150,69 +150,69 @@ void main()
 
 vec3 simpleReinhardToneMapping(vec3 color)
 {
-    float exposure = 1.5;
-    color *= exposure/(1. + color / exposure);
-    return color;
+	float exposure = 1.5;
+	color *= exposure/(1. + color / exposure);
+	return color;
 }
 
 vec3 lumaBasedReinhardToneMapping(vec3 color)
 {
-    float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
-    float toneMappedLuma = luma / (1. + luma);
-    color *= toneMappedLuma / luma;
-    return color;
+	float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
+	float toneMappedLuma = luma / (1. + luma);
+	color *= toneMappedLuma / luma;
+	return color;
 }
 
 vec3 RomBinDaHouseToneMapping(vec3 color)
 {
-    color = exp( -1.0 / ( 2.72*color + 0.15 ) );
-    return color;
+	color = exp( -1.0 / ( 2.72*color + 0.15 ) );
+	return color;
 }
 
 vec3 filmicToneMapping(vec3 color)
 {
-    color = max(vec3(0.), color - vec3(0.004));
-    color = (color * (6.2 * color + .5)) / (color * (6.2 * color + 1.7) + 0.06);
-    return color;
+	color = max(vec3(0.), color - vec3(0.004));
+	color = (color * (6.2 * color + .5)) / (color * (6.2 * color + 1.7) + 0.06);
+	return color;
 }
 
 vec3 Uncharted2ToneMapping(vec3 color)
 {
-    float A = 0.15;
-    float B = 0.50;
-    float C = 0.10;
-    float D = 0.20;
-    float E = 0.02;
-    float F = 0.30;
-    float W = 11.2;
-    float exposure = 2.;
-    color *= exposure;
-    color = ((color * (A * color + C * B) + D * E) / (color * (A * color + B) + D * F)) - E / F;
-    float white = ((W * (A * W + C * B) + D * E) / (W * (A * W + B) + D * F)) - E / F;
-    color /= white;
-    return color;
+	float A = 0.15;
+	float B = 0.50;
+	float C = 0.10;
+	float D = 0.20;
+	float E = 0.02;
+	float F = 0.30;
+	float W = 11.2;
+	float exposure = 2.;
+	color *= exposure;
+	color = ((color * (A * color + C * B) + D * E) / (color * (A * color + B) + D * F)) - E / F;
+	float white = ((W * (A * W + C * B) + D * E) / (W * (A * W + B) + D * F)) - E / F;
+	color /= white;
+	return color;
 }
 
 vec3 tonemapAuto(vec3 color)
 {
-    switch (Tonemap) {
+	switch (Tonemap) {
 	case 0:
 		break;
-    case 1:
-        color = simpleReinhardToneMapping(color);
-        break;
-    case 2:
-        color = lumaBasedReinhardToneMapping(color);
-        break;
-    case 3:
-        color = RomBinDaHouseToneMapping(color);
-        break;
-    case 4:
-        color = filmicToneMapping(color);
-        break;
-    case 5:
-        color = Uncharted2ToneMapping(color);
-        break;
+	case 1:
+		color = simpleReinhardToneMapping(color);
+		break;
+	case 2:
+		color = lumaBasedReinhardToneMapping(color);
+		break;
+	case 3:
+		color = RomBinDaHouseToneMapping(color);
+		break;
+	case 4:
+		color = filmicToneMapping(color);
+		break;
+	case 5:
+		color = Uncharted2ToneMapping(color);
+		break;
 	}
 	return color;
 }
@@ -221,25 +221,25 @@ vec3 tonemapAuto(vec3 color)
 
 void DoF(inout vec3 color)
 {
-    float depth = texture2D(sceneDepthMap, TexCoords).r;
+	float depth = texture2D(sceneDepthMap, TexCoords).r;
  
  
-    float sampleOffset = depth/500.0;
+	float sampleOffset = depth/500.0;
  
-    //vec4 col = vec4(0.0);
-    color += texture2D(sceneColorMap, TexCoords.st + vec2(-sampleOffset,-sampleOffset)).rgb * 1.0;
-    color += texture2D(sceneColorMap, TexCoords.st + vec2( 0.0         ,-sampleOffset)).rgb * 2.0;
-    color += texture2D(sceneColorMap, TexCoords.st + vec2( sampleOffset,-sampleOffset)).rgb * 1.0;
- 				 
-    color += texture2D(sceneColorMap, TexCoords.st + vec2(-sampleOffset, 0.0     )).rgb * 2.0;
-    color += texture2D(sceneColorMap, TexCoords.st + vec2( 0.0         , 0.0     )).rgb * 4.0;
-    color += texture2D(sceneColorMap, TexCoords.st + vec2( sampleOffset, 0.0     )).rgb * 2.0;
- 				 
-    color += texture2D(sceneColorMap, TexCoords.st + vec2( sampleOffset, sampleOffset)).rgb * 1.0;
-    color += texture2D(sceneColorMap, TexCoords.st + vec2( 0.0         , sampleOffset)).rgb * 2.0;
-    color += texture2D(sceneColorMap, TexCoords.st + vec2(-sampleOffset, sampleOffset)).rgb * 1.0;
+	//vec4 col = vec4(0.0);
+	color += texture2D(sceneColorMap, TexCoords.st + vec2(-sampleOffset,-sampleOffset)).rgb * 1.0;
+	color += texture2D(sceneColorMap, TexCoords.st + vec2( 0.0         ,-sampleOffset)).rgb * 2.0;
+	color += texture2D(sceneColorMap, TexCoords.st + vec2( sampleOffset,-sampleOffset)).rgb * 1.0;
+				 
+	color += texture2D(sceneColorMap, TexCoords.st + vec2(-sampleOffset, 0.0     )).rgb * 2.0;
+	color += texture2D(sceneColorMap, TexCoords.st + vec2( 0.0         , 0.0     )).rgb * 4.0;
+	color += texture2D(sceneColorMap, TexCoords.st + vec2( sampleOffset, 0.0     )).rgb * 2.0;
+				 
+	color += texture2D(sceneColorMap, TexCoords.st + vec2( sampleOffset, sampleOffset)).rgb * 1.0;
+	color += texture2D(sceneColorMap, TexCoords.st + vec2( 0.0         , sampleOffset)).rgb * 2.0;
+	color += texture2D(sceneColorMap, TexCoords.st + vec2(-sampleOffset, sampleOffset)).rgb * 1.0;
  
-    color /= 16.0;
+	color /= 16.0;
 	//return col.rgb;
 }
 
@@ -299,18 +299,18 @@ void motionBlur(inout vec3 color)
 
 // godrays
 vec3 godrays(
-    float density,
-    float weight,
-    float decay,
-    float exposure,
-    int numSamples,
-    sampler2D occlusionTexture,
-    vec2 screenSpaceLightPos,
-    vec2 uv
-    ) 
+	float density,
+	float weight,
+	float decay,
+	float exposure,
+	int numSamples,
+	sampler2D occlusionTexture,
+	vec2 screenSpaceLightPos,
+	vec2 uv
+	) 
 	{
 
-    vec3 fragColor = vec3(0.0,0.0,0.0);
+	vec3 fragColor = vec3(0.0,0.0,0.0);
 
 	vec2 deltaTextCoord = vec2( uv - screenSpaceLightPos.xy );
 
@@ -322,17 +322,17 @@ vec3 godrays(
 	for(int i=0; i < 100 ; i++){
 
 
-        /*
-        This makes sure that the loop only runs `numSamples` many times.
-        We have to do it this way in WebGL, since you can't have a for loop
-        that runs a variable number times in WebGL.
-        This little hack gets around that.
-        But the drawback of this is that we have to specify an upper bound to the
-        number of iterations(but 100 is good enough for almost all cases.)
-        */
-	    if(numSamples < i) {
-            break;
-	    }
+		/*
+		This makes sure that the loop only runs `numSamples` many times.
+		We have to do it this way in WebGL, since you can't have a for loop
+		that runs a variable number times in WebGL.
+		This little hack gets around that.
+		But the drawback of this is that we have to specify an upper bound to the
+		number of iterations(but 100 is good enough for almost all cases.)
+		*/
+		if(numSamples < i) {
+			break;
+		}
 
 		textCoo -= deltaTextCoord;
 		vec3 samp = texture2D(occlusionTexture, textCoo   ).xyz;
@@ -343,14 +343,14 @@ vec3 godrays(
 
 	fragColor *= exposure;
 
-    return fragColor;
+	return fragColor;
 
 
 }
 
 // Helper functions
 float rand(vec2 co){
-    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+	return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
 
