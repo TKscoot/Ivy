@@ -20,7 +20,7 @@ void CameraTracker::OnUpdate(float deltaTime)
 	{
 		AddTrackingPoint(mCamera->GetPosition());
 	}
-	ImGui::BeginChild("child_2", { 0, 0 }, false, ImGuiWindowFlags_HorizontalScrollbar);
+	ImGui::BeginChild("child_1", { 0, 0 }, false, ImGuiWindowFlags_HorizontalScrollbar);
 	for(int i = 0; i < mTrackingPoints.size(); i++)
 	{
 		bool isCurrent = false;

@@ -2,6 +2,9 @@
 #include "Window.h"
 #include <GLFW/glfw3.h>
 
+//#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 namespace Ivy
 {
 	Window::Window(int width, int height, const std::string& title)
@@ -63,6 +66,19 @@ namespace Ivy
 	void Window::SetTitle(std::string title)
 	{
 		glfwSetWindowTitle(mWnd, title.c_str());
+	}
+
+	void Window::SetWindowIcon(std::string path)
+	{
+		int x, y, comp;
+		GLFWimage icon[1];
+		icon[0].pixels = stbi_load(path.c_str(), &x, &y, &comp, STBI_rgb_alpha);
+		icon[0].width = x;
+		icon[0].height = y;
+
+		glfwSetWindowIcon(mWnd, 1, icon);
+
+		stbi_image_free(icon[0].pixels);
 	}
 
 	void Window::EnableVsync(bool enable)

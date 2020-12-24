@@ -11,9 +11,10 @@ Ivy::Material::Material()
 	//, mRoughness(0.5f)
 {
 	// Set default shader
-	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Default.vert", "shaders/PBR.frag");
-	//SetShader(defaultShader);
+	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Default.vert", "shaders/PBR.frag"); // TODO: Check if animated
 	mShader = defaultShader;
+	
+	SetShader(defaultShader);
 	// Set default color values
 	SetTextureTiling(mTextureTiling);
 	SetAmbientColor(mAmbient);

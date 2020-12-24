@@ -36,6 +36,9 @@ namespace Ivy
 	using Mat3 = glm::mat3;
 	using Mat4 = glm::mat4;
 
+	// Quaternions
+	using Quat = glm::quat;
+
 	// ostream operators
 	//std::ostream& operator<<(std::ostream& os, const Vec3& vec)
 	//{
@@ -51,6 +54,63 @@ namespace Ivy
         Vec3 tangent;
 		Vec3 bitangent;
 		Vec2 texcoord;
+	};
+
+	// Animation structs
+	struct AnimatedVertex
+	{
+		Vec4 position;
+		Vec3 normal;
+		Vec3 tangent;
+		Vec3 bitangent;
+		Vec2 texcoord;
+
+		uint32_t IDs[4] = { 0, 0, 0, 0 };
+		float weights[4]{ 0.0f, 0.0f, 0.0f, 0.0f };
+
+		void AddBoneData(uint32_t BoneID, float Weight)
+		{
+			for(size_t i = 0; i < 4; i++)
+			{
+				if(weights[i] == 0.0)
+				{
+					IDs[i] = BoneID;
+					weights[i] = Weight;
+					return;
+				}
+			}
+		}
+	};
+
+	struct BoneInfo
+	{
+		glm::mat4 BoneOffset;
+		glm::mat4 FinalTransformation;
+	};
+
+	struct VertexBoneData
+	{
+		uint32_t IDs[4];
+		float Weights[4];
+
+		VertexBoneData()
+		{
+			memset(IDs, 0, sizeof(IDs));
+			memset(Weights, 0, sizeof(Weights));
+		};
+
+		void AddBoneData(uint32_t BoneID, float Weight)
+		{
+			for(size_t i = 0; i < 4; i++)
+			{
+				if(Weights[i] == 0.0)
+				{
+					IDs[i] = BoneID;
+					Weights[i] = Weight;
+					return;
+				}
+			}
+		}
 	};
 
 	// Strings

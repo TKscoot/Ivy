@@ -13,7 +13,7 @@ Ivy::ImGuiHook::ImGuiHook(GLFWwindow* window)
 	ImGui_ImplOpenGL3_Init("#version 450 core");
 
 	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
+	ImGui::StyleDarkAndPurple();
 }
 
 Ivy::ImGuiHook::~ImGuiHook()

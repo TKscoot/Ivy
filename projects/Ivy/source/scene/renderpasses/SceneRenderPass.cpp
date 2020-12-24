@@ -114,16 +114,9 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 
 		shader->SetUniformFloat3("viewPos", mCamera->GetPosition());
 
-		shader->SetUniformFloat3("lightPos", Vec3(5.0f, 3.0f, 0.0f));
-		shader->SetUniformFloat3("sunDirection", Vec3(-0.2f, -1.0f, -0.3f));
-		shader->SetUniformFloat3("sunColor", Vec3(252.0F, 212.0f, 64.0f));
-
 		mSkyboxCubeTexture->Bind(6);
 
 		PushLightParams(shader);
-
-		Ptr<Transform> trans = mEntities[i]->GetFirstComponentOfType<Transform>();
-		shader->SetUniformMat4("model", trans->getComposed());
 
 		Vector<Ptr<Mesh>> meshes = mEntities[i]->GetComponentsOfType<Mesh>();
 		for(int j = 0; j < meshes.size(); j++)
@@ -132,11 +125,7 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 		}
 	}
 
-
-
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 
 void Ivy::SceneRenderPass::PushLightParams(Ptr<Shader> shader)

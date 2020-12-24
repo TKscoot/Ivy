@@ -112,7 +112,7 @@ namespace Ivy
 		virtual void OnCreate()  {};
 
 	private:
-		void UpdateComponents();
+		void UpdateComponents(float deltaTime);
 		UnorderedMap<std::type_index, Vector<Ptr<Component>>> mComponents;
 		
 		uint32_t mIndex = 0;

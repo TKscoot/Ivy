@@ -1,7 +1,7 @@
 #include "ivypch.h"
 #include "Entity.h"
 
-void Ivy::Entity::UpdateComponents()
+void Ivy::Entity::UpdateComponents(float deltaTime)
 {
 	for (auto& kv : mComponents)
 	{
@@ -9,7 +9,7 @@ void Ivy::Entity::UpdateComponents()
 		{
 			if (c->IsActive())
 			{
-				c->OnUpdate();
+				c->OnUpdate(deltaTime);
 			}
 		}
 	}

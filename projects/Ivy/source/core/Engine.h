@@ -71,6 +71,10 @@ namespace Ivy
 		 */
 		const float GetDeltaTime() { return mDeltaTime; }
 
+		/*!
+		 * Tells Ivy to shutdown
+		 * 
+		 */
 		static void Terminate() { mTerminate = true; }
 
 	private:

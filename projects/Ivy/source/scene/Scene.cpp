@@ -10,10 +10,10 @@ Ivy::Scene::Scene()
 	mCSM = CreatePtr<ShadowRenderPass>(mCamera);
 
 	AddDirectionalLight(
-		Vec3(-2.0f, 4.0f, -1.0f),	//direction
-		Vec3( 0.1f, 0.1f,  0.1f),	//ambient
-		Vec3( 0.8f, 0.8f,  0.8f),	//diffuse
-		Vec3( 0.5f, 0.5f,  0.5f));	//specular
+		Vec3(-2.0f,  4.0f, -1.0f),	 //direction
+		Vec3( 0.05f, 0.05f, 0.05f), //ambient
+		Vec3( 0.8f,  0.8f,  0.8f),	 //diffuse
+		Vec3( 0.5f,  0.5f,  0.5f));	 //specular
 
 	mCSM->SetDirLight(mDirLight);
 
@@ -67,7 +67,7 @@ void Ivy::Scene::Update(float deltaTime)
 	for(auto& e : mEntities)
 	{
 		e->OnUpdate(deltaTime);
-		e->UpdateComponents();
+		e->UpdateComponents(deltaTime);
 	}
 
 	mCSM->Update();

@@ -5,6 +5,8 @@ Application::Application()
 	mEngine = CreatePtr<Engine>();
 	mEngine->Initialize(1280, 720, "Ivy Sandbox v0.3.7");
 
+	mEngine->GetWindow()->SetWindowIcon("assets/textures/Misc/awesomeface.png");
+
 	mScene = Scene::GetScene();
 
 	SetupScene();
@@ -54,9 +56,9 @@ void Application::SetupScene()
 void Application::SetupEntities()
 {
 	// Object to test shadowmap
-	Ptr<Entity> shadowTestEntity = Scene::GetScene()->CreateEntity();
-	shadowTestEntity->AddComponent(CreatePtr<Mesh>(shadowTestEntity.get(), "assets/models/sponza_pbr.obj"));
-	Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
+	//Ptr<Entity> shadowTestEntity = Scene::GetScene()->CreateEntity();
+	//shadowTestEntity->AddComponent(CreatePtr<Mesh>(shadowTestEntity.get(), "assets/models/sponza_pbr.obj"));
+	//Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
 	//for(auto& shadowTestMaterial : shadowTestMaterials)
 	//{
 	//	//shadowTestMaterial->LoadTexture("assets/textures/Misc/box.jpg", Material::TextureMapType::DIFFUSE);
@@ -66,7 +68,7 @@ void Application::SetupEntities()
 	//	shadowTestMaterial->SetMetallic(0.1f);
 	//	shadowTestMaterial->SetRoughness(0.9f);
 	//}
-	shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
+	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(20.0f, 20.0f, 20.0f);
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setPosition(-2.0f, 4.0f, -3.0f);
 
@@ -84,8 +86,8 @@ void Application::SetupEntities()
 	//towerTransform->setScale(0.05f, 0.05f, 0.05f);
 	//towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
 	
-	//Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
-	//sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
+	Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
+	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
 	//Vector<Ptr<Material>> sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
 	//
 	//sceneBaseMaterials[0]->SetTextureTiling(Vec2(5.0f, 5.0f));
