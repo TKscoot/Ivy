@@ -43,6 +43,9 @@ namespace Ivy
 			SetDiffuseColor(mDiffuse);
 			SetSpecularColor(mSpecular);
 			SetMetallic(mMetallic);
+			SetRoughness(mRoughness);
+			UseIBL(mUseIBL);
+			SetDefaultShaderUniforms();
 			mShader->Unbind();
 		}
 

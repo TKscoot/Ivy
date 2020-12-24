@@ -64,15 +64,22 @@ float falloff = 2.0f;
 float minStrength = 0.0f;
 
 float depthStrength(){
-	float dist = texture2D(sceneDepthMap, TexCoords).r;
 	float centerDepth = texture2D(sceneDepthMap, vec2(.5, .5)).r;
+	float dofStrength = 1;
+
+	if(centerDepth > DofThreshold)
+	{
+		dofStrength = 1.0;
+		return mix(minStrength, 1.0f,dofStrength);
+	}
+
+	float dist = texture2D(sceneDepthMap, TexCoords).r;
 
 	float z = (2 * NearPlane) / (FarPlane + NearPlane - dist * (FarPlane - NearPlane));
 	float centerZ = (2 * NearPlane) / (FarPlane + NearPlane - centerDepth * (FarPlane - NearPlane));
 	//float clipZ = (distance - 0.5f) * 2.0f;
 	//float z = 2 * (nearPlane*farPlane) / (clipZ*(farPlane-nearPlane) - (farPlane + nearPlane));
 	
-	float dofStrength = 1;
 	
 	float sFarDof = (focusDistance+farDof)/FarPlane;
 	float sNearDof = (focusDistance-nearDof)/FarPlane;    
@@ -89,10 +96,7 @@ float depthStrength(){
 	dofStrength *= falloff;
 	dofStrength =clamp(1-dofStrength,0.0f,1.0f);
 
-	if(centerDepth > DofThreshold)
-	{
-		dofStrength = 1.0;
-	}
+
 
 
 	return mix(minStrength, 1.0f,dofStrength);

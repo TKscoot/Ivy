@@ -119,7 +119,20 @@ namespace Ivy
 	class TextureCube
 	{
 	public:
+		/*!
+		 * TextureCube constructor
+		 * Creates cube texture object
+		 *
+		 * \param filenames Vector of files to use as Cube texture
+		 */
 		TextureCube(Vector<String> filenames);
+		
+		/*!
+		 * TextureCube constructor
+		 * Creates cube texture object
+		 *
+		 * \param Paths to images for the cubetexture
+		 */
 		TextureCube(String right,
 				    String left,
 				    String top,
@@ -127,8 +140,18 @@ namespace Ivy
 				    String back,
 				    String front);
 
+		/*!
+		 * Loads cube texture with specified images
+		 *
+		 * \param filenames Vector of files to use as Cube texture
+		 */
 		void Load(Vector<String> filenames);
 
+		/*!
+		 * Loads cube texture with specified images
+		 *
+		 * \param filenames Vector of files to use as Cube texture
+		 */
 		void Load(String right,
 				  String left,
 				  String top,
@@ -136,6 +159,11 @@ namespace Ivy
 				  String back,
 				  String front);
 
+		/*!
+		 * Binds the cube texture to the shader
+		 * 
+		 * \param slot Which slot it should be bound to shader. Default = 0
+		 */
 		void Bind(uint32_t slot = 0);
 
 	private:

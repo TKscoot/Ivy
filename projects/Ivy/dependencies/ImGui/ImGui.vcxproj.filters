@@ -10,6 +10,12 @@
     <Filter Include="Lib\Debug\ImGui.tlog">
       <UniqueIdentifier>{0031CD1E-ECBF-56E8-95DE-6AE3814C678E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Release">
+      <UniqueIdentifier>{4C579ABE-B80C-13B4-4101-0D8BADB509B8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Release\ImGui.tlog">
+      <UniqueIdentifier>{7ACC6950-66C6-92A2-4F33-29B33BCCF80E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="backends">
       <UniqueIdentifier>{00057006-ECD1-CA11-15EB-B8B9011700A0}</UniqueIdentifier>
     </Filter>
@@ -42,6 +48,7 @@
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imgui_themes.h" />
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
@@ -63,6 +70,7 @@
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_tables.cpp" />
+    <ClCompile Include="imgui_themes.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="misc\cpp\imgui_stdlib.cpp">
       <Filter>misc\cpp</Filter>
@@ -70,35 +78,6 @@
     <ClCompile Include="misc\fonts\binary_to_compressed_c.cpp">
       <Filter>misc\fonts</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <DCompile Include="Lib\Debug\binary_to_compressed_c.d">
-      <Filter>Lib\Debug</Filter>
-    </DCompile>
-    <DCompile Include="Lib\Debug\imgui.d">
-      <Filter>Lib\Debug</Filter>
-    </DCompile>
-    <DCompile Include="Lib\Debug\imgui_demo.d">
-      <Filter>Lib\Debug</Filter>
-    </DCompile>
-    <DCompile Include="Lib\Debug\imgui_draw.d">
-      <Filter>Lib\Debug</Filter>
-    </DCompile>
-    <DCompile Include="Lib\Debug\imgui_impl_glfw.d">
-      <Filter>Lib\Debug</Filter>
-    </DCompile>
-    <DCompile Include="Lib\Debug\imgui_impl_opengl3.d">
-      <Filter>Lib\Debug</Filter>
-    </DCompile>
-    <DCompile Include="Lib\Debug\imgui_stdlib.d">
-      <Filter>Lib\Debug</Filter>
-    </DCompile>
-    <DCompile Include="Lib\Debug\imgui_tables.d">
-      <Filter>Lib\Debug</Filter>
-    </DCompile>
-    <DCompile Include="Lib\Debug\imgui_widgets.d">
-      <Filter>Lib\Debug</Filter>
-    </DCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -117,7 +96,7 @@
     <None Include="Lib\Debug\ImGui.pdb">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\ImGui.tlog\CL.10324.write.1.tlog">
+    <None Include="Lib\Debug\ImGui.tlog\CL.17468.write.1.tlog">
       <Filter>Lib\Debug\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog">
@@ -138,55 +117,46 @@
     <None Include="Lib\Debug\ImGui.tlog\Lib.command.1.tlog">
       <Filter>Lib\Debug\ImGui.tlog</Filter>
     </None>
-    <None Include="Lib\Debug\binary_to_compressed_c.o">
-      <Filter>Lib\Debug</Filter>
-    </None>
     <None Include="Lib\Debug\binary_to_compressed_c.obj">
-      <Filter>Lib\Debug</Filter>
-    </None>
-    <None Include="Lib\Debug\imgui.o">
       <Filter>Lib\Debug</Filter>
     </None>
     <None Include="Lib\Debug\imgui.obj">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\imgui_demo.o">
-      <Filter>Lib\Debug</Filter>
-    </None>
     <None Include="Lib\Debug\imgui_demo.obj">
-      <Filter>Lib\Debug</Filter>
-    </None>
-    <None Include="Lib\Debug\imgui_draw.o">
       <Filter>Lib\Debug</Filter>
     </None>
     <None Include="Lib\Debug\imgui_draw.obj">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\imgui_impl_glfw.o">
+    <None Include="Lib\Debug\imgui_impl_dx10.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_dx11.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_dx9.obj">
       <Filter>Lib\Debug</Filter>
     </None>
     <None Include="Lib\Debug\imgui_impl_glfw.obj">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\imgui_impl_opengl3.o">
+    <None Include="Lib\Debug\imgui_impl_opengl2.obj">
       <Filter>Lib\Debug</Filter>
     </None>
     <None Include="Lib\Debug\imgui_impl_opengl3.obj">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\imgui_stdlib.o">
+    <None Include="Lib\Debug\imgui_impl_win32.obj">
       <Filter>Lib\Debug</Filter>
     </None>
     <None Include="Lib\Debug\imgui_stdlib.obj">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\imgui_tables.o">
-      <Filter>Lib\Debug</Filter>
-    </None>
     <None Include="Lib\Debug\imgui_tables.obj">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\imgui_widgets.o">
+    <None Include="Lib\Debug\imgui_themes.obj">
       <Filter>Lib\Debug</Filter>
     </None>
     <None Include="Lib\Debug\imgui_widgets.obj">
@@ -198,8 +168,65 @@
     <None Include="Lib\ImGui.pdb">
       <Filter>Lib</Filter>
     </None>
-    <None Include="Lib\libImGui.a">
-      <Filter>Lib</Filter>
+    <None Include="Lib\Release\ImGui.Build.CppClean.log">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.log">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.pdb">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\CL.318880.write.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\CL.read.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\ImGui.lastbuildstate">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\Lib-link.read.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\Lib-link.write.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.tlog\Lib.command.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Release\binary_to_compressed_c.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_demo.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_draw.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_impl_glfw.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_impl_opengl3.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_stdlib.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_tables.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_themes.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_widgets.obj">
+      <Filter>Lib\Release</Filter>
     </None>
     <None Include="Makefile" />
     <None Include="docs\BACKENDS.md">

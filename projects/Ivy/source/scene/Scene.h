@@ -125,7 +125,6 @@ namespace Ivy
 			}
 		}
 
-	private:
 		void InitializeGUI(Ptr<Window> window) 
 		{
 			mImGuiHook = CreatePtr<ImGuiHook>(window->GetHandle());
@@ -143,6 +142,7 @@ namespace Ivy
 
 			mPostprocessPass = CreatePtr<PostprocessingRenderPass>(mScenePass);
 		}
+	private:
 
 
 

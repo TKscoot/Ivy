@@ -13,6 +13,8 @@ void Ivy::Renderer::Initialize()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+	glShadeModel(GL_SMOOTH);
+
 
 	int texture_units;
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
@@ -25,7 +27,6 @@ void Ivy::Renderer::Initialize()
 
 void Ivy::Renderer::Render(float deltaTime)
 {
-	glShadeModel(GL_SMOOTH);
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

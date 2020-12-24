@@ -214,7 +214,9 @@ project "Sandbox"
     filter "system:windows"
         libdirs
         {
+			"projects/Ivy/dependencies/assimp/lib",
             "projects/Ivy/dependencies/GLFW/lib"
+
         }
 
 		postbuildcommands{
@@ -227,6 +229,15 @@ project "Sandbox"
     links "Ivy"
     links "GLAD"
 	links "ImGui"
+	filter{ "system:windows", "configurations:Debug"}
+        links "GLFW3"
+		links "assimp-vc141-mt"
+    filter {}
+	
+	filter{ "system:windows", "configurations:Release"}
+        links "GLFW3"
+		links "assimp-vc141-mt"
+    filter {}
 
     filter "system:linux"
         links "dl"

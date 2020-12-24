@@ -19,7 +19,7 @@ Ivy::VertexBuffer::VertexBuffer(uint32_t size)
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, mID);
-	glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
 }
 
 Ivy::VertexBuffer::VertexBuffer(void* vertices, uint32_t size)

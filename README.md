@@ -122,7 +122,7 @@ project from the premake5.lua file in the root of the repo.
 
 ### Code sample
 
-``` c++
+```cpp
 #include <Ivy.h>
 
 using namespace Ivy;
