@@ -4,6 +4,13 @@
 
 Ivy::UnorderedMap<Ivy::String, Ivy::Ptr<Ivy::Mesh>> Ivy::Mesh::mLoadedMeshes = {};
 
+
+static inline glm::vec3 vec3_cast(const aiVector3D &v) { return glm::vec3(v.x, v.y, v.z); }
+static inline glm::vec2 vec2_cast(const aiVector3D &v) { return glm::vec2(v.x, v.y); } // it's aiVector3D because assimp's texture coordinates use that
+static inline glm::quat quat_cast(const aiQuaternion &q) { return glm::quat(q.w, q.x, q.y, q.z); }
+static inline glm::mat4 mat4_cast(const aiMatrix4x4 &m) { return glm::transpose(glm::make_mat4(&m.a1)); }
+static inline glm::mat4 mat4_cast(const aiMatrix3x3 &m) { return glm::transpose(glm::make_mat3(&m.a1)); }
+
 Ivy::Mat4 Mat4FromAssimpMat4(const aiMatrix4x4& matrix)
 {
 	Ivy::Mat4 result;
@@ -18,7 +25,7 @@ Ivy::Mat4 Mat4FromAssimpMat4(const aiMatrix4x4& matrix)
 Ivy::Mesh::Mesh(Entity* ent) : Ivy::Component::Component(ent)
 {
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
-    CreateResources();
+    //CreateResources();
 }
 
 Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Component::Component(ent)
@@ -27,7 +34,7 @@ Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Comp
 	//Debug::CoreLog("entidx: {}", entidx);
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(entidx); //TODO: GetEntityIndex not working properly
 
-    CreateResources();
+    //CreateResources();
     Load(filepath, useMtlIfProvided);
 }
 
@@ -43,7 +50,7 @@ void Ivy::Mesh::OnUpdate(float deltaTime)
 		if(mAnimationPlaying)
 		{
 			mWorldTime += deltaTime;
-
+		
 			float ticksPerSecond = (float)(mAssimpScene->mAnimations[0]->mTicksPerSecond != 0 ? mAssimpScene->mAnimations[0]->mTicksPerSecond : 25.0f) * mTimeMultiplier;
 			mAnimationTime += deltaTime * ticksPerSecond;
 			mAnimationTime = fmod(mAnimationTime, (float)mAssimpScene->mAnimations[0]->mDuration);
@@ -76,7 +83,7 @@ Ivy::Vec3 Ivy::Mesh::InterpolateTranslation(float animationTime, aiNodeAnim* nod
 	return { aiVec.x, aiVec.y, aiVec.z };
 }
 
-uint32_t Ivy::Mesh::FindPosition(float AnimationTime, aiNodeAnim* pNodeAnim)
+uint32_t Ivy::Mesh::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
 	for(uint32_t i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++)
 	{
@@ -87,9 +94,10 @@ uint32_t Ivy::Mesh::FindPosition(float AnimationTime, aiNodeAnim* pNodeAnim)
 	return 0;
 }
 
-
-uint32_t Ivy::Mesh::FindRotation(float AnimationTime, aiNodeAnim* pNodeAnim)
+uint32_t Ivy::Mesh::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
+	assert(pNodeAnim->mNumRotationKeys > 0);
+
 	for(uint32_t i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++)
 	{
 		if(AnimationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime)
@@ -99,9 +107,10 @@ uint32_t Ivy::Mesh::FindRotation(float AnimationTime, aiNodeAnim* pNodeAnim)
 	return 0;
 }
 
-
-uint32_t Ivy::Mesh::FindScaling(float AnimationTime, aiNodeAnim* pNodeAnim)
+uint32_t Ivy::Mesh::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
+	assert(pNodeAnim->mNumScalingKeys > 0);
+
 	for(uint32_t i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++)
 	{
 		if(AnimationTime < (float)pNodeAnim->mScalingKeys[i + 1].mTime)
@@ -166,127 +175,235 @@ aiNodeAnim* Ivy::Mesh::FindNodeAnim(aiAnimation* animation, std::string& nodeNam
 	return nullptr;
 }
 
+void Ivy::Mesh::LoadBones(uint32_t meshIndex, const aiMesh * mesh)
+{
+	/* Load bones one by one */
+
+	for(unsigned int i = 0; i < mesh->mNumBones; ++i)
+	{
+		unsigned int BoneIndex = 0;
+		std::string BoneName(mesh->mBones[i]->mName.data);
+
+		if(mBoneMapping.find(BoneName) == mBoneMapping.end())
+		{
+			/* allocate an index for the new bone */
+			BoneIndex = mBoneCount;
+			mBoneCount++;
+			BoneInfo bi;
+			mBoneInfo.push_back(bi);
+
+			mBoneInfo[BoneIndex].BoneOffset = mat4_cast(mesh->mBones[i]->mOffsetMatrix);
+			mBoneMapping[BoneName] = BoneIndex;
+		}
+		else
+		{
+			BoneIndex = mBoneMapping[BoneName];
+		}
+
+		for(unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; ++j)
+		{
+			//std::cout << pMesh->mBones[i]->mWeights. << std::endl;
+			unsigned int VertexID = mSubmeshes[meshIndex].baseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
+			float Weight = mesh->mBones[i]->mWeights[j].mWeight;
+			mAnimatedVertices[VertexID].AddBoneData(BoneIndex, Weight);
+		}
+	}
+}
+
+void Ivy::Mesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	if(pNodeAnim->mNumPositionKeys == 1)
+	{
+		Out = pNodeAnim->mPositionKeys[0].mValue;
+		return;
+	}
+
+	unsigned int PositionIndex = FindPosition(AnimationTime, pNodeAnim);
+	unsigned int NextPositionIndex = (PositionIndex + 1);
+	assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
+	float DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
+	float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
+	assert(Factor >= 0.0f && Factor <= 1.0f);
+	const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
+	const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
+	aiVector3D Delta = End - Start;
+	Out = Start + Factor * Delta;
+}
+
+void Ivy::Mesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	// we need at least two values to interpolate...
+	if(pNodeAnim->mNumRotationKeys == 1)
+	{
+		Out = pNodeAnim->mRotationKeys[0].mValue;
+		return;
+	}
+
+	unsigned int RotationIndex = FindRotation(AnimationTime, pNodeAnim);
+	unsigned int NextRotationIndex = (RotationIndex + 1);
+	assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
+	float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
+	float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
+	assert(Factor >= 0.0f && Factor <= 1.0f);
+	const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
+	const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
+	aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
+	Out = Out.Normalize();
+}
+
+void Ivy::Mesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	if(pNodeAnim->mNumScalingKeys == 1)
+	{
+		Out = pNodeAnim->mScalingKeys[0].mValue;
+		return;
+	}
+
+	unsigned int ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
+	unsigned int NextScalingIndex = (ScalingIndex + 1);
+	assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
+	float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
+	float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
+	assert(Factor >= 0.0f && Factor <= 1.0f);
+	const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
+	const aiVector3D& End = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
+	aiVector3D Delta = End - Start;
+	Out = Start + Factor * Delta;
+}
+
 void Ivy::Mesh::ReadNodeHierarchy(float AnimationTime, aiNode* pNode, Mat4& parentTransform)
 {
-	std::string name(pNode->mName.data);
-	aiAnimation* animation = mAssimpScene->mAnimations[0];
-	glm::mat4 nodeTransform(Mat4FromAssimpMat4(pNode->mTransformation));
-	aiNodeAnim* nodeAnim = FindNodeAnim(animation, name);
+	std::string NodeName(pNode->mName.data);
+	aiAnimation* pAnimation = mAssimpScene->mAnimations[0];
+	glm::mat4 NodeTransformation = Mat4FromAssimpMat4(pNode->mTransformation);
 
-	if(nodeAnim)
+	const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, NodeName);
+	if(pNodeAnim)
 	{
-		glm::vec3 translation = InterpolateTranslation(AnimationTime, nodeAnim);
-		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(translation.x, translation.y, translation.z));
+		// Interpolate scaling and generate scaling transformation matrix
+		aiVector3D Scaling;
+		CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
+		glm::vec3 scale = glm::vec3(Scaling.x, Scaling.y, Scaling.z);
+		glm::mat4 ScalingM = glm::scale(glm::mat4(1.0f), scale);
 
-		glm::quat rotation = InterpolateRotation(AnimationTime, nodeAnim);
-		glm::mat4 rotationMatrix = glm::toMat4(rotation);
-
-		glm::vec3 scale = InterpolateScale(AnimationTime, nodeAnim);
-		glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z));
-
-		nodeTransform = translationMatrix * rotationMatrix * scaleMatrix;
+		// Interpolate rotation and generate rotation transformation matrix
+		aiQuaternion RotationQ;
+		CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
+		glm::quat rotation = quat_cast(RotationQ);
+		glm::mat4 RotationM = glm::toMat4(rotation);
+		// Interpolate translation and generate translation transformation matrix
+		aiVector3D Translation;
+		CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
+		glm::vec3 translation = glm::vec3(Translation.x, Translation.y, Translation.z);
+		glm::mat4 TranslationM = glm::translate(glm::mat4(1.0f), translation);
+		// Combine the above transformations
+		NodeTransformation = TranslationM * RotationM *ScalingM;
 	}
 
-	glm::mat4 transform = parentTransform * nodeTransform;
-
-	if(mBoneMapping.find(name) != mBoneMapping.end())
+	// Combine with node Transformation with Parent Transformation
+	glm::mat4 GlobalTransformation = parentTransform * NodeTransformation;
+	if(mBoneMapping.find(NodeName) != mBoneMapping.end())
 	{
-		uint32_t BoneIndex = mBoneMapping[name];
-		mBoneInfo[BoneIndex].FinalTransformation = mInverseTransform * transform * mBoneInfo[BoneIndex].BoneOffset;
+		unsigned int BoneIndex = mBoneMapping[NodeName];
+		mBoneInfo[BoneIndex].FinalTransformation = mInverseTransform * GlobalTransformation * mBoneInfo[BoneIndex].BoneOffset;
 	}
-
-	for(uint32_t i = 0; i < pNode->mNumChildren; i++)
-		ReadNodeHierarchy(AnimationTime, pNode->mChildren[i], transform);
+	for(unsigned int i = 0; i < pNode->mNumChildren; i++)
+	{
+		ReadNodeHierarchy(AnimationTime, pNode->mChildren[i], GlobalTransformation);
+	}
 }
 
 void Ivy::Mesh::BoneTransform(float time)
 {
-	ReadNodeHierarchy(time, mAssimpScene->mRootNode, glm::mat4(1.0f));
+	//ReadNodeHierarchy(time, mAssimpScene->mRootNode, glm::mat4(1.0f));
+	//mBoneTransforms.resize(mBoneCount);
+	//for(size_t i = 0; i < mBoneCount; i++)
+	//{
+	//	mBoneTransforms[i] = mBoneInfo[i].FinalTransformation;
+	//
+	//}
+
+	glm::mat4 Identity = glm::mat4(1.0f);
+	animDuration = (float)mAssimpScene->mAnimations[0]->mDuration;
+
+	/* Calc animation duration */
+	//unsigned int numPosKeys = mAssimpScene->mAnimations[0]->mChannels[0]->mNumPositionKeys;
+	//animDuration = mAssimpScene->mAnimations[0]->mChannels[0]->mPositionKeys[numPosKeys - 1].mTime;
+	//float TicksPerSecond = (float)(mAssimpScene->mAnimations[0]->mTicksPerSecond != 0 ? mAssimpScene->mAnimations[0]->mTicksPerSecond : 25.0f);
+	//float TimeInTicks = time * TicksPerSecond;
+	//float AnimationTime = fmod(TimeInTicks, animDuration);
+	ReadNodeHierarchy(time, mAssimpScene->mRootNode, Identity);
 	mBoneTransforms.resize(mBoneCount);
-	for(size_t i = 0; i < mBoneCount; i++)
+
+	for(unsigned int i = 0; i < mBoneCount; i++)
+	{
 		mBoneTransforms[i] = mBoneInfo[i].FinalTransformation;
+	}
 }
 
 void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 {
 	mMeshName = filepath;
 
-	RemoveUntilCharacterInString(    mMeshName, '/' );
-	RemoveUntilCharacterInString(    mMeshName, '\\');
-	RemoveFromCharacterInStringToEnd(mMeshName, '.' );
+	RemoveUntilCharacterInString(mMeshName, '/');
+	RemoveUntilCharacterInString(mMeshName, '\\');
+	RemoveFromCharacterInStringToEnd(mMeshName, '.');
 
 	uint32_t flags =
-		aiProcess_CalcTangentSpace |       
-		aiProcess_Triangulate |            
-		aiProcess_SortByPType |            
-		aiProcess_GenNormals |             
-		aiProcess_GenUVCoords |            
-		aiProcess_OptimizeMeshes |         
-		aiProcess_ValidateDataStructure;   
+		aiProcess_CalcTangentSpace |
+		aiProcess_Triangulate |
+		aiProcess_SortByPType |
+		aiProcess_GenNormals |
+		aiProcess_GenUVCoords |
+		aiProcess_OptimizeMeshes |
+		aiProcess_ValidateDataStructure;
 
 
 	mImporter = std::make_unique<Assimp::Importer>();
 	const aiScene* scene = mImporter->ReadFile(filepath.c_str(), flags);
 	mAssimpScene = scene;
 
-	if (!mAssimpScene)
+	if(!mAssimpScene)
 	{
 		Debug::CoreError("Couldn't load mesh file!");
 		return;
 	}
 
-	if (!mAssimpScene->HasMeshes())
+	if(!mAssimpScene->HasMeshes())
 	{
 		Debug::CoreError("Mesh is empty/has no vertices");
 		return;
 	}
 
 	mIsAnimated = mAssimpScene->mAnimations != nullptr;
-	mInverseTransform = glm::inverse(Mat4FromAssimpMat4(scene->mRootNode->mTransformation));
+	mInverseTransform = mat4_cast(scene->mRootNode->mTransformation);
+	mInverseTransform = glm::inverse(mInverseTransform);
 
 	uint32_t vertexCount = 0;
 	uint32_t indexCount = 0;
 
-	mSubmeshes.resize(mAssimpScene->mNumMeshes);
-
-	//for (uint32_t i = 0; i < mAssimpScene->mNumMeshes; i++)
-	//{
-	//	aiMesh* mesh = mAssimpScene->mMeshes[i];
-	//
-	//	totalVertexCount += mesh->mNumVertices;
-	//	totalIndexCount += mesh->mNumFaces * 3;
-	//}
-	//
-	//mVertexBuffer->Bind();
-	//if(mIsAnimated)
-	//{
-	//	mVertexBuffer->SetBufferData(nullptr, totalVertexCount * sizeof(AnimatedVertex));
-	//}
-	//else
-	//{
-	//	mVertexBuffer->SetBufferData(nullptr, totalVertexCount * sizeof(Vertex));
-	//}
-	//mIndexBuffer->Bind();
-	//mIndexBuffer->SetBufferData(nullptr, totalIndexCount);
-
-	uint32_t currentVertexOffset = 0;
-	uint32_t currentIndexOffset = 0;
+	mSubmeshes.reserve(mAssimpScene->mNumMeshes);
 
 	Vector<Ptr<Material>> materials = mEntity->GetComponentsOfType<Material>();
 
-	for (uint32_t i = 0; i < mAssimpScene->mNumMeshes; i++)
+	for(uint32_t i = 0; i < mAssimpScene->mNumMeshes; i++)
 	{
 		aiMesh* mesh = mAssimpScene->mMeshes[i];
 
-		Submesh& submesh = mSubmeshes[i];
-
-		submesh.vertices.resize(mesh->mNumVertices);
-		submesh.baseVertex = currentVertexOffset; //TODO: Eventuell buggy
-		submesh.index = i;
+		Submesh& submesh = mSubmeshes.emplace_back();
+		submesh.baseVertex = vertexCount;
+		submesh.baseIndex = indexCount;
 		submesh.materialIndex = mesh->mMaterialIndex;
+		submesh.indexCount = mesh->mNumFaces * 3;
+		submesh.meshName = mesh->mName.C_Str();
 
-		Vector<Vertex> vertices;
-		Vector<unsigned int> indices;
+		vertexCount += mesh->mNumVertices;
+		indexCount += submesh.indexCount;
+	}
+
+	for(uint32_t i = 0; i < mSubmeshes.size(); i++)
+	{
+		const aiMesh* mesh = mAssimpScene->mMeshes[i];
 
 		// walk through each of the mesh's vertices
 		if(mIsAnimated)
@@ -296,118 +413,62 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 				AnimatedVertex vertex;
 				vertex.position = { mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z, 1.0f };
 				vertex.normal = { mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z };
-				
+
 				if(mesh->HasTangentsAndBitangents())
 				{
 					vertex.tangent = { mesh->mTangents[j].x, mesh->mTangents[j].y, mesh->mTangents[j].z };
 					vertex.bitangent = { mesh->mBitangents[j].x, mesh->mBitangents[j].y, mesh->mBitangents[j].z };
 				}
-				
+
 				if(mesh->HasTextureCoords(0))
 					vertex.texcoord = { mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y };
 
-				submesh.animatedVertices.push_back(vertex);
-			}
-			// now wak through each of the mesh's faces and retrieve the corresponding vertex indices.
-			for(unsigned int j = 0; j < mesh->mNumFaces; j++)
-			{
-				aiFace face = mesh->mFaces[j];
-				// retrieve all indices of the face and store them in the indices vector
-				for(unsigned int k = 0; k < face.mNumIndices; k++)
-					submesh.indices.push_back(face.mIndices[k]);
+				mAnimatedVertices.push_back(vertex);
 			}
 
-			submesh.vertexOffset = currentVertexOffset * sizeof(AnimatedVertex);
-			submesh.indexOffset = currentIndexOffset * sizeof(uint32_t);
-
-			currentVertexOffset += submesh.animatedVertices.size();
-			currentIndexOffset += submesh.indices.size();
+			LoadBones(i, mesh);
 		}
 		else
 		{
-
 			for(unsigned int j = 0; j < mesh->mNumVertices; j++)
 			{
 				Vertex vertex;
 				vertex.position = { mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z, 1.0f };
-				vertex.normal   = { mesh->mNormals[j].x,  mesh->mNormals[j].y,  mesh->mNormals[j].z };
+				vertex.normal = { mesh->mNormals[j].x,  mesh->mNormals[j].y,  mesh->mNormals[j].z };
 
 				if(mesh->HasTangentsAndBitangents())
 				{
-					vertex.tangent   = { mesh->mTangents[j].x,   mesh->mTangents[j].y,   mesh->mTangents[j].z };
+					vertex.tangent = { mesh->mTangents[j].x,   mesh->mTangents[j].y,   mesh->mTangents[j].z };
 					vertex.bitangent = { mesh->mBitangents[j].x, mesh->mBitangents[j].y, mesh->mBitangents[j].z };
 				}
 
 				if(mesh->HasTextureCoords(0))
 					vertex.texcoord = { mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y };
 
-				vertices.push_back(vertex);
+				mVertices.push_back(vertex);
 			}
-			// now wak through each of the mesh's faces and retrieve the corresponding vertex indices.
-			for(unsigned int j = 0; j < mesh->mNumFaces; j++)
-			{
-				aiFace face = mesh->mFaces[j];
-				// retrieve all indices of the face and store them in the indices vector
-				for(unsigned int k = 0; k < face.mNumIndices; k++)
-					indices.push_back(face.mIndices[k]);
-			}
-
-			submesh.vertices = vertices;
-			submesh.indices = indices;
-
-
-			submesh.vertexOffset = currentVertexOffset * sizeof(Vertex);
-			submesh.indexOffset  = currentIndexOffset * sizeof(uint32_t);
-
-			currentVertexOffset += submesh.vertices.size();
-			currentIndexOffset  += submesh.indices.size();
-		
 		}
-	}
-
-	TraverseNodes(scene->mRootNode);
 
 
-	//bones
-	if(mIsAnimated)
-	{
-		for(size_t m = 0; m < scene->mNumMeshes; m++)
+		// now wak through each of the mesh's faces and retrieve the corresponding vertex indices.
+		for(unsigned int j = 0; j < mesh->mNumFaces; j++)
 		{
-			aiMesh* mesh = scene->mMeshes[m];
-			Submesh& submesh = mSubmeshes[m];
-
-			for(size_t i = 0; i < mesh->mNumBones; i++)
-			{
-				aiBone* bone = mesh->mBones[i];
-				std::string boneName(bone->mName.data);
-				int boneIndex = 0;
-
-				if(mBoneMapping.find(boneName) == mBoneMapping.end())
-				{
-					// Allocate an index for a new bone
-					boneIndex = mBoneCount;
-					mBoneCount++;
-					BoneInfo bi;
-					mBoneInfo.push_back(bi);
-					mBoneInfo[boneIndex].BoneOffset = Mat4FromAssimpMat4(bone->mOffsetMatrix);
-					mBoneMapping[boneName] = boneIndex;
-				}
-				else
-				{
-					Debug::CoreWarning("Found existing bone in map");
-					boneIndex = mBoneMapping[boneName];
-				}
-
-				for(size_t j = 0; j < bone->mNumWeights; j++)
-				{
-					int VertexID = submesh.baseVertex + bone->mWeights[j].mVertexId;
-					float Weight = bone->mWeights[j].mWeight;
-					submesh.animatedVertices[VertexID].AddBoneData(boneIndex, Weight);
-				}
-			}
+			aiFace face = mesh->mFaces[j];
+			// retrieve all indices of the face and store them in the indices vector
+			for(unsigned int k = 0; k < face.mNumIndices; k++)
+				mIndices.push_back(face.mIndices[k]);
 		}
 	}
-	
+
+
+	//TraverseNodes(scene->mRootNode);
+
+	//for(uint32_t i = 0; i < mSubmeshes.size(); i++)
+	//{
+	//	LoadBones(i, mAssimpScene->mMeshes[i]);
+	//}
+
+
 	SetResourceData();
 
 	//material assignment
@@ -501,24 +562,24 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 	}
 	
 	// sorting submeshes for better texture binding performance
-	std::sort(mSubmeshes.begin(), mSubmeshes.end(), less_than_key());
+	//std::sort(mSubmeshes.begin(), mSubmeshes.end(), less_than_key());
 }
 
 void Ivy::Mesh::TraverseNodes(aiNode* node, const glm::mat4& parentTransform, uint32_t level)
 {
 	glm::mat4 transform = parentTransform * Mat4FromAssimpMat4(node->mTransformation);
 	for(uint32_t i = 0; i < node->mNumMeshes; i++)
-	{ 
+	{
 		uint32_t mesh = node->mMeshes[i];
-		mSubmeshes[mesh].transform = transform;
-	} 
+		auto& submesh = mSubmeshes[mesh];
+		submesh.nodeName = node->mName.C_Str();
+		submesh.transform = transform;
+	}
 
 	// HZ_MESH_LOG("{0} {1}", LevelToSpaces(level), node->mName.C_Str());
 
 	for(uint32_t i = 0; i < node->mNumChildren; i++)
-	{
 		TraverseNodes(node->mChildren[i], transform, level + 1);
-	}
 }
 
 void Ivy::Mesh::Draw(bool bindTextures)
@@ -546,16 +607,18 @@ void Ivy::Mesh::Draw(bool bindTextures)
 			materials[mSubmeshes[i].materialIndex]->UpdateShaderTextureBools();
 			materials[mSubmeshes[i].materialIndex]->UpdateMaterialUniforms();
 			
-			shader->SetUniformMat4("model", transform->getComposed()/* * mSubmeshes[i].transform*/);
+			shader->SetUniformMat4("model", transform->getComposed() /* * mSubmeshes[i].transform*/);
 
 			// höchstwahrscheinlich ziemlich langsam
 			if(mIsAnimated)
 			{
-				for(size_t i = 0; i < mBoneTransforms.size(); i++)
-				{
-					std::string uniformName = std::string("boneTransforms[") + std::to_string(i) + std::string("]");
-					shader->SetUniformMat4(uniformName, mBoneTransforms[i]);
-				}
+				glUniformMatrix4fv(
+					glGetUniformLocation(
+						shader->GetRendererID(), 
+						"boneTransforms"), 
+						(GLsizei)mBoneTransforms.size(), 
+						GL_FALSE, 
+						glm::value_ptr(mBoneTransforms[0]));
 			}
 
 		}
@@ -563,9 +626,10 @@ void Ivy::Mesh::Draw(bool bindTextures)
 		
 		//TODO: Check if animated and upload animTransform as uniform mat4
 
-		mSubmeshes[i].vertexArray->Bind();
-		glDrawElements(GL_TRIANGLES, mSubmeshes[i].indices.size(), GL_UNSIGNED_INT, (void*)mSubmeshes[i].indexOffset);
-		mSubmeshes[i].vertexArray->Unbind();
+		mVertexArray->Bind();
+		//glDrawElements(GL_TRIANGLES, mSubmeshes[i].indices.size(), GL_UNSIGNED_INT, (void*)mSubmeshes[i].indexOffset);
+		glDrawElementsBaseVertex(GL_TRIANGLES, mSubmeshes[i].indexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * mSubmeshes[i].baseIndex), mSubmeshes[i].baseVertex);
+		mVertexArray->Unbind();
 	}
 }
 
@@ -577,64 +641,52 @@ void Ivy::Mesh::CreateResources()
 
 void Ivy::Mesh::SetResourceData()
 {
+	BufferLayout layout;
 	if(mIsAnimated)
 	{
-		for(int i = 0; i < mSubmeshes.size(); i++)
+		layout =
 		{
-			Submesh& submesh = mSubmeshes[i];
-			BufferLayout layout =
-			{
-				{ShaderDataType::Float4, "aPosition",	 submesh.vertexOffset},
-				{ShaderDataType::Float3, "aNormal"  ,	 submesh.vertexOffset},
-				{ShaderDataType::Float3, "aTangent" ,	 submesh.vertexOffset},
-				{ShaderDataType::Float3, "aBitangent",	 submesh.vertexOffset},
-				{ShaderDataType::Float2, "aTexCoord",	 submesh.vertexOffset},
-				{ShaderDataType::Int4,   "aBoneIDs",	 submesh.vertexOffset},
-				{ShaderDataType::Float4, "aBoneWeights", submesh.vertexOffset}
-
-			};
-
-			submesh.vertexArray = CreatePtr<VertexArray>(layout);
-			submesh.vertexArray->SetVertexAndIndexBuffer(mVertexBuffer, mIndexBuffer);
-			submesh.vertexArray->Bind();
-
-			submesh.vertexArray->GetVertexBuffer()->Bind();
-			submesh.vertexArray->GetVertexBuffer()->SetBufferSubData(submesh.vertexOffset, submesh.animatedVertices.data(), submesh.animatedVertices.size() * sizeof(AnimatedVertex));
-			submesh.vertexArray->GetIndexBuffer()->Bind();
-			submesh.vertexArray->GetIndexBuffer()->SetBufferSubData(submesh.indexOffset, submesh.indices.data(), submesh.indices.size());
-
-			mVertexBuffer->Unbind();
-			mIndexBuffer->Unbind();
-			submesh.vertexArray->Unbind();
-		}
-
+			{ShaderDataType::Float4, "aPosition"},
+			{ShaderDataType::Float3, "aNormal"},
+			{ShaderDataType::Float3, "aTangent"},
+			{ShaderDataType::Float3, "aBitangent"},
+			{ShaderDataType::Float2, "aTexCoord"},
+			{ShaderDataType::Int4,   "aBoneIDs"},
+			{ShaderDataType::Float4, "aBoneWeights"}
+		};
 	}
 	else
 	{
-		for(int i = 0; i < mSubmeshes.size(); i++)
+
+		layout =
 		{
-			Submesh& submesh = mSubmeshes[i];
-			BufferLayout layout =
-			{
-				{ShaderDataType::Float4, "aPosition", submesh.vertexOffset},
-				{ShaderDataType::Float3, "aNormal"  , submesh.vertexOffset},
-				{ShaderDataType::Float3, "aTangent" , submesh.vertexOffset},
-				{ShaderDataType::Float3, "aBitangent", submesh.vertexOffset},
-				{ShaderDataType::Float2, "aTexCoord", submesh.vertexOffset}
-			};
-
-			submesh.vertexArray = CreatePtr<VertexArray>(layout);
-			submesh.vertexArray->SetVertexAndIndexBuffer(mVertexBuffer, mIndexBuffer);
-			submesh.vertexArray->Bind();
-
-			submesh.vertexArray->GetVertexBuffer()->Bind();
-			submesh.vertexArray->GetVertexBuffer()->SetBufferSubData(submesh.vertexOffset, submesh.vertices.data(), submesh.vertices.size() * sizeof(Vertex));
-			submesh.vertexArray->GetIndexBuffer()->Bind();
-			submesh.vertexArray->GetIndexBuffer()->SetBufferSubData(submesh.indexOffset, submesh.indices.data(), submesh.indices.size());
-
-			mVertexBuffer->Unbind();
-			mIndexBuffer->Unbind();
-			submesh.vertexArray->Unbind();
-		}
+			{ShaderDataType::Float4, "aPosition"},
+			{ShaderDataType::Float3, "aNormal"},
+			{ShaderDataType::Float3, "aTangent"},
+			{ShaderDataType::Float3, "aBitangent"},
+			{ShaderDataType::Float2, "aTexCoord"}
+		};
 	}
+	
+	mVertexBuffer = CreatePtr<VertexBuffer>();
+	mIndexBuffer = CreatePtr<IndexBuffer>();
+
+	mVertexArray = CreatePtr<VertexArray>(layout);
+	mVertexArray->SetVertexAndIndexBuffer(mVertexBuffer, mIndexBuffer);
+	mVertexArray->Bind();
+	mIndexBuffer->Bind();
+	if(mIsAnimated)
+	{
+		mVertexBuffer->SetBufferData(mAnimatedVertices.data(), mAnimatedVertices.size() * sizeof(AnimatedVertex));
+	}
+	else
+	{
+		mVertexBuffer->SetBufferData(mVertices.data(), mVertices.size() * sizeof(Vertex));
+	}
+	mIndexBuffer->Bind();
+	mIndexBuffer->SetBufferData(mIndices.data(), mIndices.size());
+
+	mVertexBuffer->Unbind();
+	mIndexBuffer->Unbind();
+	mVertexArray->Unbind();
 }

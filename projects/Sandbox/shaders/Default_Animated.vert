@@ -17,8 +17,8 @@ uniform mat4 lightSpaceMatrix1;
 uniform mat4 lightSpaceMatrix2;
 uniform mat4 lightSpaceMatrix3;
 
-
-uniform mat4 boneTransforms[100];
+const int MAX_BONES = 100;
+uniform mat4 boneTransforms[MAX_BONES];
 
 out vec3 FragPos;
 out vec3 ViewPosition;
@@ -29,14 +29,14 @@ out vec4 FragPosLightSpace[4];
 
 void main()
 {
-    mat4 boneTransform  = boneTransforms[aBoneIDs[0]] * aBoneWeights[0];
-		 boneTransform += boneTransforms[aBoneIDs[1]] * aBoneWeights[1];
-		 boneTransform += boneTransforms[aBoneIDs[2]] * aBoneWeights[2];
-		 boneTransform += boneTransforms[aBoneIDs[3]] * aBoneWeights[3];
+    mat4 boneTransform  = boneTransforms[aBoneIDs.x] * aBoneWeights.x;
+		 boneTransform += boneTransforms[aBoneIDs.y] * aBoneWeights.y;
+		 boneTransform += boneTransforms[aBoneIDs.z] * aBoneWeights.z;
+		 boneTransform += boneTransforms[aBoneIDs.w] * aBoneWeights.w;
 
 	vec4 localPosition = boneTransform * vec4(aPosition.xyz, 1.0);
 
-    FragPos = vec3(model * localPosition);   
+    FragPos = vec3(mat3(model) * localPosition.xyz);   
     TexCoords = aTexCoord;
 	ViewPosition = vec3(view * vec4(FragPos, 1.0));
 
@@ -54,6 +54,6 @@ void main()
 	FragPosLightSpace[2] = lightSpaceMatrix2 * vec4(FragPos, 1.0);
 	FragPosLightSpace[3] = lightSpaceMatrix3 * vec4(FragPos, 1.0);
         
-    gl_Position = projection * view * model * localPosition;
+    gl_Position = (projection * view * model) * localPosition;
 
 } 

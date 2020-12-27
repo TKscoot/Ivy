@@ -91,7 +91,7 @@ void Ivy::VertexBuffer::SetBufferData(const void * data, uint32_t size)
 		return;
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, mID);
-	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
 }
 
 void Ivy::VertexBuffer::SetBufferSubData(uint32_t offset, const void * data, uint32_t size)

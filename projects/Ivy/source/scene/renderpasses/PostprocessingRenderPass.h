@@ -29,7 +29,7 @@ namespace Ivy
 		Ptr<VertexArray>  mVertexArray  = nullptr;
 
 		int   mToneMapIndex		   = 3;
-		bool  mUseDoF			   = true;
+		bool  mUseDoF			   = false;
 		bool  mUseMotionBlur	   = true;
 		float mMotionBlurIntensity = 5.0f;
 		float mDofThreshold		   = 0.99;
