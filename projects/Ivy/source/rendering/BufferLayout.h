@@ -85,7 +85,7 @@ namespace Ivy
 
 		BufferElement() = default;
 
-		BufferElement(ShaderDataType type, const std::string& name, size_t bufferOffset, bool normalized = false)
+		BufferElement(ShaderDataType type, const std::string& name, size_t bufferOffset = 0, bool normalized = false)
 			: Name(name), Type(type), BufferOffset(bufferOffset), Size(ShaderDataTypeSize(type)), Offset(0),  Normalized(normalized)
 		{
 		}

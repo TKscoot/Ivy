@@ -85,7 +85,7 @@ void Application::SetupEntities()
 	////towerTransform->setScale(100.0f, 100.0f, 100.0f); 
 	//towerTransform->setScale(0.05f, 0.05f, 0.05f);
 	//towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
-	
+
 	Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
 	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
 	//Vector<Ptr<Material>> sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
@@ -132,7 +132,7 @@ void Application::Run()
 	// vars for cursor visibility toggling
 	bool cursorVisible = Input::GetMouseCursorVisible();
 	bool cursorKeyPressed = false;
-	
+
 	// Beginning the game loop
 	while(!mEngine->ShouldTerminate())
 	{

@@ -8,6 +8,12 @@
 
 namespace Ivy
 {
+	/*!
+	 * Default Entity class
+	 * Provides basic functionality
+	 * Can be used for ECS and attaching components 
+	 * 
+	 */
 	class Entity : public std::enable_shared_from_this<Entity>
 	{
 	public:
@@ -16,6 +22,10 @@ namespace Ivy
 		// be called in core
 		friend class Scene;
 
+		/*!
+		 * 
+		 * \return Returns the distance to the camera
+		 */
 		float GetCameraDistance()
 		{
 			Vec3 camPos = mCamera->GetPosition();
@@ -39,6 +49,13 @@ namespace Ivy
 			}
 		};
 
+
+		/*!
+		 * Adds a component to the entity
+		 * 
+		 * \param component Pointer to the Component
+		 * \return Returns a Pointer to the Component
+		 */
 		template <typename T>
 		Ptr<T> AddComponent(Ptr<T> component)
 		{
@@ -55,6 +72,10 @@ namespace Ivy
 			return component;
 		}
 
+		/*!
+		 * Removes all components from a specified type
+		 * 
+		 */
 		template <typename T>
 		void RemoveComponentsOfType()
 		{
@@ -67,6 +88,10 @@ namespace Ivy
 			mComponents[index].clear();
 		}
 
+		/*!
+		 * 
+		 * \return Returns all components of a specified type
+		 */
 		template <typename T>
 		Vector<Ptr<T>> const GetComponentsOfType()
 		{
@@ -87,6 +112,10 @@ namespace Ivy
 			return casted;
 		}
 
+		/*!
+		 * 
+		 * \return Returns the first added component of a specified type
+		 */
 		template<typename T>
 		Ptr<T> const GetFirstComponentOfType()
 		{
@@ -107,8 +136,22 @@ namespace Ivy
 			return casted.front();
 		}
 
+		/*!
+		 * This gets called every frame
+		 * 
+		 */
 		virtual void OnUpdate(float deltaTime)  {};
+
+		/*!
+		 * This gets called when the entity is being destroyed
+		 * 
+		 */
 		virtual void OnDestroy() {};
+
+		/*!
+		 * This gets called when the entity is being created
+		 * 
+		 */
 		virtual void OnCreate()  {};
 
 	private:

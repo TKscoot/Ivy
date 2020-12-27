@@ -120,6 +120,7 @@ Ivy::Ptr<Ivy::Texture2D> Ivy::Material::LoadTexture(String texturePath, TextureM
 void Ivy::Material::LoadShader(String vertexPath, String fragmentPath)
 {
 	mShader = CreatePtr<Shader>(vertexPath, fragmentPath);
+	SetShader(mShader);
 }
 
 void Ivy::Material::UpdateShaderTextureBools()

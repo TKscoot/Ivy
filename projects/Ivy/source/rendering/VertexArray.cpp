@@ -85,7 +85,7 @@ void Ivy::VertexArray::EnableVertexAttributes()
 	for (uint32_t i = 0; i < elements.size(); i++)
 	{
 		const auto& element = elements[i];
- 		uint32_t offset = element.Offset + element.BufferOffset;
+ 		uint32_t offset = element.Offset/* + element.BufferOffset*/;
 
 		glEnableVertexAttribArray(i);
 		glVertexAttribPointer(i,

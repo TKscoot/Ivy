@@ -60,7 +60,7 @@ Ivy::Mat4 Ivy::Camera::GetViewMatrix()
 
 Ivy::Mat4 Ivy::Camera::GetProjectionMatrix(Vec2 currentWindowSize)
 {
-	mProjection = glm::perspective(glm::radians(mFOV), currentWindowSize.x / currentWindowSize.y, mNear, mFar/*100000.0f*/);
+	mProjection = glm::perspective(glm::radians(mFOV), currentWindowSize.x / currentWindowSize.y, mNear, mFar);
 
 	return mProjection;
 }

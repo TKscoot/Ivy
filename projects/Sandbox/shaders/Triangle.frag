@@ -12,14 +12,14 @@ in vec2 texCoord;
 //in vec3 tangentFragPos;
 
 struct Material {
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    vec3  ambient;
+    vec3  diffuse;
+    vec3  specular;
     float shininess;
 }; 
   
-uniform Material material;
-uniform vec3 lightPos;
+//uniform Material material;
+//uniform vec3 lightPos;
 uniform vec3 viewPos;
 
 layout(binding = 0) uniform sampler2D diffuseMap;
@@ -35,7 +35,7 @@ vec3 CalcDirLight(Material light, vec4 diffuseTexture, vec3 direction, vec3 norm
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), light.shininess);
     // combine results
     vec3 ambient = light.ambient *			vec3(diffuseTexture);
     vec3 diffuse = light.diffuse * diff *	vec3(diffuseTexture);
@@ -62,6 +62,16 @@ vec3 getNormalFromMap()
 
 void main()
 {
+
+    Material material;
+	material.ambient   = vec3(.01);
+	material.diffuse   = vec3(.5);
+	material.specular  = vec3(.3);
+	material.shininess = 8.;
+
+    vec3 lightPos;
+	lightPos = vec3(-2.0, 4.0, -1.0);
+
 	//FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
 	//FragColor = vec4(normal, 1.0);
 	//FragColor = mix(texture(albedo, texCoord), texture(albedo1, texCoord), 0.2);
@@ -107,8 +117,8 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular = lightColor * (spec * material.specular);  
         
-    result += /*ambient + */diffuse + specular;
+    result += ambient + diffuse + specular;
 
 
-	FragColor = vec4(result, diffTex.a);
+	FragColor = vec4(result, 1.0);
 }

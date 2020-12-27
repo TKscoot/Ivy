@@ -114,7 +114,10 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 
 		shader->SetUniformFloat3("viewPos", mCamera->GetPosition());
 
-		mSkyboxCubeTexture->Bind(6);
+		if(mSkyboxCubeTexture)
+		{
+			mSkyboxCubeTexture->Bind(6);
+		}
 
 		PushLightParams(shader);
 
