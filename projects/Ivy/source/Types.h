@@ -88,30 +88,30 @@ namespace Ivy
 		glm::mat4 FinalTransformation;
 	};
 
-	struct VertexBoneData
-	{
-		uint32_t IDs[4];
-		float Weights[4];
-
-		VertexBoneData()
-		{
-			memset(IDs, 0, sizeof(IDs));
-			memset(Weights, 0, sizeof(Weights));
-		};
-
-		void AddBoneData(uint32_t BoneID, float Weight)
-		{
-			for(size_t i = 0; i < 4; i++)
-			{
-				if(Weights[i] == 0.0)
-				{
-					IDs[i] = BoneID;
-					Weights[i] = Weight;
-					return;
-				}
-			}
-		}
-	};
+	//struct VertexBoneData
+	//{
+	//	uint32_t IDs[4];
+	//	float Weights[4];
+	//
+	//	VertexBoneData()
+	//	{
+	//		memset(IDs, 0, sizeof(IDs));
+	//		memset(Weights, 0, sizeof(Weights));
+	//	};
+	//
+	//	void AddBoneData(uint32_t BoneID, float Weight)
+	//	{
+	//		for(size_t i = 0; i < 4; i++)
+	//		{
+	//			if(Weights[i] == 0.0)
+	//			{
+	//				IDs[i] = BoneID;
+	//				Weights[i] = Weight;
+	//				return;
+	//			}
+	//		}
+	//	}
+	//};
 
 	// Strings
 	using String = std::string;

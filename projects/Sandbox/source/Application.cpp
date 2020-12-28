@@ -56,18 +56,18 @@ void Application::SetupScene()
 void Application::SetupEntities()
 {
 	// Object to test shadowmap
-	//Ptr<Entity> shadowTestEntity = Scene::GetScene()->CreateEntity();
-	//shadowTestEntity->AddComponent(CreatePtr<Mesh>(shadowTestEntity.get(), "assets/models/sponza_pbr.obj"));
-	//Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
-	//for(auto& shadowTestMaterial : shadowTestMaterials)
-	//{
-	//	//shadowTestMaterial->LoadTexture("assets/textures/Misc/box.jpg", Material::TextureMapType::DIFFUSE);
-	//	//shadowTestMaterial->LoadTexture("assets/textures/Misc/brick_normal.jpg", Material::TextureMapType::NORMAL);
-	//	//shadowTestMaterial->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
-	//	//shadowTestMaterial->LoadTexture("assets/textures/Survival_BackPack_2/1001_roughness.jpg", Material::TextureMapType::ROUGHNESS);
-	//	shadowTestMaterial->SetMetallic(0.1f);
-	//	shadowTestMaterial->SetRoughness(0.9f);
-	//}
+	Ptr<Entity> shadowTestEntity = Scene::GetScene()->CreateEntity();
+	shadowTestEntity->AddComponent(CreatePtr<Mesh>(shadowTestEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
+	Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
+	for(auto& shadowTestMaterial : shadowTestMaterials)
+	{
+		shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::DIFFUSE);
+		shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Normal_OpenGL.png", Material::TextureMapType::NORMAL);
+		shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
+		shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
+		//shadowTestMaterial->SetMetallic(0.1f);
+		//shadowTestMaterial->SetRoughness(0.9f);
+	}
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(20.0f, 20.0f, 20.0f);
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setPosition(-2.0f, 4.0f, -3.0f);
@@ -87,7 +87,7 @@ void Application::SetupEntities()
 	//towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
 
 	Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
-	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
+	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
 	//Vector<Ptr<Material>> sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
 	//
 	//sceneBaseMaterials[0]->SetTextureTiling(Vec2(5.0f, 5.0f));
@@ -106,23 +106,6 @@ void Application::SetupEntities()
 	//cameraTracker->AddTrackingPoint(Vec3(0.0f, 2.0f, -5.0f));
 	//cameraTracker->AddTrackingPoint(Vec3(10.0f, 2.0f, -20.0f));
 	cameraTracker->ShouldPlay(false);
-
-	//Ptr<Entity> box1 = Scene::GetScene()->CreateEntity();
-	//box1->AddComponent(CreatePtr<Mesh>(box1.get(), "assets/models/WoodBox.obj"));
-	//Ptr<Material> box1Mat = box1->GetFirstComponentOfType<Material>();
-	//Ptr<Transform> box1Trans = box1->GetFirstComponentOfType<Transform>();
-	//
-	//box1Mat->LoadTexture("assets/textures/Misc/awesomeface.png", Material::TextureMapType::DIFFUSE);
-	//box1Trans->setPositionX(5.0f);
-	//
-	//Ptr<Entity> box2 = Scene::GetScene()->CreateEntity();
-	//box2->AddComponent(CreatePtr<Mesh>(box2.get(), "assets/models/WoodBox.obj"));
-	//Ptr<Material> box2Mat = box2->GetFirstComponentOfType<Material>();
-	//Ptr<Transform> box2Trans = box2->GetFirstComponentOfType<Transform>();
-	//box2Trans->setPositionX(-1.0f);
-	//
-	//box2Mat->LoadTexture("assets/textures/Misc/awesomeface.png", Material::TextureMapType::DIFFUSE);
-
 
 }
 

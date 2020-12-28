@@ -17,15 +17,7 @@
 #include <assimp/LogStream.hpp>
 #include <assimp/DefaultLogger.hpp>
 
-//struct aiNode;
-//struct aiAnimation;
-//struct aiNodeAnim;
-//struct aiScene;
-
-//namespace Assimp
-//{
-//	class Importer;
-//}
+#include <imgui.h>
 
 class Renderer;
 
@@ -107,27 +99,47 @@ namespace Ivy
 		 */
 		void Load(String filepath, bool useMtlIfProvided = true);
 
+		unsigned int getNumAnimations();
+		void setAnimation(unsigned int a);
+		void boneTransform(float timeInSeconds, std::vector<glm::mat4>& Transforms);
+		void setBoneTransformations(GLuint shaderProgram, GLfloat currentTime);
+
     protected:
+
+		struct VertexBoneData
+		{
+			/* de pastrat numarul de elemente al IDs & Weights */
+			unsigned int IDs[4];
+			float Weights[4];
+
+			VertexBoneData()
+			{
+				Reset();
+			}
+
+			void Reset()
+			{
+				for(unsigned int i = 0; i < 4; ++i)
+				{
+					IDs[i] = 0;
+					Weights[i] = 0;
+				}
+			}
+
+			void AddBoneData(unsigned int BoneID, float Weight);
+		};
+
 		//Animation
-		void LoadBones(uint32_t meshIndex, const aiMesh* mesh);
-
-		void ReadNodeHierarchy(float AnimationTime, aiNode* pNode, Mat4& parentTransform);
-		void BoneTransform(float time);
-
-		aiNodeAnim* FindNodeAnim(aiAnimation* animation, std::string& nodeName);
-		uint32_t FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
-		uint32_t FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
-		uint32_t FindScaling( float AnimationTime, const aiNodeAnim* pNodeAnim);
-		Vec3 InterpolateTranslation(float animationTime, aiNodeAnim* nodeAnim);
-		Quat InterpolateRotation(float animationTime, aiNodeAnim* nodeAnim);
-		Vec3 InterpolateScale(float animationTime, aiNodeAnim* nodeAnim);
-		std::vector<Mat4>& GetBoneTransforms() { return mBoneTransforms; }
-		void TraverseNodes(aiNode* node, const glm::mat4& parentTransform = glm::mat4(1.0f), uint32_t level = 0);
-
-
-		void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-		void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
 		void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+		void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+		void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+		unsigned int FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
+		unsigned int FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
+		unsigned int FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+		const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const std::string NodeName);
+		void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform);
+		void LoadBones(unsigned int MeshIndex, const aiMesh* pMesh, std::vector<VertexBoneData>& Bones);
+
 
 		double animDuration = 0;
 
@@ -183,17 +195,23 @@ namespace Ivy
 		const aiScene* mAssimpScene;
 		// Animation
 		bool mIsAnimated	   = false;
-		bool mAnimationPlaying = true;
-		Mat4 mInverseTransform = Mat4(0);
 		
-		uint32_t mBoneCount = 0;
+		std::map<std::string, unsigned int> mBoneMapping; // maps a bone name to its index
+		unsigned int mNumBones = 0;
 		std::vector<BoneInfo> mBoneInfo;
-		std::unordered_map<String, uint32_t> mBoneMapping;
-		std::vector<Mat4> mBoneTransforms;
+		glm::mat4 mGlobalInverseTransform;
 
-		float mAnimationTime  = 0.0f;
-		float mWorldTime	  = 0.0f;
+		Vector<Mat4> mBoneTransforms;
+		Vector<VertexBoneData> mBoneData;
+
+		/* duration of the animation, can be changed if frames are not present in all interval */
+		bool mAnimationPlaying = true;
+		float mAnimationTime = 0.0f;
+		float mWorldTime = 0.0f;
 		float mTimeMultiplier = 1.0f;
+
+		unsigned int mCurrentAnimation = 0;
+
 
     };
 }

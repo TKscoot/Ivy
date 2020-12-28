@@ -37,8 +37,7 @@ namespace Ivy
 
 		bool operator<(Entity& that)
 		{
-			// Sort in reverse order : far particles drawn first.
-			return this->GetCameraDistance() > that.GetCameraDistance();
+			return this->GetCameraDistance() < that.GetCameraDistance();
 		}
 
 		struct alpha_sort_key
