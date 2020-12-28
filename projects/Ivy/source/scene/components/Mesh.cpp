@@ -47,297 +47,21 @@ void Ivy::Mesh::OnUpdate(float deltaTime)
 {
 	if(mIsAnimated)
 	{
+		ImGui::Begin("Mesh");
+		ImGui::LabelText("", mAssimpScene->mAnimations[mCurrentAnimation]->mName.C_Str());
+		ImGui::Checkbox("Play animation", &mAnimationPlaying);
+		ImGui::End();
 		if(mAnimationPlaying)
 		{
 			mWorldTime += deltaTime;
 		
-			float ticksPerSecond = (float)(mAssimpScene->mAnimations[0]->mTicksPerSecond != 0 ? mAssimpScene->mAnimations[0]->mTicksPerSecond : 25.0f) * mTimeMultiplier;
+			float ticksPerSecond = (float)(mAssimpScene->mAnimations[mCurrentAnimation]->mTicksPerSecond != 0 ? mAssimpScene->mAnimations[mCurrentAnimation]->mTicksPerSecond : 25.0f) * mTimeMultiplier;
 			mAnimationTime += deltaTime * ticksPerSecond;
-			mAnimationTime = fmod(mAnimationTime, (float)mAssimpScene->mAnimations[0]->mDuration);
+			mAnimationTime = fmod(mAnimationTime, (float)mAssimpScene->mAnimations[mCurrentAnimation]->mDuration);
 		}
 
 		// TODO: We only need to recalc bones if rendering has been requested at the current animation frame
-		BoneTransform(mAnimationTime);
-	}
-}
-
-Ivy::Vec3 Ivy::Mesh::InterpolateTranslation(float animationTime, aiNodeAnim* nodeAnim)
-{
-	if(nodeAnim->mNumPositionKeys == 1)
-	{
-		// No interpolation necessary for single value
-		auto v = nodeAnim->mPositionKeys[0].mValue;
-		return { v.x, v.y, v.z };
-	}
-
-	uint32_t PositionIndex = FindPosition(animationTime, nodeAnim);
-	uint32_t NextPositionIndex = (PositionIndex + 1);
-
-	float DeltaTime = (float)(nodeAnim->mPositionKeys[NextPositionIndex].mTime - nodeAnim->mPositionKeys[PositionIndex].mTime);
-	float Factor = (animationTime - (float)nodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
-	Factor = glm::clamp(Factor, 0.0f, 1.0f);
-	const aiVector3D& Start = nodeAnim->mPositionKeys[PositionIndex].mValue;
-	const aiVector3D& End = nodeAnim->mPositionKeys[NextPositionIndex].mValue;
-	aiVector3D Delta = End - Start;
-	auto aiVec = Start + Factor * Delta;
-	return { aiVec.x, aiVec.y, aiVec.z };
-}
-
-uint32_t Ivy::Mesh::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
-{
-	for(uint32_t i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++)
-	{
-		if(AnimationTime < (float)pNodeAnim->mPositionKeys[i + 1].mTime)
-			return i;
-	}
-
-	return 0;
-}
-
-uint32_t Ivy::Mesh::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
-{
-	assert(pNodeAnim->mNumRotationKeys > 0);
-
-	for(uint32_t i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++)
-	{
-		if(AnimationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime)
-			return i;
-	}
-
-	return 0;
-}
-
-uint32_t Ivy::Mesh::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
-{
-	assert(pNodeAnim->mNumScalingKeys > 0);
-
-	for(uint32_t i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++)
-	{
-		if(AnimationTime < (float)pNodeAnim->mScalingKeys[i + 1].mTime)
-			return i;
-	}
-
-	return 0;
-}
-
-Ivy::Quat Ivy::Mesh::InterpolateRotation(float animationTime, aiNodeAnim* nodeAnim)
-{
-	if(nodeAnim->mNumRotationKeys == 1)
-	{
-		// No interpolation necessary for single value
-		auto v = nodeAnim->mRotationKeys[0].mValue;
-		return glm::quat(v.w, v.x, v.y, v.z);
-	}
-
-	uint32_t RotationIndex = FindRotation(animationTime, nodeAnim);
-	uint32_t NextRotationIndex = (RotationIndex + 1);
-	float DeltaTime = (float)(nodeAnim->mRotationKeys[NextRotationIndex].mTime - nodeAnim->mRotationKeys[RotationIndex].mTime);
-	float Factor = (animationTime - (float)nodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-	Factor = glm::clamp(Factor, 0.0f, 1.0f);
-	const aiQuaternion& StartRotationQ = nodeAnim->mRotationKeys[RotationIndex].mValue;
-	const aiQuaternion& EndRotationQ = nodeAnim->mRotationKeys[NextRotationIndex].mValue;
-	auto q = aiQuaternion();
-	aiQuaternion::Interpolate(q, StartRotationQ, EndRotationQ, Factor);
-	q = q.Normalize();
-	return glm::quat(q.w, q.x, q.y, q.z);
-}
-
-
-Ivy::Vec3 Ivy::Mesh::InterpolateScale(float animationTime, aiNodeAnim* nodeAnim)
-{
-	if(nodeAnim->mNumScalingKeys == 1)
-	{
-		// No interpolation necessary for single value
-		auto v = nodeAnim->mScalingKeys[0].mValue;
-		return { v.x, v.y, v.z };
-	}
-
-	uint32_t index = FindScaling(animationTime, nodeAnim);
-	uint32_t nextIndex = (index + 1);
-	float deltaTime = (float)(nodeAnim->mScalingKeys[nextIndex].mTime - nodeAnim->mScalingKeys[index].mTime);
-	float factor = (animationTime - (float)nodeAnim->mScalingKeys[index].mTime) / deltaTime;
-	factor = glm::clamp(factor, 0.0f, 1.0f);
-	const auto& start = nodeAnim->mScalingKeys[index].mValue;
-	const auto& end = nodeAnim->mScalingKeys[nextIndex].mValue;
-	auto delta = end - start;
-	auto aiVec = start + factor * delta;
-	return { aiVec.x, aiVec.y, aiVec.z };
-}
-
-aiNodeAnim* Ivy::Mesh::FindNodeAnim(aiAnimation* animation, std::string& nodeName)
-{
-	for(uint32_t i = 0; i < animation->mNumChannels; i++)
-	{
-		aiNodeAnim* nodeAnim = animation->mChannels[i];
-		if(std::string(nodeAnim->mNodeName.data) == nodeName)
-			return nodeAnim;
-	}
-	return nullptr;
-}
-
-void Ivy::Mesh::LoadBones(uint32_t meshIndex, const aiMesh * mesh)
-{
-	/* Load bones one by one */
-
-	for(unsigned int i = 0; i < mesh->mNumBones; ++i)
-	{
-		unsigned int BoneIndex = 0;
-		std::string BoneName(mesh->mBones[i]->mName.data);
-
-		if(mBoneMapping.find(BoneName) == mBoneMapping.end())
-		{
-			/* allocate an index for the new bone */
-			BoneIndex = mBoneCount;
-			mBoneCount++;
-			BoneInfo bi;
-			mBoneInfo.push_back(bi);
-
-			mBoneInfo[BoneIndex].BoneOffset = mat4_cast(mesh->mBones[i]->mOffsetMatrix);
-			mBoneMapping[BoneName] = BoneIndex;
-		}
-		else
-		{
-			BoneIndex = mBoneMapping[BoneName];
-		}
-
-		for(unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; ++j)
-		{
-			//std::cout << pMesh->mBones[i]->mWeights. << std::endl;
-			unsigned int VertexID = mSubmeshes[meshIndex].baseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
-			float Weight = mesh->mBones[i]->mWeights[j].mWeight;
-			mAnimatedVertices[VertexID].AddBoneData(BoneIndex, Weight);
-		}
-	}
-}
-
-void Ivy::Mesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
-{
-	if(pNodeAnim->mNumPositionKeys == 1)
-	{
-		Out = pNodeAnim->mPositionKeys[0].mValue;
-		return;
-	}
-
-	unsigned int PositionIndex = FindPosition(AnimationTime, pNodeAnim);
-	unsigned int NextPositionIndex = (PositionIndex + 1);
-	assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
-	float DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
-	float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
-	assert(Factor >= 0.0f && Factor <= 1.0f);
-	const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
-	const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
-	aiVector3D Delta = End - Start;
-	Out = Start + Factor * Delta;
-}
-
-void Ivy::Mesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
-{
-	// we need at least two values to interpolate...
-	if(pNodeAnim->mNumRotationKeys == 1)
-	{
-		Out = pNodeAnim->mRotationKeys[0].mValue;
-		return;
-	}
-
-	unsigned int RotationIndex = FindRotation(AnimationTime, pNodeAnim);
-	unsigned int NextRotationIndex = (RotationIndex + 1);
-	assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
-	float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
-	float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-	assert(Factor >= 0.0f && Factor <= 1.0f);
-	const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
-	const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
-	aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
-	Out = Out.Normalize();
-}
-
-void Ivy::Mesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
-{
-	if(pNodeAnim->mNumScalingKeys == 1)
-	{
-		Out = pNodeAnim->mScalingKeys[0].mValue;
-		return;
-	}
-
-	unsigned int ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
-	unsigned int NextScalingIndex = (ScalingIndex + 1);
-	assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
-	float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
-	float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
-	assert(Factor >= 0.0f && Factor <= 1.0f);
-	const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
-	const aiVector3D& End = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
-	aiVector3D Delta = End - Start;
-	Out = Start + Factor * Delta;
-}
-
-void Ivy::Mesh::ReadNodeHierarchy(float AnimationTime, aiNode* pNode, Mat4& parentTransform)
-{
-	std::string NodeName(pNode->mName.data);
-	aiAnimation* pAnimation = mAssimpScene->mAnimations[0];
-	glm::mat4 NodeTransformation = Mat4FromAssimpMat4(pNode->mTransformation);
-
-	const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, NodeName);
-	if(pNodeAnim)
-	{
-		// Interpolate scaling and generate scaling transformation matrix
-		aiVector3D Scaling;
-		CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
-		glm::vec3 scale = glm::vec3(Scaling.x, Scaling.y, Scaling.z);
-		glm::mat4 ScalingM = glm::scale(glm::mat4(1.0f), scale);
-
-		// Interpolate rotation and generate rotation transformation matrix
-		aiQuaternion RotationQ;
-		CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
-		glm::quat rotation = quat_cast(RotationQ);
-		glm::mat4 RotationM = glm::toMat4(rotation);
-		// Interpolate translation and generate translation transformation matrix
-		aiVector3D Translation;
-		CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
-		glm::vec3 translation = glm::vec3(Translation.x, Translation.y, Translation.z);
-		glm::mat4 TranslationM = glm::translate(glm::mat4(1.0f), translation);
-		// Combine the above transformations
-		NodeTransformation = TranslationM * RotationM *ScalingM;
-	}
-
-	// Combine with node Transformation with Parent Transformation
-	glm::mat4 GlobalTransformation = parentTransform * NodeTransformation;
-	if(mBoneMapping.find(NodeName) != mBoneMapping.end())
-	{
-		unsigned int BoneIndex = mBoneMapping[NodeName];
-		mBoneInfo[BoneIndex].FinalTransformation = mInverseTransform * GlobalTransformation * mBoneInfo[BoneIndex].BoneOffset;
-	}
-	for(unsigned int i = 0; i < pNode->mNumChildren; i++)
-	{
-		ReadNodeHierarchy(AnimationTime, pNode->mChildren[i], GlobalTransformation);
-	}
-}
-
-void Ivy::Mesh::BoneTransform(float time)
-{
-	//ReadNodeHierarchy(time, mAssimpScene->mRootNode, glm::mat4(1.0f));
-	//mBoneTransforms.resize(mBoneCount);
-	//for(size_t i = 0; i < mBoneCount; i++)
-	//{
-	//	mBoneTransforms[i] = mBoneInfo[i].FinalTransformation;
-	//
-	//}
-
-	glm::mat4 Identity = glm::mat4(1.0f);
-	animDuration = (float)mAssimpScene->mAnimations[0]->mDuration;
-
-	/* Calc animation duration */
-	//unsigned int numPosKeys = mAssimpScene->mAnimations[0]->mChannels[0]->mNumPositionKeys;
-	//animDuration = mAssimpScene->mAnimations[0]->mChannels[0]->mPositionKeys[numPosKeys - 1].mTime;
-	//float TicksPerSecond = (float)(mAssimpScene->mAnimations[0]->mTicksPerSecond != 0 ? mAssimpScene->mAnimations[0]->mTicksPerSecond : 25.0f);
-	//float TimeInTicks = time * TicksPerSecond;
-	//float AnimationTime = fmod(TimeInTicks, animDuration);
-	ReadNodeHierarchy(time, mAssimpScene->mRootNode, Identity);
-	mBoneTransforms.resize(mBoneCount);
-
-	for(unsigned int i = 0; i < mBoneCount; i++)
-	{
-		mBoneTransforms[i] = mBoneInfo[i].FinalTransformation;
+		boneTransform(mAnimationTime, mBoneTransforms);
 	}
 }
 
@@ -376,8 +100,8 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 	}
 
 	mIsAnimated = mAssimpScene->mAnimations != nullptr;
-	mInverseTransform = mat4_cast(scene->mRootNode->mTransformation);
-	mInverseTransform = glm::inverse(mInverseTransform);
+	mGlobalInverseTransform = mat4_cast(scene->mRootNode->mTransformation);
+	mGlobalInverseTransform = glm::inverse(mGlobalInverseTransform);
 
 	uint32_t vertexCount = 0;
 	uint32_t indexCount = 0;
@@ -425,8 +149,6 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 
 				mAnimatedVertices.push_back(vertex);
 			}
-
-			LoadBones(i, mesh);
 		}
 		else
 		{
@@ -462,11 +184,13 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 
 
 	//TraverseNodes(scene->mRootNode);
+	mBoneData.resize(vertexCount);
+	for(uint32_t i = 0; i < mSubmeshes.size(); i++)
+	{
+		LoadBones(i, mAssimpScene->mMeshes[i], mBoneData);
+	}
 
-	//for(uint32_t i = 0; i < mSubmeshes.size(); i++)
-	//{
-	//	LoadBones(i, mAssimpScene->mMeshes[i]);
-	//}
+
 
 
 	SetResourceData();
@@ -565,23 +289,6 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 	//std::sort(mSubmeshes.begin(), mSubmeshes.end(), less_than_key());
 }
 
-void Ivy::Mesh::TraverseNodes(aiNode* node, const glm::mat4& parentTransform, uint32_t level)
-{
-	glm::mat4 transform = parentTransform * Mat4FromAssimpMat4(node->mTransformation);
-	for(uint32_t i = 0; i < node->mNumMeshes; i++)
-	{
-		uint32_t mesh = node->mMeshes[i];
-		auto& submesh = mSubmeshes[mesh];
-		submesh.nodeName = node->mName.C_Str();
-		submesh.transform = transform;
-	}
-
-	// HZ_MESH_LOG("{0} {1}", LevelToSpaces(level), node->mName.C_Str());
-
-	for(uint32_t i = 0; i < node->mNumChildren; i++)
-		TraverseNodes(node->mChildren[i], transform, level + 1);
-}
-
 void Ivy::Mesh::Draw(bool bindTextures)
 {
 	if (!IsActive()) return;
@@ -678,6 +385,14 @@ void Ivy::Mesh::SetResourceData()
 	if(mIsAnimated)
 	{
 		mVertexBuffer->SetBufferData(mAnimatedVertices.data(), mAnimatedVertices.size() * sizeof(AnimatedVertex));
+		GLuint boneBuffer = 0;
+		glGenBuffers(1, &boneBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, boneBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(mBoneData[0]) * mBoneData.size(), &mBoneData[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(5);
+		glVertexAttribIPointer(5, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
 	}
 	else
 	{
@@ -689,4 +404,268 @@ void Ivy::Mesh::SetResourceData()
 	mVertexBuffer->Unbind();
 	mIndexBuffer->Unbind();
 	mVertexArray->Unbind();
+}
+
+
+void Ivy::Mesh::setBoneTransformations(GLuint shaderProgram, GLfloat currentTime)
+{
+	std::vector<glm::mat4> Transforms;
+	boneTransform((float)currentTime, Transforms);
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "gBones"), (GLsizei)Transforms.size(), GL_FALSE, glm::value_ptr(Transforms[0]));
+}
+
+/* Adds a new Bone */
+void Ivy::Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
+{
+	for(unsigned int i = 0; i < 4; ++i)
+		if(Weights[i] == 0.0)
+		{
+			IDs[i] = BoneID;
+			Weights[i] = Weight;
+			return;
+		}
+}
+
+unsigned int Ivy::Mesh::getNumAnimations()
+{
+	return mAssimpScene->mNumAnimations;
+}
+
+void Ivy::Mesh::setAnimation(unsigned int a)
+{
+	if(a >= 0 && a < getNumAnimations())
+		mCurrentAnimation = a;
+}
+
+void Ivy::Mesh::LoadBones(unsigned int MeshIndex, const aiMesh* pMesh, std::vector<VertexBoneData>& Bones)
+{
+	/* Load bones one by one */
+
+	for(unsigned int i = 0; i < pMesh->mNumBones; ++i)
+	{
+		unsigned int BoneIndex = 0;
+		std::string BoneName(pMesh->mBones[i]->mName.data);
+
+		if(mBoneMapping.find(BoneName) == mBoneMapping.end())
+		{
+			/* allocate an index for the new bone */
+			BoneIndex = mNumBones;
+			mNumBones++;
+			BoneInfo bi;
+			mBoneInfo.push_back(bi);
+
+			mBoneInfo[BoneIndex].BoneOffset = mat4_cast(pMesh->mBones[i]->mOffsetMatrix);
+			mBoneMapping[BoneName] = BoneIndex;
+		}
+		else
+		{
+			BoneIndex = mBoneMapping[BoneName];
+		}
+
+		for(unsigned int j = 0; j < pMesh->mBones[i]->mNumWeights; ++j)
+		{
+			//std::cout << pMesh->mBones[i]->mWeights. << std::endl;
+			unsigned int VertexID = mSubmeshes[MeshIndex].baseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
+			float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
+			Bones[VertexID].AddBoneData(BoneIndex, Weight);
+		}
+	}
+}
+
+unsigned int Ivy::Mesh::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	for(unsigned int i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++)
+	{
+
+		if(AnimationTime < (float)pNodeAnim->mPositionKeys[i + 1].mTime)
+		{
+			return i;
+		}
+	}
+
+	assert(0);
+	return 0;
+}
+
+unsigned int Ivy::Mesh::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	assert(pNodeAnim->mNumRotationKeys > 0);
+
+	for(unsigned int i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++)
+	{
+		if(AnimationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime)
+		{
+			return i;
+		}
+	}
+
+	assert(0);
+	return 0;
+}
+
+unsigned int Ivy::Mesh::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	assert(pNodeAnim->mNumScalingKeys > 0);
+
+	for(unsigned int i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++)
+	{
+		if(AnimationTime < (float)pNodeAnim->mScalingKeys[i + 1].mTime)
+		{
+			return i;
+		}
+	}
+
+	assert(0);
+	return 0;
+}
+
+void Ivy::Mesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	if(pNodeAnim->mNumPositionKeys == 1)
+	{
+		Out = pNodeAnim->mPositionKeys[0].mValue;
+		return;
+	}
+
+	unsigned int PositionIndex = FindPosition(AnimationTime, pNodeAnim);
+	unsigned int NextPositionIndex = (PositionIndex + 1);
+	assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
+	float DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
+	float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
+	assert(Factor >= 0.0f && Factor <= 1.0f);
+	const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
+	const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
+	aiVector3D Delta = End - Start;
+	Out = Start + Factor * Delta;
+}
+
+void Ivy::Mesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	// we need at least two values to interpolate...
+	if(pNodeAnim->mNumRotationKeys == 1)
+	{
+		Out = pNodeAnim->mRotationKeys[0].mValue;
+		return;
+	}
+
+	unsigned int RotationIndex = FindRotation(AnimationTime, pNodeAnim);
+	unsigned int NextRotationIndex = (RotationIndex + 1);
+	assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
+	float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
+	float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
+	assert(Factor >= 0.0f && Factor <= 1.0f);
+	const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
+	const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
+	aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
+	Out = Out.Normalize();
+}
+
+void Ivy::Mesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	if(pNodeAnim->mNumScalingKeys == 1)
+	{
+		Out = pNodeAnim->mScalingKeys[0].mValue;
+		return;
+	}
+
+	unsigned int ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
+	unsigned int NextScalingIndex = (ScalingIndex + 1);
+	assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
+	float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
+	float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
+	assert(Factor >= 0.0f && Factor <= 1.0f);
+	const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
+	const aiVector3D& End = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
+	aiVector3D Delta = End - Start;
+	Out = Start + Factor * Delta;
+}
+
+void Ivy::Mesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform)
+{
+	std::string NodeName(pNode->mName.data);
+
+	const aiAnimation* pAnimation = mAssimpScene->mAnimations[mCurrentAnimation];
+
+	glm::mat4 NodeTransformation = mat4_cast(pNode->mTransformation);
+
+	const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, NodeName);
+
+	if(pNodeAnim)
+	{
+		// Interpolate scaling and generate scaling transformation matrix
+		aiVector3D Scaling;
+		CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
+		glm::vec3 scale = glm::vec3(Scaling.x, Scaling.y, Scaling.z);
+		glm::mat4 ScalingM = glm::scale(glm::mat4(1.0f), scale);
+
+		// Interpolate rotation and generate rotation transformation matrix
+		aiQuaternion RotationQ;
+		CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
+		glm::quat rotation = quat_cast(RotationQ);
+		glm::mat4 RotationM = glm::toMat4(rotation);
+
+		// Interpolate translation and generate translation transformation matrix
+		aiVector3D Translation;
+		CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
+		glm::vec3 translation = glm::vec3(Translation.x, Translation.y, Translation.z);
+		glm::mat4 TranslationM = glm::translate(glm::mat4(1.0f), translation);
+
+		// Combine the above transformations
+		NodeTransformation = TranslationM * RotationM *ScalingM;
+	}
+
+	// Combine with node Transformation with Parent Transformation
+	glm::mat4 GlobalTransformation = ParentTransform * NodeTransformation;
+
+	if(mBoneMapping.find(NodeName) != mBoneMapping.end())
+	{
+		unsigned int BoneIndex = mBoneMapping[NodeName];
+		mBoneInfo[BoneIndex].FinalTransformation = mGlobalInverseTransform * GlobalTransformation * mBoneInfo[BoneIndex].BoneOffset;
+	}
+
+	for(unsigned int i = 0; i < pNode->mNumChildren; i++)
+	{
+		ReadNodeHeirarchy(AnimationTime, pNode->mChildren[i], GlobalTransformation);
+	}
+}
+
+void Ivy::Mesh::boneTransform(float timeInSeconds, std::vector<glm::mat4>& Transforms)
+{
+	glm::mat4 Identity = glm::mat4(1.0f);
+
+	//TODO: I think that this line does not make any sense... because its overwritten later
+	animDuration = (float)mAssimpScene->mAnimations[mCurrentAnimation]->mDuration;
+
+	/* Calc animation duration */
+	unsigned int numPosKeys = mAssimpScene->mAnimations[mCurrentAnimation]->mChannels[0]->mNumPositionKeys;
+	animDuration = mAssimpScene->mAnimations[mCurrentAnimation]->mChannels[0]->mPositionKeys[numPosKeys - 1].mTime;
+
+	float TicksPerSecond = (float)(mAssimpScene->mAnimations[mCurrentAnimation]->mTicksPerSecond != 0 ? mAssimpScene->mAnimations[mCurrentAnimation]->mTicksPerSecond : 25.0f);
+	//TicksPerSecond = 3;
+	float TimeInTicks = timeInSeconds * TicksPerSecond;
+	float AnimationTime = fmod(TimeInTicks, animDuration);
+
+	ReadNodeHeirarchy(timeInSeconds, mAssimpScene->mRootNode, Identity);
+
+	Transforms.resize(mNumBones);
+
+	for(unsigned int i = 0; i < mNumBones; i++)
+	{
+		Transforms[i] = mBoneInfo[i].FinalTransformation;
+	}
+}
+
+const aiNodeAnim* Ivy::Mesh::FindNodeAnim(const aiAnimation* pAnimation, const std::string NodeName)
+{
+	for(unsigned int i = 0; i < pAnimation->mNumChannels; i++)
+	{
+		const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
+
+		if(std::string(pNodeAnim->mNodeName.data) == NodeName)
+		{
+			return pNodeAnim;
+		}
+	}
+
+	return NULL;
 }
