@@ -17,14 +17,6 @@ void Ivy::ShadowRenderPass::Update()
 
 void Ivy::ShadowRenderPass::RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>& entities)
 {
-	//Mat4 lightProjection, lightView, lightModel;
-	//
-	//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 20.0f);
-	//lightView = glm::lookAt(mDirLight.direction, Vec3(0.0f), Vec3(0.0f, 1.0f, 0.0f));
-	//
-	//Mat4 bias = glm::scale(glm::translate(Mat4(1), Vec3(0.5, 0.5, 0.5)), Vec3(0.5, 0.5, 0.5));
-
-	//lightSpaceMatrix = lightProjection * lightView;
 	static Mat4 scaleBiasMatrix = glm::scale(Mat4(1.0f), { 0.5f, 0.5f, 0.5f }) * glm::translate(Mat4(1.0f), { 1, 1, 1 });
 
 	CascadeData cascades[4];
@@ -35,10 +27,7 @@ void Ivy::ShadowRenderPass::RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>&
 
 
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	//glBindFramebuffer(GL_FRAMEBUFFER, mShadowFBO->GetDepthFboID());
-	//glClear(GL_DEPTH_BUFFER_BIT);
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, mShadowFBO->GetDepthTextureID());
+
 	for(int c = 0; c < CASCADE_COUNT; c++)
 	{
 		mCascadeSplits[c] = cascades[c].SplitDepth;

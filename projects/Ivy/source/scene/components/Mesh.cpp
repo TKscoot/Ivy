@@ -316,7 +316,6 @@ void Ivy::Mesh::Draw(bool bindTextures)
 			
 			shader->SetUniformMat4("model", transform->getComposed() /* * mSubmeshes[i].transform*/);
 
-			// höchstwahrscheinlich ziemlich langsam
 			if(mIsAnimated)
 			{
 				glUniformMatrix4fv(
@@ -331,11 +330,14 @@ void Ivy::Mesh::Draw(bool bindTextures)
 		}
 		// ENDTODO
 		
-		//TODO: Check if animated and upload animTransform as uniform mat4
 
 		mVertexArray->Bind();
-		//glDrawElements(GL_TRIANGLES, mSubmeshes[i].indices.size(), GL_UNSIGNED_INT, (void*)mSubmeshes[i].indexOffset);
-		glDrawElementsBaseVertex(GL_TRIANGLES, mSubmeshes[i].indexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * mSubmeshes[i].baseIndex), mSubmeshes[i].baseVertex);
+		glDrawElementsBaseVertex(
+			GL_TRIANGLES, 
+			mSubmeshes[i].indexCount, 
+			GL_UNSIGNED_INT, 
+			(void*)(sizeof(uint32_t) * mSubmeshes[i].baseIndex), 
+			mSubmeshes[i].baseVertex);
 		mVertexArray->Unbind();
 	}
 }
@@ -388,7 +390,7 @@ void Ivy::Mesh::SetResourceData()
 		GLuint boneBuffer = 0;
 		glGenBuffers(1, &boneBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, boneBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(mBoneData[0]) * mBoneData.size(), &mBoneData[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(mBoneData[0]) * mBoneData.size(), &mBoneData[0], GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(5, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
 		glEnableVertexAttribArray(6);
@@ -406,7 +408,7 @@ void Ivy::Mesh::SetResourceData()
 	mVertexArray->Unbind();
 }
 
-
+// Animation Code von xphere (http://www.xphere.me/2019/05/bones-animation-with-openglassimpglm/)
 void Ivy::Mesh::setBoneTransformations(GLuint shaderProgram, GLfloat currentTime)
 {
 	std::vector<glm::mat4> Transforms;
@@ -467,7 +469,7 @@ void Ivy::Mesh::LoadBones(unsigned int MeshIndex, const aiMesh* pMesh, std::vect
 			//std::cout << pMesh->mBones[i]->mWeights. << std::endl;
 			unsigned int VertexID = mSubmeshes[MeshIndex].baseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
 			float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
-			Bones[VertexID].AddBoneData(BoneIndex, Weight);
+			mBoneData[VertexID].AddBoneData(BoneIndex, Weight);
 		}
 	}
 }
@@ -633,9 +635,6 @@ void Ivy::Mesh::boneTransform(float timeInSeconds, std::vector<glm::mat4>& Trans
 {
 	glm::mat4 Identity = glm::mat4(1.0f);
 
-	//TODO: I think that this line does not make any sense... because its overwritten later
-	animDuration = (float)mAssimpScene->mAnimations[mCurrentAnimation]->mDuration;
-
 	/* Calc animation duration */
 	unsigned int numPosKeys = mAssimpScene->mAnimations[mCurrentAnimation]->mChannels[0]->mNumPositionKeys;
 	animDuration = mAssimpScene->mAnimations[mCurrentAnimation]->mChannels[0]->mPositionKeys[numPosKeys - 1].mTime;
@@ -669,3 +668,5 @@ const aiNodeAnim* Ivy::Mesh::FindNodeAnim(const aiAnimation* pAnimation, const s
 
 	return NULL;
 }
+// Animation Code von xphere END
+

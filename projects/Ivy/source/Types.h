@@ -65,17 +65,23 @@ namespace Ivy
 		Vec3 bitangent;
 		Vec2 texcoord;
 
-		uint32_t IDs[4] = { 0, 0, 0, 0 };
-		float weights[4]{ 0.0f, 0.0f, 0.0f, 0.0f };
+		uint32_t IDs[4];
+		float Weights[4];
+
+		AnimatedVertex()
+		{
+			memset(IDs, 0, sizeof(IDs));
+			memset(Weights, 0, sizeof(Weights));
+		};
 
 		void AddBoneData(uint32_t BoneID, float Weight)
 		{
 			for(size_t i = 0; i < 4; i++)
 			{
-				if(weights[i] == 0.0)
+				if(Weights[i] == 0.0)
 				{
 					IDs[i] = BoneID;
-					weights[i] = Weight;
+					Weights[i] = Weight;
 					return;
 				}
 			}
