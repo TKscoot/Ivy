@@ -57,17 +57,21 @@ void Application::SetupEntities()
 {
 	// Object to test shadowmap
 	Ptr<Entity> shadowTestEntity = Scene::GetScene()->CreateEntity();
-	shadowTestEntity->AddComponent(CreatePtr<Mesh>(shadowTestEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
-	Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
-	for(auto& shadowTestMaterial : shadowTestMaterials)
-	{
-		shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::DIFFUSE);
-		shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Normal_OpenGL.png", Material::TextureMapType::NORMAL);
-		shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
-		shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
-		//shadowTestMaterial->SetMetallic(0.1f);
-		//shadowTestMaterial->SetRoughness(0.9f);
-	}
+	shadowTestEntity->AddComponent(CreatePtr<Mesh>(shadowTestEntity.get(), "assets/models/stormtrooper_dancing.fbx"));
+	Ptr<Entity> pilotEntity = Scene::GetScene()->CreateEntity();
+	auto mesh = pilotEntity->AddComponent(CreatePtr<Mesh>(pilotEntity.get(), "assets/models/Apocalypse_Female_Geared.fbx"));
+	pilotEntity->GetFirstComponentOfType<Transform>()->setPositionX(-15.0f);
+	pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.01f));
+	//Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
+	//for(auto& shadowTestMaterial : shadowTestMaterials)
+	//{
+	//	shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::DIFFUSE);
+	//	shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Normal_OpenGL.png", Material::TextureMapType::NORMAL);
+	//	shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
+	//	shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
+	//	//shadowTestMaterial->SetMetallic(0.1f);
+	//	//shadowTestMaterial->SetRoughness(0.9f);
+	//}
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(20.0f, 20.0f, 20.0f);
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setPosition(-2.0f, 4.0f, -3.0f);

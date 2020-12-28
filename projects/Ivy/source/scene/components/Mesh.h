@@ -129,7 +129,7 @@ namespace Ivy
 			void AddBoneData(unsigned int BoneID, float Weight);
 		};
 
-		//Animation
+		// Animation Code von xphere (http://www.xphere.me/2019/05/bones-animation-with-openglassimpglm/)
 		void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
 		void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
 		void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
