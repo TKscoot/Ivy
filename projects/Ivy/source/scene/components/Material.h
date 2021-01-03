@@ -25,8 +25,6 @@ namespace Ivy
 			ROUGHNESS = 2,
 			METALLIC = 3,
 			BRDF_LUT = 4,
-			//AMBIENT_OCCLUSION = 5,
-
 
 			TEXTURE_MAP_TYPE_LAST
 		};

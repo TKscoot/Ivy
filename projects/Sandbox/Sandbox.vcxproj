@@ -73,6 +73,7 @@
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)"
+call "$(SolutionDir)MergeLibs.bat" /OUT:IvyMerged.lib Build/Bin/Ivy/Debug/Ivy.lib projects/Ivy/dependencies/assimp/lib/assimp-vc141-mt.lib projects/Ivy/dependencies/GLFW/lib/glfw3.lib projects/Ivy/dependencies/GLAD/Lib/GLAD.lib projects/Ivy/dependencies/ImGui/Lib/ImGui.lib
 xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e /i /f</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -98,6 +99,7 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)"
+call "$(SolutionDir)MergeLibs.bat" /OUT:IvyMerged.lib Build/Bin/Ivy/Debug/Ivy.lib projects/Ivy/dependencies/assimp/lib/assimp-vc141-mt.lib projects/Ivy/dependencies/GLFW/lib/glfw3.lib projects/Ivy/dependencies/GLAD/Lib/GLAD.lib projects/Ivy/dependencies/ImGui/Lib/ImGui.lib
 xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e /i /f</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

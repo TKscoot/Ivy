@@ -86,5 +86,9 @@ namespace Ivy
 		static void OnFramebufferSizeChange(GLFWwindow* window, int width, int height);
 
 		GLFWwindow* mWnd;
+		GLFWmonitor* mMonitor;
+		const GLFWvidmode* mMode;
+
+		bool mFullscreen = false;
 	};
 }

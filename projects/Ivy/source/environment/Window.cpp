@@ -23,6 +23,10 @@ namespace Ivy
 			//Debug::CoreError("Failed to create glfw window!");
 			return;
 		}
+		mMonitor = glfwGetPrimaryMonitor();
+		mMode = glfwGetVideoMode(mMonitor);
+
+		//glfwSetWindowMonitor(mWnd, mFullscreen ? mMonitor : NULL, 0, 0, mMode->width, mMode->height, GLFW_DONT_CARE);
 
 		glfwMakeContextCurrent(mWnd);
 

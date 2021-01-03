@@ -4,8 +4,6 @@
 
 void Ivy::Renderer::Initialize()
 {
-	//String glVersion = String(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-
 
 	EnableDebugMessages();
 
@@ -15,14 +13,14 @@ void Ivy::Renderer::Initialize()
     glEnable(GL_CULL_FACE);
 	glShadeModel(GL_SMOOTH);
 
-
 	int texture_units;
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
+
+	//InitLoadingScreen();
 
 	mScene = Scene::GetScene();
 	mScene->InitializeGUI(mWindow);
 	mScene->InitializeScenePass(mWindow);
-
 }
 
 void Ivy::Renderer::Render(float deltaTime)
@@ -59,4 +57,47 @@ void Ivy::Renderer::EnableDebugMessages()
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(GLLogCallback, nullptr);
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+}
+
+void Ivy::Renderer::InitLoadingScreen()
+{
+	float vertices[] = {
+		// pos        // tex
+		-1.0f, -1.0f, 0.0f, 0.0f,
+		 1.0f,  1.0f, 1.0f, 1.0f,
+		-1.0f,  1.0f, 0.0f, 1.0f,
+
+		-1.0f, -1.0f, 0.0f, 0.0f,
+		 1.0f, -1.0f, 1.0f, 0.0f,
+		 1.0f,  1.0f, 1.0f, 1.0f
+	};;
+
+	BufferLayout layout =
+	{
+		{ShaderDataType::Float2, "aPos", 0},
+		{ShaderDataType::Float2, "aCoords", 0}
+	};
+
+	mLoadingScreenShader  = CreatePtr<Shader>("shaders/LoadingScreen.vert", "shaders/LoadingScreen.frag");
+	mLoadingScreenTexture = CreatePtr<Texture2D>("assets/textures/Misc/LoadingScreen.png");
+
+	mVertexArray  = CreatePtr<VertexArray>(layout);
+	mVertexBuffer = CreatePtr<VertexBuffer>();
+	mVertexArray->SetVertexBuffer(mVertexBuffer);
+	mVertexArray->Bind();
+	mVertexBuffer->SetBufferData(&vertices, sizeof(vertices));
+
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0, mWindow->GetWindowSize().x, mWindow->GetWindowSize().y);
+
+	mLoadingScreenShader->Bind();
+	mVertexArray->Bind();
+	mLoadingScreenTexture->Bind(0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glfwSwapBuffers(mWindow->GetHandle());
+
+	mLoadingScreenShader->Unbind();
+	mVertexArray->Unbind();
+
 }

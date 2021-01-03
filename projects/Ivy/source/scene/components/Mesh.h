@@ -103,6 +103,7 @@ namespace Ivy
 		void setAnimation(unsigned int a);
 		void boneTransform(float timeInSeconds, std::vector<glm::mat4>& Transforms);
 		void setBoneTransformations(GLuint shaderProgram, GLfloat currentTime);
+		void TraverseNodes(aiNode* node, const glm::mat4& parentTransform = Mat4(1.0f), uint32_t level = 0);
 
     protected:
 
@@ -164,7 +165,8 @@ namespace Ivy
 
         void CreateResources();
 		void SetResourceData();
-        void Draw(bool bindTextures = true);
+		void Draw(bool bindTextures = true);
+		void Draw(Ptr<Shader> shader, bool bindTextures = true);
 
 		std::unique_ptr<Assimp::Importer> mImporter;
 

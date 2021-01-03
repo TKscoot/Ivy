@@ -71,9 +71,18 @@ void Ivy::Scene::Update(float deltaTime)
 	}
 
 	mCSM->Update();
+	static float timer = 0;
+	static float fps = 0;
+	timer += deltaTime;
+	if(timer >= 1.0f)
+	{
+		fps = 1 / deltaTime;
+		timer = 0;
+	}
 
 	// render your GUI
 	ImGui::Begin("Scene Settings!");
+	ImGui::Text("FPS: %f", fps);
 	float v[3];
 	v[0] = mDirLight.direction.x;
 	v[1] = mDirLight.direction.y;
@@ -93,9 +102,7 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 
 	// Shadow Pass
 	mCSM->RenderShadows(currentWindowSize, mEntities);
-
 	// Scene pass
-
 	mScenePass->Render(currentWindowSize);
 
 	mPostprocessPass->Render(currentWindowSize, deltaTime);

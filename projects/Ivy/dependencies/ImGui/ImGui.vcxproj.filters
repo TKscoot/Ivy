@@ -87,6 +87,9 @@
     <None Include="ImGui.vcxproj.filters" />
     <None Include="ImGui.vcxproj.user" />
     <None Include="LICENSE.txt" />
+    <None Include="Lib\Debug\ImGui.Build.CppClean.log">
+      <Filter>Lib\Debug</Filter>
+    </None>
     <None Include="Lib\Debug\ImGui.idb">
       <Filter>Lib\Debug</Filter>
     </None>
@@ -96,7 +99,7 @@
     <None Include="Lib\Debug\ImGui.pdb">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\ImGui.tlog\CL.17468.write.1.tlog">
+    <None Include="Lib\Debug\ImGui.tlog\CL.594972.write.1.tlog">
       <Filter>Lib\Debug\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog">
@@ -129,25 +132,10 @@
     <None Include="Lib\Debug\imgui_draw.obj">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\imgui_impl_dx10.obj">
-      <Filter>Lib\Debug</Filter>
-    </None>
-    <None Include="Lib\Debug\imgui_impl_dx11.obj">
-      <Filter>Lib\Debug</Filter>
-    </None>
-    <None Include="Lib\Debug\imgui_impl_dx9.obj">
-      <Filter>Lib\Debug</Filter>
-    </None>
     <None Include="Lib\Debug\imgui_impl_glfw.obj">
       <Filter>Lib\Debug</Filter>
     </None>
-    <None Include="Lib\Debug\imgui_impl_opengl2.obj">
-      <Filter>Lib\Debug</Filter>
-    </None>
     <None Include="Lib\Debug\imgui_impl_opengl3.obj">
-      <Filter>Lib\Debug</Filter>
-    </None>
-    <None Include="Lib\Debug\imgui_impl_win32.obj">
       <Filter>Lib\Debug</Filter>
     </None>
     <None Include="Lib\Debug\imgui_stdlib.obj">
@@ -177,7 +165,7 @@
     <None Include="Lib\Release\ImGui.pdb">
       <Filter>Lib\Release</Filter>
     </None>
-    <None Include="Lib\Release\ImGui.tlog\CL.318880.write.1.tlog">
+    <None Include="Lib\Release\ImGui.tlog\CL.384604.write.1.tlog">
       <Filter>Lib\Release\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog">

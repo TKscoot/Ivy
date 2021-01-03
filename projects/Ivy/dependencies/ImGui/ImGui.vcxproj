@@ -130,10 +130,11 @@
     <None Include="ImGui.vcxproj.filters" />
     <None Include="ImGui.vcxproj.user" />
     <None Include="LICENSE.txt" />
+    <None Include="Lib\Debug\ImGui.Build.CppClean.log" />
     <None Include="Lib\Debug\ImGui.idb" />
     <None Include="Lib\Debug\ImGui.log" />
     <None Include="Lib\Debug\ImGui.pdb" />
-    <None Include="Lib\Debug\ImGui.tlog\CL.17468.write.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\CL.594972.write.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\CL.read.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\ImGui.lastbuildstate" />
@@ -144,13 +145,8 @@
     <None Include="Lib\Debug\imgui.obj" />
     <None Include="Lib\Debug\imgui_demo.obj" />
     <None Include="Lib\Debug\imgui_draw.obj" />
-    <None Include="Lib\Debug\imgui_impl_dx10.obj" />
-    <None Include="Lib\Debug\imgui_impl_dx11.obj" />
-    <None Include="Lib\Debug\imgui_impl_dx9.obj" />
     <None Include="Lib\Debug\imgui_impl_glfw.obj" />
-    <None Include="Lib\Debug\imgui_impl_opengl2.obj" />
     <None Include="Lib\Debug\imgui_impl_opengl3.obj" />
-    <None Include="Lib\Debug\imgui_impl_win32.obj" />
     <None Include="Lib\Debug\imgui_stdlib.obj" />
     <None Include="Lib\Debug\imgui_tables.obj" />
     <None Include="Lib\Debug\imgui_themes.obj" />
@@ -160,7 +156,7 @@
     <None Include="Lib\Release\ImGui.Build.CppClean.log" />
     <None Include="Lib\Release\ImGui.log" />
     <None Include="Lib\Release\ImGui.pdb" />
-    <None Include="Lib\Release\ImGui.tlog\CL.318880.write.1.tlog" />
+    <None Include="Lib\Release\ImGui.tlog\CL.384604.write.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\CL.read.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\ImGui.lastbuildstate" />

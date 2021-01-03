@@ -36,7 +36,7 @@ void main()
 
 	vec4 localPosition = boneTransform * vec4(aPosition.xyz, 1.0);
 
-    FragPos = vec3(mat3(model) * localPosition.xyz);   
+    FragPos = vec3(model * boneTransform * vec4(aPosition));   
     TexCoords = aTexCoord;
 	ViewPosition = vec3(view * vec4(FragPos, 1.0));
 

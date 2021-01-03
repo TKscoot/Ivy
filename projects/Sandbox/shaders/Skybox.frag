@@ -8,7 +8,7 @@ layout(binding = 0) uniform samplerCube skybox;
 uniform vec3 sunPosition;
 
 
-//  ATMOS SCATTERING
+//  ATMOS SCATTERING by Rye Terell (https://github.com/wwwtyro/glsl-atmosphere)
 
 #define PI 3.141592
 #define iSteps 8
@@ -138,6 +138,4 @@ void main()
 
 	//FragColor = mix(texture(skybox, TexCoords),vec4(color, 1.0f), .5);
 	FragColor = texture(skybox, TexCoords);
-
-	//FragColor = texture(skybox, TexCoords);
 }

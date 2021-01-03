@@ -55,13 +55,15 @@ void Application::SetupScene()
 
 void Application::SetupEntities()
 {
-	// Object to test shadowmap
-	Ptr<Entity> shadowTestEntity = Scene::GetScene()->CreateEntity();
-	shadowTestEntity->AddComponent(CreatePtr<Mesh>(shadowTestEntity.get(), "assets/models/stormtrooper_dancing.fbx"));
+	// Animated Pilot
 	Ptr<Entity> pilotEntity = Scene::GetScene()->CreateEntity();
-	auto mesh = pilotEntity->AddComponent(CreatePtr<Mesh>(pilotEntity.get(), "assets/models/Apocalypse_Female_Geared.fbx"));
-	pilotEntity->GetFirstComponentOfType<Transform>()->setPositionX(-15.0f);
-	pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.01f));
+	pilotEntity->AddComponent(CreatePtr<Mesh>(pilotEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
+
+	// Sponza scene
+	//Ptr<Entity> sponzaEntity = Scene::GetScene()->CreateEntity();
+	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
+	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
+
 	//Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
 	//for(auto& shadowTestMaterial : shadowTestMaterials)
 	//{
@@ -72,7 +74,6 @@ void Application::SetupEntities()
 	//	//shadowTestMaterial->SetMetallic(0.1f);
 	//	//shadowTestMaterial->SetRoughness(0.9f);
 	//}
-	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(20.0f, 20.0f, 20.0f);
 	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setPosition(-2.0f, 4.0f, -3.0f);
 
@@ -86,10 +87,9 @@ void Application::SetupEntities()
 	//
 	//Ptr<Transform> towerTransform = towerEntity->GetFirstComponentOfType<Transform>();
 	//towerTransform->setPosition(3.0f, 3.0f, 0.0f);
-	////towerTransform->setScale(100.0f, 100.0f, 100.0f); 
 	//towerTransform->setScale(0.05f, 0.05f, 0.05f);
 	//towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
-
+	//
 	Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
 	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
 	//Vector<Ptr<Material>> sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
@@ -133,16 +133,7 @@ void Application::Run()
 			mScene->SortEntitiesForAlpha();
 		}
 
-		// Handle cursor toggling
-		//bool cursorKeyCurrentlyPressed = Input::IsKeyPressed(M);
-
-		//if(!cursorKeyPressed && cursorKeyCurrentlyPressed)
-		//{ 
-		//	mScene->GetCamera()->HandleInput(cursorVisible);
-		//	Input::SetMouseCursorVisible(!cursorVisible);
-		//	cursorVisible = !cursorVisible;
-		//}
-		//cursorKeyPressed = cursorKeyCurrentlyPressed;
+		
 
 		if(Input::IsKeyDown(M))
 		{
