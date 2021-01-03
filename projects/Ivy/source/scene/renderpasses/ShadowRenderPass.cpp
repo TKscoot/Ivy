@@ -46,7 +46,7 @@ void Ivy::ShadowRenderPass::RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>&
 			Vector<Ptr<Mesh>> meshes = entities[i]->GetComponentsOfType<Mesh>();
 			for(int j = 0; j < meshes.size(); j++)
 			{
-				meshes[j]->Draw(false);
+				meshes[j]->Draw(mDepthShader, false);
 			}
 		}
 

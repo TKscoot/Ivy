@@ -183,7 +183,7 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 	}
 
 
-	//TraverseNodes(scene->mRootNode);
+	TraverseNodes(scene->mRootNode);
 	mBoneData.resize(vertexCount);
 	for(uint32_t i = 0; i < mSubmeshes.size(); i++)
 	{
@@ -314,7 +314,7 @@ void Ivy::Mesh::Draw(bool bindTextures)
 			materials[mSubmeshes[i].materialIndex]->UpdateShaderTextureBools();
 			materials[mSubmeshes[i].materialIndex]->UpdateMaterialUniforms();
 			
-			shader->SetUniformMat4("model", transform->getComposed() /* * mSubmeshes[i].transform*/);
+			shader->SetUniformMat4("model", transform->getComposed()  /** mSubmeshes[i].transform*/);
 
 			if(mIsAnimated)
 			{
@@ -337,6 +337,65 @@ void Ivy::Mesh::Draw(bool bindTextures)
 			mSubmeshes[i].indexCount, 
 			GL_UNSIGNED_INT, 
 			(void*)(sizeof(uint32_t) * mSubmeshes[i].baseIndex), 
+			mSubmeshes[i].baseVertex);
+		mVertexArray->Unbind();
+	}
+}
+
+void Ivy::Mesh::Draw(Ptr<Shader> shader, bool bindTextures)
+{
+	if(!IsActive()) return;
+
+	auto& materials = mEntity->GetComponentsOfType<Material>();
+	auto& transform = mEntity->GetFirstComponentOfType<Transform>();
+
+	for(int i = 0; i < mSubmeshes.size(); i++)
+	{
+
+		// TODO: VERY PERFORMANCE HUNGRY WHEN LOTS OF TEXTUREBINDS: FIX
+		if(bindTextures && materials.size() >= mSubmeshes[i].materialIndex)
+		{
+			for(auto& kv : materials[mSubmeshes[i].materialIndex]->GetTextures())
+			{
+				textures[static_cast<uint32_t>(kv.first)] = kv.second->GetRendererID();
+			}
+
+			glBindTextures(0, textures.size(), textures.data());
+
+			//Ptr<Shader> shader = materials[mSubmeshes[i].materialIndex]->GetShader();
+			shader->Bind();
+			materials[mSubmeshes[i].materialIndex]->UpdateShaderTextureBools();
+			materials[mSubmeshes[i].materialIndex]->UpdateMaterialUniforms();
+
+			shader->SetUniformMat4("model", transform->getComposed()  /** mSubmeshes[i].transform*/);
+
+
+
+		}
+		// ENDTODO
+
+		if(mIsAnimated)
+		{
+			shader->SetUniformInt("isAnimated", true);
+			glUniformMatrix4fv(
+				glGetUniformLocation(
+					shader->GetRendererID(),
+					"boneTransforms"),
+					(GLsizei)mBoneTransforms.size(),
+				GL_FALSE,
+				glm::value_ptr(mBoneTransforms[0]));
+		}
+		else
+		{
+			shader->SetUniformInt("isAnimated", false);
+		}
+
+		mVertexArray->Bind();
+		glDrawElementsBaseVertex(
+			GL_TRIANGLES,
+			mSubmeshes[i].indexCount,
+			GL_UNSIGNED_INT,
+			(void*)(sizeof(uint32_t) * mSubmeshes[i].baseIndex),
 			mSubmeshes[i].baseVertex);
 		mVertexArray->Unbind();
 	}
@@ -670,3 +729,16 @@ const aiNodeAnim* Ivy::Mesh::FindNodeAnim(const aiAnimation* pAnimation, const s
 }
 // Animation Code von xphere END
 
+void Ivy::Mesh::TraverseNodes(aiNode* node, const glm::mat4& parentTransform, uint32_t level)
+{
+	glm::mat4 transform = parentTransform * Mat4FromAssimpMat4(node->mTransformation);
+	for(uint32_t i = 0; i < node->mNumMeshes; i++)
+	{
+		uint32_t mesh = node->mMeshes[i];
+		auto& submesh = mSubmeshes[mesh];
+		submesh.transform = transform;
+	}
+
+	for(uint32_t i = 0; i < node->mNumChildren; i++)
+		TraverseNodes(node->mChildren[i], transform, level + 1);
+}

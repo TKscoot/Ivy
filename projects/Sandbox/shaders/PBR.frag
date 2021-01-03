@@ -124,9 +124,9 @@ vec3  fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
 //MAIN
 void main()
 {		
-	vec2 uv = TexCoords * material.tiling;
-    vec3 albedo     = pow(texture(diffuseMap, uv).rgb, vec3(2.2));
-	float alpha = texture(diffuseMap, uv).a;
+	vec2  uv		= TexCoords * material.tiling;
+    vec3  albedo    = pow(texture(diffuseMap, uv).rgb, vec3(2.2));
+	float alpha		= texture(diffuseMap, uv).a;
     float metallic  = material.metallic;
     float roughness = material.roughness;
 
@@ -163,6 +163,7 @@ void main()
 	vec3 Lo = PbrDirectionalLighting(dirLight, roughness, metallic, albedo, N, V, F0);
 
 	// Point Lights
+	// Implementierung basierend auf topfs2's shadow-swan renderer (https://github.com/topfs2/shadow-swan/blob/master/shaders/pbr.fs)
 	for(int i = 0; i < pointLightSize; ++i) 
     {
 		vec3 lightPosition = pointLights[i].position;
@@ -235,11 +236,6 @@ void main()
 	}
 
     vec3 color = ambient + Lo;
-
-    // HDR tonemapping
-    //color = color / (color + vec3(1.0));
-    //// gamma correct
-    //color = pow(color, vec3(1.0/2.2)); 
 
 	if (csm.showCascades)
 	{

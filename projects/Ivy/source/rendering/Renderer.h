@@ -68,10 +68,16 @@ namespace Ivy
 
 		// Methods
 		void EnableDebugMessages();
+		void InitLoadingScreen();
 
 		// Variables
 		Ptr<Window>       mWindow;
 		Ptr<Scene>		  mScene;
+
+		Ptr<Shader>		  mLoadingScreenShader;
+		Ptr<VertexBuffer> mVertexBuffer;
+		Ptr<VertexArray>  mVertexArray;
+		Ptr<Texture2D>	  mLoadingScreenTexture;
 
 	};
 }

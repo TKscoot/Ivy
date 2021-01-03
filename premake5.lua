@@ -50,7 +50,10 @@ workspace "Ivy"
 	-- The path is relative to *this* folder
 	targetdir ("Build/Bin/%{prj.name}/%{cfg.longname}")
 	objdir ("Build/Obj/%{prj.name}/%{cfg.longname}")
+
 	
+
+
 project "GLAD"
 	
 	location "projects/Ivy/dependencies/GLAD"
@@ -211,6 +214,18 @@ project "Sandbox"
 		"projects/Ivy/dependencies/ImGui/Lib"
 	}
 
+	LibraryDir = {}
+	filter "configurations:Debug"
+	LibraryDir["Assimp"] = "projects/Ivy/dependencies/assimp/lib/assimp-vc141-mt.lib"
+	LibraryDir["Ivy"] = "Build/Bin/Ivy/Debug/Ivy.lib"
+	--filter "configurations:Release"
+	--LibraryDir["Assimp"] = "projects/Ivy/dependencies/assimp/lib/assimp-vc141-mt.lib"
+	--LibraryDir["Ivy"] = "Build/Bin/Ivy/Release/Ivy.lib"
+	filter{}
+	LibraryDir["GLFW"] = "projects/Ivy/dependencies/GLFW/lib/glfw3.lib"
+	LibraryDir["GLAD"] = "projects/Ivy/dependencies/GLAD/Lib/GLAD.lib"
+	LibraryDir["ImGui"] = "projects/Ivy/dependencies/ImGui/Lib/ImGui.lib"
+
     filter "system:windows"
         libdirs
         {
@@ -219,8 +234,12 @@ project "Sandbox"
 
         }
 
+		
+
+
 		postbuildcommands{
 			"cd \"$(SolutionDir)\"",
+			"call \"$(SolutionDir)MergeLibs.bat\" /OUT:IvyMerged.lib %{LibraryDir.Ivy} %{LibraryDir.Assimp} %{LibraryDir.GLFW} %{LibraryDir.GLAD} %{LibraryDir.ImGui}",
 			-- copying shaders to build folder
 			"xcopy \"$(SolutionDir)projects\\Sandbox\\shaders\\*.*\" \"$(TargetDir)shaders\\\" /y /e /i /f" 
 		}

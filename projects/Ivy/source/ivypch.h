@@ -1,6 +1,7 @@
 #pragma once
 #if defined _WIN32
 	// OpenGL on Windows needs Windows.h
+#define NOMINMAX
 	#include <Windows.h>
 #endif
 
