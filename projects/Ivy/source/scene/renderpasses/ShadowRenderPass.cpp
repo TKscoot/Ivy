@@ -39,14 +39,17 @@ void Ivy::ShadowRenderPass::RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>&
 
 		for(int i = 0; i < entities.size(); i++)
 		{
-			Ptr<Transform> trans = entities[i]->GetFirstComponentOfType<Transform>();
-			Mat4 model = trans->getComposed();
-			mDepthShader->SetUniformMat4("model", model);
-
-			Vector<Ptr<Mesh>> meshes = entities[i]->GetComponentsOfType<Mesh>();
-			for(int j = 0; j < meshes.size(); j++)
+			if(entities[i]->IsActive())
 			{
-				meshes[j]->Draw(mDepthShader, false);
+				Ptr<Transform> trans = entities[i]->GetFirstComponentOfType<Transform>();
+				Mat4 model = trans->getComposed();
+				mDepthShader->SetUniformMat4("model", model);
+
+				Vector<Ptr<Mesh>> meshes = entities[i]->GetComponentsOfType<Mesh>();
+				for(int j = 0; j < meshes.size(); j++)
+				{
+					meshes[j]->Draw(mDepthShader, false);
+				}
 			}
 		}
 

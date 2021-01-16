@@ -26,6 +26,7 @@ Ivy::Mesh::Mesh(Entity* ent) : Ivy::Component::Component(ent)
 {
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
     //CreateResources();
+	mCamera = ent->GetSceneCamera();
 }
 
 Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Component::Component(ent)
@@ -35,12 +36,16 @@ Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Comp
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(entidx); //TODO: GetEntityIndex not working properly
 
     //CreateResources();
+	mCamera = ent->GetSceneCamera();
+
     Load(filepath, useMtlIfProvided);
 }
 
 Ivy::Mesh::Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices) : Ivy::Component::Component(ent)
 {
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
+	mCamera = ent->GetSceneCamera();
+
 }
 
 void Ivy::Mesh::OnUpdate(float deltaTime)
@@ -184,6 +189,7 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 
 
 	TraverseNodes(scene->mRootNode);
+
 	mBoneData.resize(vertexCount);
 	for(uint32_t i = 0; i < mSubmeshes.size(); i++)
 	{
@@ -287,6 +293,7 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 	
 	// sorting submeshes for better texture binding performance
 	//std::sort(mSubmeshes.begin(), mSubmeshes.end(), less_than_key());
+
 }
 
 void Ivy::Mesh::Draw(bool bindTextures)
@@ -314,7 +321,7 @@ void Ivy::Mesh::Draw(bool bindTextures)
 			materials[mSubmeshes[i].materialIndex]->UpdateShaderTextureBools();
 			materials[mSubmeshes[i].materialIndex]->UpdateMaterialUniforms();
 			
-			shader->SetUniformMat4("model", transform->getComposed()  /** mSubmeshes[i].transform*/);
+			shader->SetUniformMat4("model", transform->getComposed());
 
 			if(mIsAnimated)
 			{
@@ -367,7 +374,7 @@ void Ivy::Mesh::Draw(Ptr<Shader> shader, bool bindTextures)
 			materials[mSubmeshes[i].materialIndex]->UpdateShaderTextureBools();
 			materials[mSubmeshes[i].materialIndex]->UpdateMaterialUniforms();
 
-			shader->SetUniformMat4("model", transform->getComposed()  /** mSubmeshes[i].transform*/);
+			shader->SetUniformMat4("model", transform->getComposed());
 
 
 
@@ -731,7 +738,8 @@ const aiNodeAnim* Ivy::Mesh::FindNodeAnim(const aiAnimation* pAnimation, const s
 
 void Ivy::Mesh::TraverseNodes(aiNode* node, const glm::mat4& parentTransform, uint32_t level)
 {
-	glm::mat4 transform = parentTransform * Mat4FromAssimpMat4(node->mTransformation);
+	glm::mat4 transform = /*parentTransform **/ Mat4FromAssimpMat4(node->mTransformation);
+
 	for(uint32_t i = 0; i < node->mNumMeshes; i++)
 	{
 		uint32_t mesh = node->mMeshes[i];

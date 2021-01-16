@@ -111,3 +111,9 @@ void Ivy::Input::Initialize(Ptr<Window> wnd)
 	lastX = wnd->GetWindowSize().x;
 	lastY = wnd->GetWindowSize().y;
 }
+
+
+void Ivy::Input::SetMousePositon(Vec2 mousePos)
+{
+	glfwSetCursorPos(mGlfwWnd, mousePos.x, mousePos.y);
+}

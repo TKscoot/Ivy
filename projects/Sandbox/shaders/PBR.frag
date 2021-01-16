@@ -130,6 +130,11 @@ void main()
     float metallic  = material.metallic;
     float roughness = material.roughness;
 
+	if(alpha <= 0.1)
+	{
+		discard;
+	}
+
 	vec3 N = Normal;
 	if(useNormalMap)
 	{
@@ -201,7 +206,7 @@ void main()
         float NdotL = max(dot(N, L), 0.0);     
 
         // add to outgoing radiance Lo
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        Lo += (kD * albedo / PI + specular) * radiance * NdotL * pointLights[i].constant;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
     
 	vec3 ambient = vec3(0);

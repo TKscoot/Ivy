@@ -153,6 +153,12 @@ namespace Ivy
 		 */
 		virtual void OnCreate()  {};
 
+		void SetActive(bool active) { mActive = active; }
+
+		bool IsActive() { return mActive; }
+
+		Ptr<Camera> GetSceneCamera() { return mCamera; }
+	
 	private:
 		void UpdateComponents(float deltaTime);
 		UnorderedMap<std::type_index, Vector<Ptr<Component>>> mComponents;
@@ -160,5 +166,6 @@ namespace Ivy
 		uint32_t mIndex = 0;
 		Ptr<Camera> mCamera = nullptr;
 
+		bool mActive = true;
 	};
 }
