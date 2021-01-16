@@ -18,6 +18,9 @@ public:
 	void ShouldPlay(bool play) { mShouldPlay = play; }
 
 private:
+	std::array<const char*, 3> mCameraModes = {"Free cam", "Rotating", "Pathing"};
+	int			   mCurrentCameraMode = 0;
+
 	Ptr<Camera>  mCamera		 = nullptr;
 	Vector<Vec3> mTrackingPoints = {};
 	float		 mTimer			 = 0.0f;

@@ -52,10 +52,19 @@ void Ivy::Camera::Update(float deltaTime)
 	}
 }
 
+void Ivy::Camera::LookAt(Vec3 lookPos)
+{
+	mLookPos = lookPos;
+}
+
 Ivy::Mat4 Ivy::Camera::GetViewMatrix()
 {
-	
-	return glm::lookAt(mPosition, mPosition + mFront, mUp);
+	if(mHandleInput)
+	{
+		mLookPos = mPosition + mFront;
+	}
+	mView = glm::lookAt(mPosition, mLookPos, mUp);
+	return mView;
 }
 
 Ivy::Mat4 Ivy::Camera::GetProjectionMatrix(Vec2 currentWindowSize)

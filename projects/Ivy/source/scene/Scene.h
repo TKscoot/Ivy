@@ -142,6 +142,8 @@ namespace Ivy
 
 			mPostprocessPass = CreatePtr<PostprocessingRenderPass>(mScenePass);
 		}
+
+		void ToggleGUI() { mRenderGui = !mRenderGui; }
 	private:
 
 
@@ -159,5 +161,7 @@ namespace Ivy
 		DirectionalLight	mDirLight	 = {};
 		Vector<SpotLight>	mSpotLights  = {};
 		Vector<PointLight>	mPointLights = {};
+
+		bool mRenderGui = true;
 	};
 }

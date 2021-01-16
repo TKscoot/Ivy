@@ -58,24 +58,34 @@ void Application::SetupEntities()
 	// Animated Pilot
 	Ptr<Entity> pilotEntity = Scene::GetScene()->CreateEntity();
 	pilotEntity->AddComponent(CreatePtr<Mesh>(pilotEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
-
+	pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
+	Vector<Ptr<Material>> pilotMaterials = pilotEntity->GetComponentsOfType<Material>();
+	for(auto& pilotMat : pilotMaterials)
+	{
+		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::DIFFUSE);
+		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Normal_OpenGL.png", Material::TextureMapType::NORMAL);
+		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
+		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
+		//shadowTestMaterial->SetMetallic(0.1f);
+		//shadowTestMaterial->SetRoughness(0.9f);
+		//pilotMat->UseIBL(false);
+	}
+	
+	
 	// Sponza scene
-	//Ptr<Entity> sponzaEntity = Scene::GetScene()->CreateEntity();
-	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
+	Ptr<Entity> sponzaEntity = Scene::GetScene()->CreateEntity();
+	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/Showroom.obj"));
 	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
-
-	//Vector<Ptr<Material>> shadowTestMaterials = shadowTestEntity->GetComponentsOfType<Material>();
-	//for(auto& shadowTestMaterial : shadowTestMaterials)
-	//{
-	//	shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::DIFFUSE);
-	//	shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Normal_OpenGL.png", Material::TextureMapType::NORMAL);
-	//	shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
-	//	shadowTestMaterial->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
-	//	//shadowTestMaterial->SetMetallic(0.1f);
-	//	//shadowTestMaterial->SetRoughness(0.9f);
-	//}
-	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setScale(20.0f, 20.0f, 20.0f);
-	//shadowTestEntity->GetFirstComponentOfType<Transform>()->setPosition(-2.0f, 4.0f, -3.0f);
+	for(auto& mat : sponzaEntity->GetComponentsOfType<Material>())
+	{
+		mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Base Color.jpg", Material::TextureMapType::DIFFUSE);
+		//mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Normal.jpg", Material::TextureMapType::NORMAL);
+		mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Metallic.jpg", Material::TextureMapType::METALLIC);
+		//mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
+		mat->UseIBL(false);
+		//mat->SetMetallic(0.001f);
+		mat->SetTextureTiling(Vec2(4.0f));
+	}
 
 	// General testing Entity
 	//Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
@@ -90,26 +100,29 @@ void Application::SetupEntities()
 	//towerTransform->setScale(0.05f, 0.05f, 0.05f);
 	//towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
 	//
-	Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
-	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
+	//Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
+	//sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
 	//Vector<Ptr<Material>> sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
 	//
-	//sceneBaseMaterials[0]->SetTextureTiling(Vec2(5.0f, 5.0f));
-	//sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_diffuse.png", Material::TextureMapType::DIFFUSE);
-	//sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_normal.png", Material::TextureMapType::NORMAL);
-	//sceneBaseMaterials[0]->LoadTexture("assets/textures/Scene_Base/Grass002_roughness.png", Material::TextureMapType::ROUGHNESS);
-	//
 	//sceneBaseMaterials[1]->SetTextureTiling(Vec2(5.0f, 5.0f));
-	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Base_Color.jpg", Material::TextureMapType::DIFFUSE);
-	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Normal.jpg", Material::TextureMapType::NORMAL);
-	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Metallic.jpg", Material::TextureMapType::METALLIC);
-	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
+	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Grass002_diffuse.png", Material::TextureMapType::DIFFUSE);
+	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Grass002_normal.png", Material::TextureMapType::NORMAL);
+	//sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Grass002_roughness.png", Material::TextureMapType::ROUGHNESS);
+	//
+	//sceneBaseMaterials[2]->SetTextureTiling(Vec2(5.0f, 5.0f));
+	//sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Base_Color.jpg", Material::TextureMapType::DIFFUSE);
+	//sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Normal.jpg", Material::TextureMapType::NORMAL);
+	//sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Metallic.jpg", Material::TextureMapType::METALLIC);
+	//sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
 
 	Ptr<CameraTracker> cameraTracker = Scene::GetScene()->CreateEntity<CameraTracker>(Scene::GetScene()->GetCamera());
-	//cameraTracker->AddTrackingPoint(Vec3(-10.0f, 2.0f, -10.0f));
-	//cameraTracker->AddTrackingPoint(Vec3(0.0f, 2.0f, -5.0f));
-	//cameraTracker->AddTrackingPoint(Vec3(10.0f, 2.0f, -20.0f));
+	cameraTracker->AddTrackingPoint(Vec3(-10.0f, 2.0f, -10.0f));
+	cameraTracker->AddTrackingPoint(Vec3(0.0f, 2.0f, -5.0f));
+	cameraTracker->AddTrackingPoint(Vec3(10.0f, 2.0f, -20.0f));
 	cameraTracker->ShouldPlay(false);
+
+	mBouncingEntity = mScene->CreateEntity();
+	mBouncingEntity->AddComponent(CreatePtr<Mesh>(mBouncingEntity.get(), "assets/models/bunny.obj"));
 
 }
 
@@ -120,9 +133,19 @@ void Application::Run()
 	bool cursorVisible = Input::GetMouseCursorVisible();
 	bool cursorKeyPressed = false;
 
+	bool sponzaActive = true;
+
+	float timer = 0;
+
 	// Beginning the game loop
 	while(!mEngine->ShouldTerminate())
 	{
+		timer += mEngine->GetDeltaTime();
+		Ptr<Transform> bouncingEntTransform = mBouncingEntity->GetFirstComponentOfType<Transform>();
+		bouncingEntTransform->setRotation(0.0f, timer * 50.0f, 0.0f);
+		bouncingEntTransform->setPositionY(10 + glm::sin(timer));
+		bouncingEntTransform->setPositionX(10);
+
 		if(Input::IsKeyBeingPressed(KeyCode::Escape))
 		{
 			exit(0);
@@ -133,16 +156,21 @@ void Application::Run()
 			mScene->SortEntitiesForAlpha();
 		}
 
-		
 
 		if(Input::IsKeyDown(M))
 		{
+			Input::SetMousePositon({mEngine->GetWindow()->GetWindowSize().x / 2.0f, mEngine->GetWindow()->GetWindowSize().y / 2.0f });
 			mScene->GetCamera()->HandleInput(cursorVisible);
 			Input::SetMouseCursorVisible(!cursorVisible);
 			cursorVisible = !cursorVisible;
 		}
 
-
+		if(Input::IsKeyDown(G))
+		{
+			//mScene->ToggleGUI();
+			mScene->GetEntities()[1]->SetActive(!sponzaActive);
+			sponzaActive = !sponzaActive;
+		}
 
 		// Begin new frame
 		mEngine->NewFrame();

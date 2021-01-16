@@ -38,9 +38,15 @@ vec3 tonemapAuto(vec3 color);
 
 // Depth of field and motion blur
 void DoF(inout vec3 color);
-void motionBlur(inout vec3 color);
+float depthStrength();
 void SEUSmotionBlur(inout vec3 color, float depth);
 vec3 GaussianBlur();
+
+float LinearizeDepth(float d,float zNear,float zFar)
+{
+    float z_n = 2.0 * d - 1.0;
+    return 2.0 * zNear * zFar / (zFar + zNear - z_n * (zFar - zNear));
+}
 
 
 //Godrays
@@ -63,46 +69,6 @@ float nearDof = 0.0001f;
 float falloff = 2.0f;
 float minStrength = 0.0f;
 
-float depthStrength(){
-	float centerDepth = texture2D(sceneDepthMap, vec2(.5, .5)).r;
-	float dofStrength = 1;
-
-	if(centerDepth > DofThreshold)
-	{
-		dofStrength = 1.0;
-		return mix(minStrength, 1.0f,dofStrength);
-	}
-
-	float dist = texture2D(sceneDepthMap, TexCoords).r;
-
-	float z = (2 * NearPlane) / (FarPlane + NearPlane - dist * (FarPlane - NearPlane));
-	float centerZ = (2 * NearPlane) / (FarPlane + NearPlane - centerDepth * (FarPlane - NearPlane));
-	//float clipZ = (distance - 0.5f) * 2.0f;
-	//float z = 2 * (nearPlane*farPlane) / (clipZ*(farPlane-nearPlane) - (farPlane + nearPlane));
-	
-	
-	float sFarDof = (focusDistance+farDof)/FarPlane;
-	float sNearDof = (focusDistance-nearDof)/FarPlane;    
-	 
-	if(z > sFarDof){
-	   //dofStrength = ((sFarDof)/(z));
-		dofStrength = ((sFarDof)/(z));
-	}else if (z < sNearDof) {
-	   dofStrength = ((z)/(sNearDof));
-	}    
-	
-
-	dofStrength = clamp(1-dofStrength,0.0f,1.0f);
-	dofStrength *= falloff;
-	dofStrength =clamp(1-dofStrength,0.0f,1.0f);
-
-
-
-
-	return mix(minStrength, 1.0f,dofStrength);
-}
-
-
 // =====================MAIN=====================
 void main()
 {
@@ -111,6 +77,7 @@ void main()
 	
 	vec3 color = texture2D(sceneColorMap, TexCoords).rgb;
 	float depth = texture2D(sceneDepthMap, TexCoords).r;
+	//depth = LinearizeDepth(depth, NearPlane, FarPlane);
 
 	if(UseMotionBlur)
 	{
@@ -226,7 +193,7 @@ vec3 tonemapAuto(vec3 color)
 void DoF(inout vec3 color)
 {
 	float depth = texture2D(sceneDepthMap, TexCoords).r;
- 
+	depth = LinearizeDepth(depth, NearPlane, FarPlane);
  
 	float sampleOffset = depth/500.0;
  
@@ -244,61 +211,6 @@ void DoF(inout vec3 color)
 	color += texture2D(sceneColorMap, TexCoords.st + vec2(-sampleOffset, sampleOffset)).rgb * 1.0;
  
 	color /= 16.0;
-	//return col.rgb;
-}
-
-// Motion Blur effect used and customized from GPU Gems 3 
-// (https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-27-motion-blur-post-processing-effect)
-void motionBlur(inout vec3 color)
-{
-	vec2 texCoord = TexCoords;
-
-	// Get the depth buffer value at this pixel.
-	float zOverW = texture2D(sceneDepthMap, texCoord).r;
-	
-	// H is the viewport position at this pixel in the range -1 to 1.
-	vec4 H = vec4(texCoord.x * 2 - 1, (1 - texCoord.y) * 2 - 1,zOverW, 1);
-	
-	// Transform by the view-projection inverse.
-	//vec4 D = mul(H, g_ViewProjectionInverseMatrix);
-	vec4 D = InverseViewProjection * H;
-	
-	// Divide by w to get the world position.
-	vec4 worldPos = D / D.w;
-
-	// Current viewport position
-	vec4 currentPos = H;
-	
-	// Use the world position, and transform by the previous view-
-	// projection matrix.
-	//vec4 previousPos = mul(worldPos, g_previousViewProjectionMatrix);
-	vec4 previousPos = PreviousWorldViewProjection * worldPos;
-	
-	// Convert to nonhomogeneous points [-1,1] by dividing by w.
-	previousPos /= previousPos.w;
-	
-	// Use this frame's position and last frame's to compute the pixel
-	// velocity.
-	vec4 vel = (currentPos - previousPos)/2. * 0.05;
-
-	// Get the initial color at this pixel.
-	//color = texture2D(sceneColorMap, texCoord);
-	
-	float velocity = (vel.x + vel.y + vel.z) / 3.;
-
-	texCoord += velocity;
-	
-	for(int i = 1; i < 10; ++i, texCoord += velocity)
-	{
-	  // Sample the color buffer along the velocity vector.
-	  vec4 currentColor = texture2D(sceneColorMap, texCoord);
-	
-	  // Add the current color to our color sum.
-	  color += currentColor.rgb;
-	}
-	
-	// Average all of the samples to get the final blur color.
-	color = color / 10;
 }
 
 // godrays
@@ -360,15 +272,7 @@ float rand(vec2 co){
 
 void SEUSmotionBlur(inout vec3 color, float depth) 
 {
-	//float depth = GetDepth(texcoord.st);
-
-	//vec2 nearFragment = GetNearFragment(texcoord.st, depth);
-	//depth = GetDepth(nearFragment);
-
-
-
 	vec4 currentPosition = vec4(TexCoords.x * 2.0f - 1.0f, TexCoords.y * 2.0f - 1.0f, 2.0f * depth - 1.0f, 1.0f);
-
 
 	vec4 fragposition = inverse(Projection) * currentPosition;
 	fragposition = inverse(View) * fragposition;
@@ -409,7 +313,7 @@ void SEUSmotionBlur(inout vec3 color, float depth)
 }
 
 
-	// WORKING BLUR (NOT MOTION BLUR!) From https://www.shadertoy.com/view/Xltfzj
+// Working Gaussian Blur (NOT MOTION BLUR!) From https://www.shadertoy.com/view/Xltfzj
 vec3 GaussianBlur()
 {
 	float Pi = 6.28318530718; // Pi*2
@@ -437,4 +341,41 @@ vec3 GaussianBlur()
 	
 	return result;
 
+}
+
+float depthStrength()
+{
+	float centerDepth = texture2D(sceneDepthMap, vec2(.5, .5)).r;
+	float dofStrength = 1;
+
+	if(centerDepth > DofThreshold)
+	{
+		dofStrength = 1.0;
+		return mix(minStrength, 1.0f,dofStrength);
+	}
+
+	float dist = texture2D(sceneDepthMap, TexCoords).r;
+
+	float z = (2 * NearPlane) / (FarPlane + NearPlane - dist * (FarPlane - NearPlane));
+	float centerZ = (2 * NearPlane) / (FarPlane + NearPlane - centerDepth * (FarPlane - NearPlane));
+	
+	float sFarDof = (focusDistance+farDof)/FarPlane;
+	float sNearDof = (focusDistance-nearDof)/FarPlane;    
+	 
+	if(z > sFarDof){
+	   //dofStrength = ((sFarDof)/(z));
+		dofStrength = ((sFarDof)/(z));
+	}else if (z < sNearDof) {
+	   dofStrength = ((z)/(sNearDof));
+	}    
+	
+
+	dofStrength = clamp(1-dofStrength,0.0f,1.0f);
+	dofStrength *= falloff;
+	dofStrength =clamp(1-dofStrength,0.0f,1.0f);
+
+
+
+
+	return mix(minStrength, 1.0f,dofStrength);
 }

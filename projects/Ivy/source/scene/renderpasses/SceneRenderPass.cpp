@@ -94,6 +94,11 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 
 	for(int i = 0; i < mEntities.size(); i++)
 	{
+		if(!mEntities[i]->IsActive())
+		{
+			continue;
+		}
+
 		Vector<Ptr<Material>> materials = mEntities[i]->GetComponentsOfType<Material>();
 		Ptr<Shader> shader;
 		for(int j = 0; j < materials.size(); j++)

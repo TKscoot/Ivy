@@ -10,10 +10,10 @@ Ivy::Scene::Scene()
 	mCSM = CreatePtr<ShadowRenderPass>(mCamera);
 
 	AddDirectionalLight(
-		Vec3(-2.0f,  4.0f, -1.0f),	 //direction
-		Vec3( 0.05f, 0.05f, 0.05f), //ambient
-		Vec3( 0.8f,  0.8f,  0.8f),	 //diffuse
-		Vec3( 0.5f,  0.5f,  0.5f));	 //specular
+		Vec3(-2.0f,  4.0f,   -1.0f),	 //direction
+		Vec3( 0.05f, 0.0492f, 0.0439f), //ambient
+		Vec3( 1.0f,  0.984f,  0.878f),	 //diffuse
+		Vec3( 0.5f,  0.492f,  0.439f));	 //specular
 
 	mCSM->SetDirLight(mDirLight);
 
@@ -66,8 +66,11 @@ void Ivy::Scene::Update(float deltaTime)
 
 	for(auto& e : mEntities)
 	{
-		e->OnUpdate(deltaTime);
-		e->UpdateComponents(deltaTime);
+		if(e->mActive)
+		{
+			e->OnUpdate(deltaTime);
+			e->UpdateComponents(deltaTime);
+		}
 	}
 
 	mCSM->Update();
@@ -107,9 +110,10 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 
 	mPostprocessPass->Render(currentWindowSize, deltaTime);
 
-
-
-	mImGuiHook->Render();
+	if(mRenderGui)
+	{
+		mImGuiHook->Render();
+	}
 }
 
 Ivy::DirectionalLight& Ivy::Scene::AddDirectionalLight(DirectionalLight lightParams)

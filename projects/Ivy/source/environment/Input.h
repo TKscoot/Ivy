@@ -65,6 +65,14 @@ namespace Ivy
 		///
 		static bool GetMouseCursorVisible();
 
+		/*!
+		*  
+		* Sets the position of the mouse in window space
+		* 
+		*/
+		static void SetMousePositon(Vec2 mousePos);
+
+
 	private:
 		static void Initialize(Ptr<Window> mWnd);
 

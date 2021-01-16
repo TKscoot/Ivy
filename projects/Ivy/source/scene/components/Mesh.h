@@ -6,6 +6,7 @@
 #include "Component.h"
 #include "scene/Entity.h"
 #include "scene/components/Material.h"
+#include "scene/Camera.h"
 
 #include <assimp/mesh.h>
 #include <assimp/postprocess.h>
@@ -16,6 +17,8 @@
 #include <assimp/anim.h>
 #include <assimp/LogStream.hpp>
 #include <assimp/DefaultLogger.hpp>
+
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include <imgui.h>
 
@@ -49,6 +52,13 @@ namespace Ivy
 			glm::mat4 transform;
 
 			std::string nodeName, meshName;
+
+			float cameraDistance = 0.0f;
+
+			bool operator<(Submesh& that)
+			{
+				return this->cameraDistance < that.cameraDistance;
+			}
 		};
 
 		/*!
@@ -63,7 +73,14 @@ namespace Ivy
 				return (struct1.materialIndex < struct2.materialIndex);
 			}
 		};
-		
+		struct alpha_sort_key
+		{
+			inline bool operator() (Submesh submesh1, Submesh submesh2)
+			{
+				return (submesh1.cameraDistance > submesh2.cameraDistance);
+			}
+		};
+
 		/*!
 		 * Default Mesh constructor
 		 * 
@@ -104,6 +121,8 @@ namespace Ivy
 		void boneTransform(float timeInSeconds, std::vector<glm::mat4>& Transforms);
 		void setBoneTransformations(GLuint shaderProgram, GLfloat currentTime);
 		void TraverseNodes(aiNode* node, const glm::mat4& parentTransform = Mat4(1.0f), uint32_t level = 0);
+
+
 
     protected:
 
@@ -168,6 +187,21 @@ namespace Ivy
 		void Draw(bool bindTextures = true);
 		void Draw(Ptr<Shader> shader, bool bindTextures = true);
 
+		static float GetCameraDistance(Submesh& sm, Vec3 camPos)
+		{
+
+			glm::vec3 scale;
+			glm::quat rotation;
+			glm::vec3 position;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(sm.transform, scale, rotation, position, skew, perspective);
+
+			float dist = glm::length2(position - camPos);
+
+			return dist;
+		}
+
 		std::unique_ptr<Assimp::Importer> mImporter;
 
 		static UnorderedMap<String, Ivy::Ptr<Mesh>> mLoadedMeshes;
@@ -189,6 +223,7 @@ namespace Ivy
         BufferLayout           mBufferLayout;
 
 		Ptr<Entity> mEnt;
+		Ptr<Camera> mCamera;
 
 		String mMeshName;
 

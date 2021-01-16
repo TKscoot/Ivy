@@ -93,7 +93,6 @@ void Ivy::Engine::NewFrame()
 		timer = 0.0f;
 	}
 
-
 	newtime = lastTime;
 }
 
