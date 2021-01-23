@@ -4,10 +4,18 @@
 
 namespace Ivy
 {
+	/*!
+	 * The camera to view the 3D scene. Default camera behaviour is a flythrough camera.
+	 * 
+	 */
 	class Camera
 	{
 	public:
-
+		/*!
+		 * Constructor
+		 * 
+		 * \param position The initial position of the camera.
+		 */
 		Camera(Vec3 position)
 			: mPosition(position)
 		{
@@ -15,27 +23,92 @@ namespace Ivy
 			UpdateCameraVectors();
 		}
 
+		/*!
+		 * Updates the camera
+		 * 
+		 * Internal! No need to call this!
+		 * 
+		 * \param deltaTime
+		 */
 		void Update(float deltaTime);
 
+		/*!
+		 * Sets the point where the camera is looking at
+		 * 
+		 * \param lookPos Position vector to look at
+		 */
 		void LookAt(Vec3 lookPos);
 
+		/*!
+		 * 
+		 * \return Returns the view matrix
+		 */
 		Mat4 GetViewMatrix();
+
+		/*!
+		 * Calculates the projection matrix
+		 * 
+		 * \param currentWindowSize The currently used window size in pixels
+		 * \return Returns the projection matrix
+		 */
 		Mat4 GetProjectionMatrix(Vec2 currentWindowSize);
 
+		/*!
+		 * Gets the world position of the camera
+		 * 
+		 * \return Returns world position
+		 */
 		Vec3 GetPosition() { return mPosition; }
+
+		/*!
+		 * Sets the world position of the camera
+		 * 
+		 * \param position Desired world position
+		 */
 		void SetPosition(Vec3 position) { mPosition = position; }
+
+		/*!
+		 * Sets the X rotation
+		 * 
+		 * \param rotation Rotation in degrees
+		 */
 		void SetRotation(float rotation) 
 		{
 			mFront.x = glm::cos(glm::radians(rotation)) * glm::cos(glm::radians(rotation));
 			mFront = glm::normalize(mFront);
 		}
+
+		/*!
+		 * Gets the front vector
+		 * 
+		 */
 		Vec3 GetFront() { return mFront; }
 
+		/*!
+		 * Checks and handles input events
+		 * 
+		 * \param shouldHandle Wether the input should be checked
+		 */
 		void HandleInput(bool shouldHandle) { mHandleInput = shouldHandle; }
 
+		/*!
+		 * Distance to the near plane
+		 * 
+		 * \return Near plane of the camera
+		 */
 		float GetNearPlane() { return mNear; }
+
+		/*!
+		 * Distance to the far plane
+		 * 
+		 * \return Far plane of the camera
+		 */
 		float GetFarPlane() { return mFar; }
 
+		/*!
+		 * Resets the camera to default values
+		 * 
+		 */
 		void Reset()
 		{
 			mPosition = Vec3(0.0f);
@@ -50,7 +123,7 @@ namespace Ivy
 
 			mProjection = Mat4(0.0f);
 			mView = Mat4(0.0f);
-			mFOV = 45.0f;
+			mFOV = 60.0f;
 			mNear = 0.1f;
 			mFar = 512.0f;
 		}
@@ -71,7 +144,7 @@ namespace Ivy
 
 		Mat4  mProjection = Mat4(0.0f);
 		Mat4  mView		  = Mat4(0.0f);
-		float mFOV		  = 45.0f;
+		float mFOV		  = 60.0f;
 		float mNear		  = 0.1f;
 		float mFar		  = 512.0f;
 
@@ -82,7 +155,6 @@ namespace Ivy
 		// camera options
 		float mMovementSpeed	= 5.0f;
 		float mMouseSensitivity = 0.1f;
-		float mZoom				= 45.0f;
 
 		//movement
 		bool mGoingForward = false;

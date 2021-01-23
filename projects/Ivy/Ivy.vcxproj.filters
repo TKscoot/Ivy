@@ -27,9 +27,6 @@
     <ClInclude Include="source\core\Engine.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\ResourceManager.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="source\core\Timer.h">
       <Filter>core</Filter>
     </ClInclude>

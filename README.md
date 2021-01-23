@@ -3,9 +3,8 @@ Ivy Readme                         {#mainpage}
 
 # Ivy Framework 
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
-TODO: Logo hier einfügen
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://ivy3d.org)
 
 Ivy is a modern, minimalistic and efficient 3D framework. 
 It can be used as a rendering and ecs backend for your game or simulation. 

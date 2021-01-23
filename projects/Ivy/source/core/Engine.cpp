@@ -17,6 +17,8 @@ void ErrorCallback(int, const char* err_str)
 void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::string& windowTitle)
 {
     glfwSetErrorCallback(ErrorCallback);
+	Debug::Initialize();
+
 	// creating window
 	mWnd = CreatePtr<Window>(windowWidth, windowHeight, windowTitle);
 	if (mWnd == nullptr)
@@ -32,7 +34,6 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 	}
 
 
-	Debug::Initialize();
 
 	CheckGLVersion(4, 0);
 
@@ -68,11 +69,14 @@ void Ivy::Engine::NewFrame()
 
 	mWnd->PollEvents();
 
-	Scene::GetScene()->Update(mDeltaTime);
+	if(!mWnd->IsIconified())
+	{
+		Scene::GetScene()->Update(mDeltaTime);
+		
+		mRenderer->Render(mDeltaTime);
 
-	mRenderer->Render(mDeltaTime);
-
-	mWnd->SwapBuffers();
+		mWnd->SwapBuffers();
+	}
 
 	newtime = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float> delta = newtime - lastTime;

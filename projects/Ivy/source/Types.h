@@ -142,4 +142,23 @@ namespace Ivy
 	template<typename First, typename Second>
 	using Pair = std::pair<First, Second>;
 
+	// Texture Data
+	struct Texture2DData
+	{
+		void* data = nullptr;
+		uint32_t width = 0;
+		uint32_t height = 0;
+
+		GLenum internalFormat = GL_RGBA8;
+		GLenum dataFormat = GL_RGBA;
+
+		String filepath = "";
+
+		void Free()
+		{
+			delete data;
+			data = nullptr;
+		}
+	};
+
 }

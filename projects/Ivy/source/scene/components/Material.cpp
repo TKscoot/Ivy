@@ -2,6 +2,7 @@
 #include "Material.h"
 
 Ivy::UnorderedMap<Ivy::String, Ivy::Ptr<Ivy::Texture2D>> Ivy::Material::mLoadedTextures = {};
+Ivy::Vector<std::future<Ivy::Texture2DData>> Ivy::Material::mFutures = {};
 
 Ivy::Material::Material()
 	: mAmbient(Vec3(0.5f, 0.5f, 0.5f))
@@ -144,6 +145,8 @@ void Ivy::Material::SetDefaultShaderUniforms()
 	mShader->Unbind();
 }
 
+
+
 void Ivy::Material::UpdateMaterialUniforms()
 {
 
@@ -154,4 +157,56 @@ void Ivy::Material::UpdateMaterialUniforms()
 	mShader->SetUniformFloat( "material.metallic",  mMetallic);
 	mShader->SetUniformFloat( "material.roughness", mRoughness);
 	//mShader->SetUniformInt(   "useIBL",		   (int)mUseIBL);
+}
+
+void Ivy::Material::LoadTexturesAsync(std::vector<String> filepaths)
+{
+	std::for_each(filepaths.begin(), filepaths.end(), [](String &s) {
+		mFutures.push_back(std::async(std::launch::async, LoadTextureAsync, s));
+	});
+
+	for(auto& data : mFutures)
+	{
+		Texture2DData td = data.get();
+
+		Ptr<Texture2D> texture = CreatePtr<Texture2D>(td.width, td.height, td.data);
+
+		if(texture)
+		{
+			Debug::CoreLog("Created Texture: {}", td.filepath);
+			mLoadedTextures.insert({ td.filepath, texture });
+		}
+		td.Free();
+	}
+}
+
+
+Ivy::Texture2DData Ivy::Material::LoadTextureAsync(String filepath)
+{
+	if(filepath.empty())
+	{
+		Debug::CoreWarning("Path to texture is empty. skipping texture loading! ({})", filepath);
+		return{};
+	}
+
+	auto itr = mLoadedTextures.find(filepath);
+
+	//Ptr<Texture2D> texture = nullptr;
+	Texture2DData data = {};
+	if(itr == mLoadedTextures.end())
+	{
+		//texture = CreatePtr<Texture2D>(filepath);
+	
+		data = Texture2D::LoadTextureData(filepath);
+	}
+
+	return data;
+
+
+	//if(texture)
+	//{
+	//	Debug::CoreLog("Loaded texture file: {}", filepath);
+	//	std::lock_guard<std::mutex> lock(gTextureMutex);
+	//	mLoadedTextures.insert({ filepath, texture });
+	//}
 }
