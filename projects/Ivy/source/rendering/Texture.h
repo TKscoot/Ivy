@@ -3,7 +3,6 @@
 #include <map>
 #include "Types.h"
 #include "environment/Log.h"
-#include "core/ResourceManager.h"
 
 namespace Ivy
 {
@@ -108,6 +107,8 @@ namespace Ivy
 		GLuint GetRendererID() const { return mID; }
 
 		// TODO: void SetPixel(Vec2i coord, Vec4 colorValues); 
+
+		static Texture2DData LoadTextureData(String file);
 	private:
 		GLuint	 mID			 = 0;
 		GLenum	 mInternalFormat;

@@ -224,8 +224,17 @@ namespace Ivy
 		 */
 		void UpdateMaterialUniforms();
 
+		static void LoadTexturesAsync(std::vector<String> filepaths);
+
+		static UnorderedMap<String, Ivy::Ptr<Texture2D>> GetLoadedTextures()
+		{
+			return mLoadedTextures;
+		};
+
 	private:
 		void SetDefaultShaderUniforms();
+
+		static Texture2DData LoadTextureAsync(String filepath);
 
 		UnorderedMap<TextureMapType, Ptr<Texture2D>> mTextures;
 		static UnorderedMap<String, Ivy::Ptr<Texture2D>> mLoadedTextures;
@@ -241,6 +250,10 @@ namespace Ivy
 		float mRoughness	 = 0.9f;
 		bool  mUseIBL		 = true;
 		Vec2  mTextureTiling = Vec2(1.0f, 1.0f);
+
+
+		// Async stuff
+		static Vector<std::future<Ivy::Texture2DData>> mFutures;
 
 	};
 }

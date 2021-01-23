@@ -153,10 +153,24 @@ namespace Ivy
 		 */
 		virtual void OnCreate()  {};
 
+		/*!
+		 * Wether the entity should be active and seen in the scene
+		 * 
+		 * \param active
+		 */
 		void SetActive(bool active) { mActive = active; }
 
+		/*!
+		 * Checks if entity is active
+		 * 
+		 * \return Returns bool if the entity is currently active.
+		 */
 		bool IsActive() { return mActive; }
 
+		/*!
+		 * 
+		 * \return Returns the camera pointer
+		 */
 		Ptr<Camera> GetSceneCamera() { return mCamera; }
 	
 	private:

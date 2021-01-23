@@ -7,6 +7,7 @@
 #include "scene/Entity.h"
 #include "scene/components/Material.h"
 #include "scene/Camera.h"
+#include "core/Timer.h"
 
 #include <assimp/mesh.h>
 #include <assimp/postprocess.h>
@@ -106,6 +107,11 @@ namespace Ivy
 		 */
         Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices);
 
+		/*!
+		 * OnUpdate Callback override
+		 * 
+		 * \param deltaTime
+		 */
 		void OnUpdate(float deltaTime) final;
 
 		/*!

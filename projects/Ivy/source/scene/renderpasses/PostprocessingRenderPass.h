@@ -8,6 +8,10 @@
 
 namespace Ivy
 {
+	/*!
+	 * The renderpass that handles the postprocessing stack
+	 * 
+	 */
 	class PostprocessingRenderPass
 	{
 	public:

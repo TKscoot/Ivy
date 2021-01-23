@@ -3,9 +3,9 @@
 Application::Application()
 {
 	mEngine = CreatePtr<Engine>();
-	mEngine->Initialize(1280, 720, "Ivy Sandbox v0.3.7");
+	mEngine->Initialize(1600, 900, "Ivy Sandbox v0.3.7");
 
-	mEngine->GetWindow()->SetWindowIcon("assets/textures/Misc/awesomeface.png");
+	//mEngine->GetWindow()->SetWindowIcon("assets/textures/Misc/awesomeface.png");
 
 	mScene = Scene::GetScene();
 
@@ -27,30 +27,33 @@ void Application::SetupScene()
 	};
 	mScene->SetSkybox(skyboxTextures);
 	// Adding lights to the scene
-	//mScene->AddPointLight(
-	//	Vec3(-1.0f, 1.0f, 0.0f),
-	//	1.0f,
-	//	0.09f,
-	//	0.032,
-	//	Vec3(0.05f, 0.05f, 0.05f),
-	//	Vec3(1.0f, 0.0f, 0.0f),
-	//	Vec3(1.0f, 1.0f, 1.0f));
-	//mScene->AddPointLight(
-	//	Vec3(1.0f, 1.0f, 0.0f),
-	//	1.0f,
-	//	0.09f,
-	//	0.032,
-	//	Vec3(0.05f, 0.05f, 0.05f),
-	//	Vec3(0.0f, 1.0f, 0.0f),
-	//	Vec3(1.0f, 1.0f, 1.0f));
-	//mScene->AddPointLight(
-	//	Vec3(0.0f, 1.0f, 1.0f),
-	//	1.0f,
-	//	0.09f,
-	//	0.032,
-	//	Vec3(0.05f, 0.05f, 0.05f),
-	//	Vec3(0.0f, 0.0f, 1.0f),
-	//	Vec3(1.0f, 1.0f, 1.0f));
+	/*
+	mScene->AddPointLight(
+		Vec3(25.0f, 5.0f, 30.0f),
+		64.0f,
+		0.09f,
+		0.032f,
+		Vec3(0.05f, 0.05f, 0.05f),
+		Vec3(0.8f, 0.55f, 0.55f),
+		Vec3(1.0f, 1.0f, 1.0f));
+	mScene->AddPointLight(
+		Vec3(25.0f, 5.0f, 0.0f),
+		64.0f,
+		0.09f,
+		0.032f,
+		Vec3(0.05f, 0.05f, 0.05f),
+		Vec3(0.65f, 0.9f, 0.65f),
+		Vec3(1.0f, 1.0f, 1.0f));
+	mScene->AddPointLight(
+		Vec3(25.0f, 5.0f, -30.0f),
+		64.0f,
+		0.09f,
+		0.032f,
+		Vec3(0.05f, 0.05f, 0.05f),
+		Vec3(0.48f, 0.52f, 0.83f),
+		Vec3(1.0f, 1.0f, 1.0f));
+
+	*/
 }
 
 void Application::SetupEntities()
@@ -74,31 +77,34 @@ void Application::SetupEntities()
 	
 	// Sponza scene
 	Ptr<Entity> sponzaEntity = Scene::GetScene()->CreateEntity();
-	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/Showroom.obj"));
-	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
-	for(auto& mat : sponzaEntity->GetComponentsOfType<Material>())
-	{
-		mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Base Color.jpg", Material::TextureMapType::DIFFUSE);
-		//mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Normal.jpg", Material::TextureMapType::NORMAL);
-		mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Metallic.jpg", Material::TextureMapType::METALLIC);
-		//mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
-		mat->UseIBL(false);
-		//mat->SetMetallic(0.001f);
-		mat->SetTextureTiling(Vec2(4.0f));
-	}
+	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
+	sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
+	//for(auto& mat : sponzaEntity->GetComponentsOfType<Material>())
+	//{
+	//	mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Base Color.jpg", Material::TextureMapType::DIFFUSE);
+	//	//mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Normal.jpg", Material::TextureMapType::NORMAL);
+	//	mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Metallic.jpg", Material::TextureMapType::METALLIC);
+	//	//mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
+	//	mat->UseIBL(false);
+	//	//mat->SetMetallic(0.001f);
+	//	mat->SetTextureTiling(Vec2(4.0f));
+	//}
+
+	/*
 
 	// General testing Entity
-	//Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
-	//towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
-	//Ptr<Material> towerMat = towerEntity->GetFirstComponentOfType<Material>();
-	//towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);
-	//towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
-	//towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_R.tga", Material::TextureMapType::ROUGHNESS);
+	Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
+	towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
+	Ptr<Material> towerMat = towerEntity->GetFirstComponentOfType<Material>();
+	towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_A.tga", Material::TextureMapType::DIFFUSE);
+	towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);
+	towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
+	towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_R.tga", Material::TextureMapType::ROUGHNESS);
 	//
-	//Ptr<Transform> towerTransform = towerEntity->GetFirstComponentOfType<Transform>();
-	//towerTransform->setPosition(3.0f, 3.0f, 0.0f);
-	//towerTransform->setScale(0.05f, 0.05f, 0.05f);
-	//towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
+	Ptr<Transform> towerTransform = towerEntity->GetFirstComponentOfType<Transform>();
+	towerTransform->setPosition(0.0f, 5.0f, -30.0f);
+	towerTransform->setScale(0.05f, 0.05f, 0.05f);
+	towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
 	//
 	//Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
 	//sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
@@ -115,14 +121,17 @@ void Application::SetupEntities()
 	//sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Metallic.jpg", Material::TextureMapType::METALLIC);
 	//sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
 
+	mBouncingEntity = mScene->CreateEntity();
+	mBouncingEntity->AddComponent(CreatePtr<Mesh>(mBouncingEntity.get(), "assets/models/bunny.obj"));
+
+
+	*/
 	Ptr<CameraTracker> cameraTracker = Scene::GetScene()->CreateEntity<CameraTracker>(Scene::GetScene()->GetCamera());
 	cameraTracker->AddTrackingPoint(Vec3(-10.0f, 2.0f, -10.0f));
 	cameraTracker->AddTrackingPoint(Vec3(0.0f, 2.0f, -5.0f));
 	cameraTracker->AddTrackingPoint(Vec3(10.0f, 2.0f, -20.0f));
 	cameraTracker->ShouldPlay(false);
 
-	mBouncingEntity = mScene->CreateEntity();
-	mBouncingEntity->AddComponent(CreatePtr<Mesh>(mBouncingEntity.get(), "assets/models/bunny.obj"));
 
 }
 
@@ -133,7 +142,7 @@ void Application::Run()
 	bool cursorVisible = Input::GetMouseCursorVisible();
 	bool cursorKeyPressed = false;
 
-	bool sponzaActive = true;
+	bool isFullscreen = mEngine->GetWindow()->IsFullscreen();
 
 	float timer = 0;
 
@@ -141,10 +150,9 @@ void Application::Run()
 	while(!mEngine->ShouldTerminate())
 	{
 		timer += mEngine->GetDeltaTime();
-		Ptr<Transform> bouncingEntTransform = mBouncingEntity->GetFirstComponentOfType<Transform>();
-		bouncingEntTransform->setRotation(0.0f, timer * 50.0f, 0.0f);
-		bouncingEntTransform->setPositionY(10 + glm::sin(timer));
-		bouncingEntTransform->setPositionX(10);
+		//Ptr<Transform> bouncingEntTransform = mBouncingEntity->GetFirstComponentOfType<Transform>();
+		//bouncingEntTransform->setRotation(0.0f, timer * 50.0f, 0.0f);
+		//bouncingEntTransform->setPosition(0.0f, 5.0f + glm::sin(timer), 30.0f);
 
 		if(Input::IsKeyBeingPressed(KeyCode::Escape))
 		{
@@ -168,8 +176,9 @@ void Application::Run()
 		if(Input::IsKeyDown(G))
 		{
 			//mScene->ToggleGUI();
-			mScene->GetEntities()[1]->SetActive(!sponzaActive);
-			sponzaActive = !sponzaActive;
+			//mScene->GetEntities()[1]->SetActive(!sponzaActive);
+			mEngine->GetWindow()->SetFullscreen(isFullscreen);
+			isFullscreen = !isFullscreen;
 		}
 
 		// Begin new frame

@@ -165,7 +165,7 @@
     <None Include="Lib\Release\ImGui.pdb">
       <Filter>Lib\Release</Filter>
     </None>
-    <None Include="Lib\Release\ImGui.tlog\CL.384604.write.1.tlog">
+    <None Include="Lib\Release\ImGui.tlog\CL.10048.write.1.tlog">
       <Filter>Lib\Release\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog">

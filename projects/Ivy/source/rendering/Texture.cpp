@@ -190,6 +190,63 @@ void Ivy::Texture2D::Bind(uint32_t slot)
 	}
 }
 
+Ivy::Texture2DData Ivy::Texture2D::LoadTextureData(String file)
+{
+	Texture2DData texData = {};
+
+
+	if(file.empty())
+	{
+		Debug::CoreError("Filepath is empty!");
+		return {};
+	}
+	texData.filepath = file;
+
+	int width, height, channels;
+	stbi_set_flip_vertically_on_load(1);
+	stbi_uc* data = nullptr;
+	{
+		data = stbi_load(file.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+	}
+	if(!data)
+	{
+		Debug::CoreError("Couldn't load texture with path: {}", file);
+	}
+
+	texData.data = data;
+	texData.width = width;
+	texData.height = height;
+
+	GLenum internalFormat = 0, dataFormat = 0;
+	channels = 4;
+	if(channels == 4)
+	{
+		internalFormat = GL_RGBA8;
+		dataFormat     = GL_RGBA;
+	}
+	else if(channels == 3)
+	{
+		internalFormat = GL_RGB8;
+		dataFormat = GL_RGB;
+	}
+	else if(channels == 2)
+	{
+		internalFormat = GL_RG8;
+		dataFormat = GL_RG;
+	}
+	else if(channels == 1)
+	{
+		internalFormat = GL_R8;
+		dataFormat = GL_R;
+	}
+
+	texData.internalFormat = internalFormat;
+	texData.dataFormat = dataFormat;
+
+	Debug::CoreLog("TEXTURE ASYNC: Loaded texture file: {}", texData.filepath);
+	return texData;
+}
+
 Ivy::TextureCube::TextureCube(Vector<String> filenames)
 {
 	glGenTextures(1, &mID);

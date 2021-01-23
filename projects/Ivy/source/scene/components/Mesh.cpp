@@ -216,6 +216,74 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 
 		}
 		
+		std::vector<String> filepaths;
+		for(uint32_t i = 0; i < mAssimpScene->mNumMaterials; i++)
+		{
+			// Get the material
+			aiMaterial* assimpMaterial = mAssimpScene->mMaterials[i];
+			aiString diff;
+			aiString norm;
+			aiString rough;
+			aiString metal;
+			assimpMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diff);
+			assimpMaterial->GetTexture(aiTextureType_HEIGHT, 0, &norm);
+			assimpMaterial->GetTexture(aiTextureType_SHININESS, 0, &rough);
+			assimpMaterial->GetTexture(aiTextureType_AMBIENT, 0, &metal);
+
+			{
+				std::stringstream ss;
+				ss << "assets/textures/";
+				ss << mMeshName;
+				ss << "/";
+				ss << diff.C_Str();
+
+				if(diff.length > 0)
+				{
+					filepaths.push_back(ss.str());
+				}
+			}
+			{
+				std::stringstream ss;
+				ss << "assets/textures/";
+				ss << mMeshName;
+				ss << "/";
+				ss << norm.C_Str();
+				if(norm.length > 0)
+				{
+					filepaths.push_back(ss.str());
+				}
+			}
+			{
+				std::stringstream ss;
+				ss << "assets/textures/";
+				ss << mMeshName;
+				ss << "/";
+				ss << rough.C_Str();
+				if(rough.length > 0)
+				{
+					filepaths.push_back(ss.str());
+				}
+			}
+			{
+				std::stringstream ss;
+				ss << "assets/textures/";
+				ss << mMeshName;
+				ss << "/";
+				ss << metal.C_Str();
+				if(metal.length > 0)
+				{
+					filepaths.push_back(ss.str());
+				}
+			}
+
+		}
+
+		// LOAD TEXTURES ASYNC HERE!
+		//auto t = Material::GetLoadedTextures();
+		Timer t;
+		t.Start();
+		Material::LoadTexturesAsync(filepaths);
+		//auto t1 = Material::GetLoadedTextures();
 
 		for(uint32_t i = 0; i < mAssimpScene->mNumMeshes; i++)
 		{
@@ -231,6 +299,7 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 			assimpMaterial->GetTexture(aiTextureType_HEIGHT, 0, &norm);
 			assimpMaterial->GetTexture(aiTextureType_SHININESS, 0, &rough);
 			assimpMaterial->GetTexture(aiTextureType_AMBIENT, 0, &metal);
+
 
 			{
 				std::stringstream ss;
@@ -279,8 +348,11 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 			}
 
 		}
+		t.Stop();
+		Debug::CoreCritical("Texture loading took: {} ms", t.ElapsedMilliseconds());
 	}
 
+	
 	if(mIsAnimated)
 	{
 		Vector<Ptr<Material>> mats = mEntity->GetComponentsOfType<Material>();

@@ -34,7 +34,7 @@ namespace Ivy
 		///
 		/// Polls window and input events and updates window
 		///
-		void PollEvents() const noexcept;
+		void PollEvents();
 
 		///
 		/// Swaps the pixelbuffers of the window
@@ -81,6 +81,12 @@ namespace Ivy
 		/// Cleans up all window resources
 		///
 		void Finalize();
+
+		bool IsIconified() { return mIsIconified; }
+
+		bool IsFullscreen(){return glfwGetWindowMonitor(mWnd) != nullptr;}
+
+		void SetFullscreen(bool fullscreen);
 		
 	private:
 		static void OnFramebufferSizeChange(GLFWwindow* window, int width, int height);
@@ -90,5 +96,10 @@ namespace Ivy
 		const GLFWvidmode* mMode;
 
 		bool mFullscreen = false;
+
+		VecI2 mWindowSize = { 1600, 900 };
+		VecI2 mWindowPos = { 50, 50 };
+
+		int mIsIconified = 0;
 	};
 }

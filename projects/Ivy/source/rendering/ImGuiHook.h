@@ -14,6 +14,11 @@ namespace Ivy
 	class ImGuiHook
 	{
 	public:
+		/*!
+		 * Constructor
+		 * 
+		 * \param window The glfw program window handle
+		 */
 		ImGuiHook(GLFWwindow* window);
 		~ImGuiHook();
 	private:
