@@ -106,6 +106,13 @@ namespace Ivy
 		float GetFarPlane() { return mFar; }
 
 		/*!
+		 * Sets the Field of View
+		 * 
+		 * \param fov Field of View in degrees
+		 */
+		void SetFOV(float fov) { mFOV = fov; }
+
+		/*!
 		 * Resets the camera to default values
 		 * 
 		 */

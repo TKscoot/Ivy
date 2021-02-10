@@ -39,12 +39,22 @@ namespace Ivy
 	// Quaternions
 	using Quat = glm::quat;
 
-	// ostream operators
-	//std::ostream& operator<<(std::ostream& os, const Vec3& vec)
-	//{
-	//	os << "{x: " << vec.x << " y:" << vec.y << " z:" << vec.z <<"}";
-	//	return os;
-	//}
+	// AxisAlignedBoundingBox
+	struct AABB
+	{
+		Vec3 Min, Max;
+
+		AABB()
+			: Min(0.0f), Max(0.0f)
+		{
+		}
+
+		AABB(const Vec3& min, const Vec3& max)
+			: Min(min), Max(max)
+		{
+		}
+
+	};
 
 	// Vertex
 	struct Vertex
@@ -93,31 +103,6 @@ namespace Ivy
 		glm::mat4 BoneOffset;
 		glm::mat4 FinalTransformation;
 	};
-
-	//struct VertexBoneData
-	//{
-	//	uint32_t IDs[4];
-	//	float Weights[4];
-	//
-	//	VertexBoneData()
-	//	{
-	//		memset(IDs, 0, sizeof(IDs));
-	//		memset(Weights, 0, sizeof(Weights));
-	//	};
-	//
-	//	void AddBoneData(uint32_t BoneID, float Weight)
-	//	{
-	//		for(size_t i = 0; i < 4; i++)
-	//		{
-	//			if(Weights[i] == 0.0)
-	//			{
-	//				IDs[i] = BoneID;
-	//				Weights[i] = Weight;
-	//				return;
-	//			}
-	//		}
-	//	}
-	//};
 
 	// Strings
 	using String = std::string;

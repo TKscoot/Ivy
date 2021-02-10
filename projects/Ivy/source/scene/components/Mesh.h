@@ -3,6 +3,7 @@
 #include "Helper.h"
 #include "rendering/Buffer.h"
 #include "rendering/VertexArray.h"
+#include "rendering/Line.h"
 #include "Component.h"
 #include "scene/Entity.h"
 #include "scene/components/Material.h"
@@ -51,6 +52,9 @@ namespace Ivy
 			uint32_t indexCount;
 
 			glm::mat4 transform;
+
+			AABB boundingBox;
+			//std::array<Line, 12> mBoundingBoxLines;
 
 			std::string nodeName, meshName;
 
@@ -254,6 +258,9 @@ namespace Ivy
 		float mTimeMultiplier = 1.0f;
 
 		unsigned int mCurrentAnimation = 0;
+
+
+		Ptr<Line>  mLine = nullptr;
 
 
     };

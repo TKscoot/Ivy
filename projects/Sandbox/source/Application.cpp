@@ -4,7 +4,6 @@ Application::Application()
 {
 	mEngine = CreatePtr<Engine>();
 	mEngine->Initialize(1600, 900, "Ivy Sandbox v0.3.7");
-
 	//mEngine->GetWindow()->SetWindowIcon("assets/textures/Misc/awesomeface.png");
 
 	mScene = Scene::GetScene();
@@ -44,6 +43,7 @@ void Application::SetupScene()
 		Vec3(0.05f, 0.05f, 0.05f),
 		Vec3(0.65f, 0.9f, 0.65f),
 		Vec3(1.0f, 1.0f, 1.0f));
+
 	mScene->AddPointLight(
 		Vec3(25.0f, 5.0f, -30.0f),
 		64.0f,
@@ -52,8 +52,10 @@ void Application::SetupScene()
 		Vec3(0.05f, 0.05f, 0.05f),
 		Vec3(0.48f, 0.52f, 0.83f),
 		Vec3(1.0f, 1.0f, 1.0f));
-
 	*/
+
+
+
 }
 
 void Application::SetupEntities()
@@ -73,12 +75,13 @@ void Application::SetupEntities()
 		//shadowTestMaterial->SetRoughness(0.9f);
 		//pilotMat->UseIBL(false);
 	}
+	pilotEntity->SetActive(true);
 	
 	
 	// Sponza scene
 	Ptr<Entity> sponzaEntity = Scene::GetScene()->CreateEntity();
-	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
-	sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
+	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/Scene_Base.obj"));
+	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	//for(auto& mat : sponzaEntity->GetComponentsOfType<Material>())
 	//{
 	//	mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Base Color.jpg", Material::TextureMapType::DIFFUSE);
@@ -89,9 +92,11 @@ void Application::SetupEntities()
 	//	//mat->SetMetallic(0.001f);
 	//	mat->SetTextureTiling(Vec2(4.0f));
 	//}
-
+	sponzaEntity->SetActive(true);
 	/*
 
+
+	
 	// General testing Entity
 	Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
 	towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
@@ -142,7 +147,7 @@ void Application::Run()
 	bool cursorVisible = Input::GetMouseCursorVisible();
 	bool cursorKeyPressed = false;
 
-	bool isFullscreen = mEngine->GetWindow()->IsFullscreen();
+	bool setFullscreen = !mEngine->GetWindow()->IsFullscreen();
 
 	float timer = 0;
 
@@ -173,12 +178,10 @@ void Application::Run()
 			cursorVisible = !cursorVisible;
 		}
 
-		if(Input::IsKeyDown(G))
+		if(Input::IsKeyDown(F11))
 		{
-			//mScene->ToggleGUI();
-			//mScene->GetEntities()[1]->SetActive(!sponzaActive);
-			mEngine->GetWindow()->SetFullscreen(isFullscreen);
-			isFullscreen = !isFullscreen;
+			mEngine->GetWindow()->SetFullscreen(setFullscreen);
+			setFullscreen = !setFullscreen;
 		}
 
 		// Begin new frame
