@@ -9,6 +9,16 @@ Ivy::Engine::~Engine()
 {
 }
 
+// Ensure to use dedicated GPU
+#ifdef _WIN32
+extern "C" {
+	__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+}
+#elif __linux__ 
+// TODO: Ensure to use dedicated GPU on linux
+#endif
+
 void ErrorCallback(int, const char* err_str)
 {
 	Ivy::Debug::CoreError("GLFW Error: {}", err_str);
@@ -33,7 +43,7 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 		Debug::CoreError("Failed to initialize GLAD!");
 	}
 
-
+	
 
 	CheckGLVersion(4, 0);
 

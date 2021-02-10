@@ -131,9 +131,11 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 		{
 			meshes[j]->Draw();
 		}
+
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 }
 
 void Ivy::SceneRenderPass::PushLightParams(Ptr<Shader> shader)

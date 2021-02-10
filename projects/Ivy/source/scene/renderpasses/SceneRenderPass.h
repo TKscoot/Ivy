@@ -6,6 +6,7 @@
 #include "scene/components/Mesh.h"
 #include "scene/components/Transform.h"
 #include "scene/renderpasses/ShadowRenderPass.h"
+#include "rendering/Line.h"
 
 namespace Ivy
 {
@@ -101,5 +102,7 @@ namespace Ivy
 		Ptr<Shader>			mSkyboxShader = nullptr;
 		Ptr<VertexBuffer>   mSkyboxVertexBuffer = nullptr;
 		Ptr<VertexArray>    mSkyboxVertexArray = nullptr;
+
+
 	};
 }

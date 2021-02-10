@@ -11,9 +11,10 @@ layout(location = 6) in vec4 aBoneWeights;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform mat4 lightSpaceMatrix;
-uniform bool isAnimated;
 
+uniform mat4 lightSpaceMatrix;
+
+uniform bool isAnimated;
 const int MAX_BONES = 100;
 uniform mat4 boneTransforms[MAX_BONES];
 

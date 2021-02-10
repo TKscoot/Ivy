@@ -1,26 +1,27 @@
 #include "ivypch.h"
 #include "Scene.h"
 
+
 Ivy::Ptr<Ivy::Scene> Ivy::Scene::mInstance = nullptr;
 
 Ivy::Scene::Scene()
 {
 	mCamera = CreatePtr<Camera>(Vec3(0.0f, 0.0f, 0.0f));
-
+	
 	mCSM = CreatePtr<ShadowRenderPass>(mCamera);
-
+	
 	AddDirectionalLight(
 		Vec3(-2.0f,  4.0f,   -1.0f),	 //direction
-		Vec3( 0.05f, 0.0492f, 0.0439f), //ambient
+		Vec3( 0.05f, 0.0492f, 0.0439f),  //ambient
 		Vec3( 1.0f,  0.984f,  0.878f),	 //diffuse
 		Vec3( 0.5f,  0.492f,  0.439f));	 //specular
 
 	mCSM->SetDirLight(mDirLight);
-
 }
 
 Ivy::Scene::~Scene()
 {
+
 }
 
 Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
@@ -32,7 +33,7 @@ Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
 	ent->AddComponent(CreatePtr<Material>());
 	ent->OnCreate();
 	Debug::CoreLog("Created entity with index {}", ent->mIndex);
-
+	
 	mEntities.push_back(ent);
 
 	//SortEntitiesForAlpha();
@@ -83,13 +84,27 @@ void Ivy::Scene::Update(float deltaTime)
 		timer = 0;
 	}
 
-	// render your GUI
+
 	ImGui::Begin("Scene Settings!");
 	ImGui::Text("FPS: %f", fps);
 	float v[3];
 	v[0] = mDirLight.direction.x;
 	v[1] = mDirLight.direction.y;
 	v[2] = mDirLight.direction.z;
+
+
+	static float fov = 60.0f;
+	String fovLabel = "FOV";
+	if(fov >= 100)
+	{
+		fovLabel = "FOV: Quake Pro";
+	}
+
+
+	if(ImGui::SliderFloat(fovLabel.c_str(), &fov, 30.0f, 120.0f))
+	{
+		mCamera->SetFOV(fov);
+	}
 
 	if(ImGui::SliderFloat3("Sun direction", v, -6.28319f, 6.28319f))
 	{
@@ -156,9 +171,10 @@ Ivy::PointLight& Ivy::Scene::AddPointLight(
 	l.diffuse = diffuse;
 	l.specular = specular;
 
+	uint32_t index = mPointLights.size();
 	mPointLights.push_back(l);
 
-	return l;
+	return mPointLights[index];
 }
 
 Ivy::SpotLight& Ivy::Scene::AddSpotLight(SpotLight& lightParams)
@@ -185,7 +201,8 @@ Ivy::SpotLight& Ivy::Scene::AddSpotLight(
 	l.diffuse = diffuse;
 	l.specular = specular;
 
+	uint32_t index = mSpotLights.size();
 	mSpotLights.push_back(l);
 
-	return l;
+	return mSpotLights[index];
 }

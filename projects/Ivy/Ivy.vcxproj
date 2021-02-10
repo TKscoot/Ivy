@@ -100,6 +100,8 @@
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
+    <ClInclude Include="source\rendering\Line.h" />
+    <ClInclude Include="source\rendering\Terrain.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\Timer.h" />
@@ -139,8 +141,10 @@
     <ClCompile Include="source\rendering\Buffer.cpp" />
     <ClCompile Include="source\rendering\Framebuffer.cpp" />
     <ClCompile Include="source\rendering\ImGuiHook.cpp" />
+    <ClCompile Include="source\rendering\Line.cpp" />
     <ClCompile Include="source\rendering\Renderer.cpp" />
     <ClCompile Include="source\rendering\Shader.cpp" />
+    <ClCompile Include="source\rendering\Terrain.cpp" />
     <ClCompile Include="source\rendering\Texture.cpp" />
     <ClCompile Include="source\rendering\VertexArray.cpp" />
     <ClCompile Include="source\scene\Camera.cpp" />

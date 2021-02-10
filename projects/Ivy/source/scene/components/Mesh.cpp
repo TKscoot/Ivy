@@ -27,6 +27,7 @@ Ivy::Mesh::Mesh(Entity* ent) : Ivy::Component::Component(ent)
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
     //CreateResources();
 	mCamera = ent->GetSceneCamera();
+	mLine = CreatePtr<Line>();
 }
 
 Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Component::Component(ent)
@@ -37,6 +38,7 @@ Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Comp
 
     //CreateResources();
 	mCamera = ent->GetSceneCamera();
+	mLine = CreatePtr<Line>();
 
     Load(filepath, useMtlIfProvided);
 }
@@ -45,6 +47,7 @@ Ivy::Mesh::Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices) 
 {
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
 	mCamera = ent->GetSceneCamera();
+	mLine = CreatePtr<Line>();
 
 }
 
@@ -133,6 +136,9 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 	for(uint32_t i = 0; i < mSubmeshes.size(); i++)
 	{
 		const aiMesh* mesh = mAssimpScene->mMeshes[i];
+		AABB& aabb = mSubmeshes[i].boundingBox;
+		aabb.Min = { FLT_MAX, FLT_MAX, FLT_MAX };
+		aabb.Max = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
 
 		// walk through each of the mesh's vertices
 		if(mIsAnimated)
@@ -151,6 +157,15 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 
 				if(mesh->HasTextureCoords(0))
 					vertex.texcoord = { mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y };
+
+				//AABB
+				aabb.Min.x = glm::min(vertex.position.x, aabb.Min.x);
+				aabb.Min.y = glm::min(vertex.position.y, aabb.Min.y);
+				aabb.Min.z = glm::min(vertex.position.z, aabb.Min.z);
+				aabb.Max.x = glm::max(vertex.position.x, aabb.Max.x);
+				aabb.Max.y = glm::max(vertex.position.y, aabb.Max.y);
+				aabb.Max.z = glm::max(vertex.position.z, aabb.Max.z);
+
 
 				mAnimatedVertices.push_back(vertex);
 			}
@@ -171,6 +186,16 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 
 				if(mesh->HasTextureCoords(0))
 					vertex.texcoord = { mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y };
+
+
+				//AABB
+				aabb.Min.x = glm::min(vertex.position.x, aabb.Min.x);
+				aabb.Min.y = glm::min(vertex.position.y, aabb.Min.y);
+				aabb.Min.z = glm::min(vertex.position.z, aabb.Min.z);
+				aabb.Max.x = glm::max(vertex.position.x, aabb.Max.x);
+				aabb.Max.y = glm::max(vertex.position.y, aabb.Max.y);
+				aabb.Max.z = glm::max(vertex.position.z, aabb.Max.z);
+
 
 				mVertices.push_back(vertex);
 			}
@@ -282,7 +307,7 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 		//auto t = Material::GetLoadedTextures();
 		Timer t;
 		t.Start();
-		Material::LoadTexturesAsync(filepaths);
+		//Material::LoadTexturesAsync(filepaths);
 		//auto t1 = Material::GetLoadedTextures();
 
 		for(uint32_t i = 0; i < mAssimpScene->mNumMeshes; i++)
@@ -378,7 +403,6 @@ void Ivy::Mesh::Draw(bool bindTextures)
 	for (int i = 0; i < mSubmeshes.size(); i++)
 	{
 
-		// TODO: VERY PERFORMANCE HUNGRY WHEN LOTS OF TEXTUREBINDS: FIX
 		if (bindTextures && materials.size() >= mSubmeshes[i].materialIndex)
 		{
 			for (auto& kv : materials[mSubmeshes[i].materialIndex]->GetTextures())
@@ -407,7 +431,6 @@ void Ivy::Mesh::Draw(bool bindTextures)
 			}
 
 		}
-		// ENDTODO
 		
 
 		mVertexArray->Bind();
@@ -418,6 +441,12 @@ void Ivy::Mesh::Draw(bool bindTextures)
 			(void*)(sizeof(uint32_t) * mSubmeshes[i].baseIndex), 
 			mSubmeshes[i].baseVertex);
 		mVertexArray->Unbind();
+
+		// Draw lines
+		//Mat4 projection = mCamera->GetProjectionMatrix();
+		//Mat4 view = mCamera->GetViewMatrix();
+		//Mat4 mvp = projection * view * Mat4(1.0f);
+		//mLine->Draw(mvp);
 	}
 }
 
