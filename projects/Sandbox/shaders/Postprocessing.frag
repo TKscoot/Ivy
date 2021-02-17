@@ -179,10 +179,10 @@ vec3 tonemapAuto(vec3 color)
 		color = RomBinDaHouseToneMapping(color);
 		break;
 	case 4:
-		color = filmicToneMapping(color);
+		color = Uncharted2ToneMapping(color);
 		break;
 	case 5:
-		color = Uncharted2ToneMapping(color);
+		color = filmicToneMapping(color);
 		break;
 	}
 	return color;

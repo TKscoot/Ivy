@@ -16,26 +16,9 @@ void CameraTracker::OnUpdate(float deltaTime)
 	static Vec3 lookAt = Vec3(0.0f);
 	static float radius = 10.0f;
 	static float rotationSpeed = 10.0f;
-	static float lightIntensity = 1.0f;
 	Vec3 camPos = mCamera->GetPosition();
 	ImGui::Text("Camera Position: x: %.00f, y: %.00f, z: %.00f", camPos.x, camPos.y, camPos.z);
-	ImGui::SliderFloat("Light intensity", &lightIntensity, 0.0f, 100.0f);
-	static Vec3 diff = Vec3(1.0f);
-	static Vec3 spec = Vec3(1.0f);
-	ImGui::ColorPicker3("Diffuse", &diff.x);
-	ImGui::ColorPicker3("Specular", &spec.x);
-
-	if(ImGui::Button("Add pointlight"))
-	{
-		Scene::GetScene()->AddPointLight(
-			camPos,
-			lightIntensity,
-			0.09f,
-			0.032,
-			Vec3(0.05f, 0.05f, 0.05f),
-			diff,
-			spec);
-	}
+	
 	ImGui::Spacing();
 
 	if(ImGui::Combo("Camera mode", &mCurrentCameraMode, mCameraModes.data(), mCameraModes.size()))

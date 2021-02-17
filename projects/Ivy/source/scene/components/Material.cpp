@@ -164,6 +164,33 @@ void Ivy::Material::LoadTexturesAsync(std::vector<String> filepaths)
 	std::for_each(filepaths.begin(), filepaths.end(), [](String &s) {
 		mFutures.push_back(std::async(std::launch::async, LoadTextureAsync, s));
 	});
+	
+	for(auto& data : mFutures)
+	{
+		Texture2DData td = data.get();
+	
+		Ptr<Texture2D> texture = CreatePtr<Texture2D>(td.width, td.height, td.data);
+	
+		if(texture)
+		{
+			Debug::CoreLog("Created Texture: {}", td.filepath);
+			mLoadedTextures.insert({ td.filepath, texture });
+		}
+		td.Free();
+	}
+
+
+	/*
+	tf::Executor executor;
+	tf::Taskflow tf;
+
+	for(auto& s : filepaths)
+	{
+		mFutures.push_back(executor.async(LoadTextureAsync, s));
+		tf.emplace(LoadTextureAsync, s);
+	}
+
+	executor.run(tf);
 
 	for(auto& data : mFutures)
 	{
@@ -178,6 +205,7 @@ void Ivy::Material::LoadTexturesAsync(std::vector<String> filepaths)
 		}
 		td.Free();
 	}
+	*/
 }
 
 

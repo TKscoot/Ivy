@@ -4,6 +4,8 @@
 #include "rendering/Shader.h"
 #include "rendering/Texture.h"
 
+#include <taskflow.hpp>
+
 namespace Ivy
 {
 	/*!
@@ -254,7 +256,6 @@ namespace Ivy
 
 		// Async stuff
 		static Vector<std::future<Ivy::Texture2DData>> mFutures;
-
 	};
 }
 

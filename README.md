@@ -11,6 +11,13 @@ It can be used as a rendering and ecs backend for your game or simulation.
 Supported platforms are Windows 10 and GNU/Linux with a kernel >= 5.0.
 Note that this is my honours project for my bachelors degree in Games Programming at SAE Institute Munich.
 
+
+
+\htmlonly
+<video src="Final_Trailer.mp4" width="830" height="auto" controls>
+</video>
+\endhtmlonly
+
 ## Features
 
 - Multiplatform (Linux & Windows)

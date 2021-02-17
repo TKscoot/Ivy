@@ -37,12 +37,21 @@ Ivy::PostprocessingRenderPass::PostprocessingRenderPass(Ptr<SceneRenderPass> sce
 
 void Ivy::PostprocessingRenderPass::Render(Vec2 currentWindowSize, float deltaTime)
 {
+	if(Input::IsKeyDown(KeyCode::P))
+	{
+		mUseMotionBlur = !mUseMotionBlur;
+	}
+	if(Input::IsKeyDown(KeyCode::L))
+	{
+		mUseDoF = !mUseDoF;
+	}
+
 	ImGui::Begin("Postprocessing Settings!");
 	ImGui::Checkbox("Use depth of field", &mUseDoF);
 	ImGui::SliderFloat("DoF Threshold", &mDofThreshold, 0, 1);
 	ImGui::Checkbox("Use motion blur", &mUseMotionBlur);
 	ImGui::SliderFloat("Motion blur intensity", &mMotionBlurIntensity, 1.0f, 30.0f);
-	ImGui::SliderInt("Tonemap index", &mToneMapIndex, 0, 5);
+	ImGui::SliderInt("Tonemap index", &mToneMapIndex, 0, 4);
 	ImGui::End();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

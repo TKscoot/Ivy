@@ -261,8 +261,15 @@ void main()
 		}
 	}
 
+
 	FragColor = vec4(color, alpha);
 	//GodRayOcclusionColor = vec4(0.0, 0.0, 0.0, 1.0);
+
+
+	// FOG
+	//FragColor *= 1.0 - smoothstep(244, 252, length(viewPos));
+	//float fog = smoothstep(fog_near, fog_far, length(v_viewpos));
+    //frag_color = vec4(mix(frag_color, fog_color, fog).rgb, frag_color.a);
 }
 
 float CalcShadow(sampler2D shadowMap, vec3 fragPosLightSpace, vec3 lightPos, vec3 N)
@@ -278,7 +285,7 @@ float CalcShadow(sampler2D shadowMap, vec3 fragPosLightSpace, vec3 lightPos, vec
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(Normal);
-    vec3 lightDir = lightPos;//normalize(lightPos - FragPos);
+    vec3 lightDir = normalize(lightPos);//normalize(lightPos - FragPos);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
     // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
