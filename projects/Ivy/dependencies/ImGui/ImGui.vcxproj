@@ -156,7 +156,7 @@
     <None Include="Lib\Release\ImGui.Build.CppClean.log" />
     <None Include="Lib\Release\ImGui.log" />
     <None Include="Lib\Release\ImGui.pdb" />
-    <None Include="Lib\Release\ImGui.tlog\CL.10048.write.1.tlog" />
+    <None Include="Lib\Release\ImGui.tlog\CL.587460.write.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\CL.read.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\ImGui.lastbuildstate" />

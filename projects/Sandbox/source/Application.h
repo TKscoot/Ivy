@@ -19,5 +19,5 @@ private:
 	Ptr<Scene>  mScene = nullptr;
 
 	Ptr<Entity> mBouncingEntity = nullptr;
-
+	Vector<Ptr<Material>> sceneBaseMaterials;
 };

@@ -209,7 +209,11 @@ namespace Ivy
 		 * 
 		 * \param direction Direction as vector
 		 */
-		void SetDirectionalLightDirection(Vec3 direction) { mDirLight.direction = direction; }
+		void SetDirectionalLightDirection(Vec3 direction) 
+		{
+			mDirLight.direction = direction;
+			mCSM->SetDirLight(mDirLight);
+		}
 
 		/*!
 		 * Internal!

@@ -145,7 +145,8 @@ project "Ivy"
 		"projects/Ivy/dependencies/glm",
 		"projects/Ivy/dependencies/stb_image",
 		"projects/Ivy/dependencies/assimp/include",
-		"projects/Ivy/dependencies/ImGui"
+		"projects/Ivy/dependencies/ImGui",
+		"projects/Ivy/dependencies/taskflow"
 	}
 	
 	libdirs
@@ -204,7 +205,8 @@ project "Sandbox"
 		"projects/Ivy/dependencies/glm",
 		"projects/Ivy/dependencies/stb_image",
 		"projects/Ivy/dependencies/assimp/include",
-		"projects/Ivy/dependencies/ImGui"
+		"projects/Ivy/dependencies/ImGui",
+		"projects/Ivy/dependencies/taskflow"
 	}
 	
 

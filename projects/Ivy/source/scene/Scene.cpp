@@ -84,6 +84,14 @@ void Ivy::Scene::Update(float deltaTime)
 		timer = 0;
 	}
 
+	ImGui::Begin("Controls");
+	ImGui::Text("Show/Hide mouse cursor = M");
+	ImGui::Text("Move around scene      = WASD");
+	ImGui::Text("look around scene      = Mouse movement");
+	ImGui::Text("Toggle Fullscreen mode = F11");
+	ImGui::Text("Exit Program           = ESC");
+	ImGui::End();
+
 
 	ImGui::Begin("Scene Settings!");
 	ImGui::Text("FPS: %f", fps);
@@ -106,11 +114,33 @@ void Ivy::Scene::Update(float deltaTime)
 		mCamera->SetFOV(fov);
 	}
 
+	ImGui::Text("Lighting settings");
+
 	if(ImGui::SliderFloat3("Sun direction", v, -6.28319f, 6.28319f))
 	{
 		mDirLight.direction = (Vec3(v[0],v[1], v[2]));
 		mCSM->SetDirLight(mDirLight);
 	}
+
+	static float lightIntensity = 1.0f;
+	ImGui::SliderFloat("Light intensity", &lightIntensity, 0.0f, 100.0f);
+	static Vec3 diff = Vec3(1.0f);
+	static Vec3 spec = Vec3(1.0f);
+	ImGui::ColorEdit3("Diffuse", &diff.x);
+	ImGui::ColorEdit3("Specular", &spec.x);
+
+	if(ImGui::Button("Add pointlight"))
+	{
+		PointLight& pl = AddPointLight(
+			mCamera->GetPosition(),
+			lightIntensity,
+			0.09f,
+			0.032,
+			Vec3(0.05f, 0.05f, 0.05f),
+			diff,
+			spec);
+	}
+
 	ImGui::End();
 }
 

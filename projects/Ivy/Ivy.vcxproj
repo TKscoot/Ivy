@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ivypch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -78,7 +78,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ivypch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -100,8 +100,6 @@
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
-    <ClInclude Include="source\rendering\Line.h" />
-    <ClInclude Include="source\rendering\Terrain.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\Timer.h" />
@@ -114,8 +112,10 @@
     <ClInclude Include="source\rendering\BufferLayout.h" />
     <ClInclude Include="source\rendering\Framebuffer.h" />
     <ClInclude Include="source\rendering\ImGuiHook.h" />
+    <ClInclude Include="source\rendering\Line.h" />
     <ClInclude Include="source\rendering\Renderer.h" />
     <ClInclude Include="source\rendering\Shader.h" />
+    <ClInclude Include="source\rendering\Terrain.h" />
     <ClInclude Include="source\rendering\Texture.h" />
     <ClInclude Include="source\rendering\VertexArray.h" />
     <ClInclude Include="source\scene\Camera.h" />

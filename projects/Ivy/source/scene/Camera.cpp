@@ -3,37 +3,38 @@
 
 void Ivy::Camera::Update(float deltaTime)
 {
+	if(mHandleInput)
+	{
+		// Checks if movement keys are being pressed
+		if(Input::IsKeyBeingPressed(W))		    mGoingForward = true;
+		if(Input::IsKeyBeingPressed(S))	        mGoingBack	  = true;
+		if(Input::IsKeyBeingPressed(A))	        mGoingLeft	  = true;
+		if(Input::IsKeyBeingPressed(D))	        mGoingRight   = true;
+		if(Input::IsKeyBeingPressed(Q))	        mGoingUp	  = true;
+		if(Input::IsKeyBeingPressed(E))	        mGoingDown	  = true;
+		if(Input::IsKeyBeingPressed(LeftShift)) mFastMove	  = true;
 
-	// Checks if movement keys are being pressed
-	if(Input::IsKeyBeingPressed(W))		    mGoingForward = true;
-	if(Input::IsKeyBeingPressed(S))	        mGoingBack	  = true;
-	if(Input::IsKeyBeingPressed(A))	        mGoingLeft	  = true;
-	if(Input::IsKeyBeingPressed(D))	        mGoingRight   = true;
-	if(Input::IsKeyBeingPressed(Q))	        mGoingUp      = true;
-	if(Input::IsKeyBeingPressed(E))	        mGoingDown    = true;
-	if(Input::IsKeyBeingPressed(LeftShift)) mFastMove	  = true;
+		// Checks if movement keys are being released
+		if(Input::IsKeyUp(LeftShift)) mFastMove		= false;
+		if(Input::IsKeyUp(E))	      mGoingDown	= false;
+		if(Input::IsKeyUp(Q))	      mGoingUp		= false;
+		if(Input::IsKeyUp(D))	      mGoingRight	= false;
+		if(Input::IsKeyUp(A))	      mGoingLeft	= false;
+		if(Input::IsKeyUp(S))	      mGoingBack	= false;
+		if(Input::IsKeyUp(W))		  mGoingForward = false;
 
-	// Checks if movement keys are being released
-	if(Input::IsKeyUp(LeftShift)) mFastMove	    = false;
-	if(Input::IsKeyUp(E))	      mGoingDown    = false;
-	if(Input::IsKeyUp(Q))	      mGoingUp		= false;
-	if(Input::IsKeyUp(D))	      mGoingRight   = false;
-	if(Input::IsKeyUp(A))	      mGoingLeft	= false;
-	if(Input::IsKeyUp(S))	      mGoingBack	= false;
-	if(Input::IsKeyUp(W))		  mGoingForward = false;
+		// Movement calculation
 
-	// Movement calculation
+		float velocity = mFastMove ? (mMovementSpeed + 20.0f) * deltaTime : mMovementSpeed * deltaTime;
 
-	float velocity = mFastMove ? (mMovementSpeed + 20.0f) * deltaTime : mMovementSpeed * deltaTime;
+		if(mGoingForward) mPosition += mFront * velocity;
+		if(mGoingBack)    mPosition -= mFront * velocity;
+		if(mGoingRight)   mPosition += mRight * velocity;
+		if(mGoingLeft)    mPosition -= mRight * velocity;
+		if(mGoingUp)      mPosition += mUp * velocity;
+		if(mGoingDown)    mPosition -= mUp * velocity;
 
-	if (mGoingForward) mPosition += mFront * velocity;
-	if (mGoingBack)    mPosition -= mFront * velocity;
-	if (mGoingRight)   mPosition += mRight * velocity;
-	if (mGoingLeft)    mPosition -= mRight * velocity;
-	if (mGoingUp)      mPosition += mUp    * velocity;
-	if (mGoingDown)    mPosition -= mUp    * velocity;
-
-
+	}
 	Vec2 mousePos = Input::GetMouseDelta();
 
 	mousePos.x *= mMouseSensitivity;

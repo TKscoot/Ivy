@@ -55,10 +55,16 @@
     <ClInclude Include="source\rendering\ImGuiHook.h">
       <Filter>rendering</Filter>
     </ClInclude>
+    <ClInclude Include="source\rendering\Line.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
     <ClInclude Include="source\rendering\Renderer.h">
       <Filter>rendering</Filter>
     </ClInclude>
     <ClInclude Include="source\rendering\Shader.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rendering\Terrain.h">
       <Filter>rendering</Filter>
     </ClInclude>
     <ClInclude Include="source\rendering\Texture.h">
@@ -100,8 +106,6 @@
     <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h">
       <Filter>scene\renderpasses</Filter>
     </ClInclude>
-    <ClInclude Include="source\rendering\Line.h" />
-    <ClInclude Include="source\rendering\Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Engine.cpp">
@@ -126,10 +130,16 @@
     <ClCompile Include="source\rendering\ImGuiHook.cpp">
       <Filter>rendering</Filter>
     </ClCompile>
+    <ClCompile Include="source\rendering\Line.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
     <ClCompile Include="source\rendering\Renderer.cpp">
       <Filter>rendering</Filter>
     </ClCompile>
     <ClCompile Include="source\rendering\Shader.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="source\rendering\Terrain.cpp">
       <Filter>rendering</Filter>
     </ClCompile>
     <ClCompile Include="source\rendering\Texture.cpp">
@@ -162,7 +172,5 @@
     <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp">
       <Filter>scene\renderpasses</Filter>
     </ClCompile>
-    <ClCompile Include="source\rendering\Line.cpp" />
-    <ClCompile Include="source\rendering\Terrain.cpp" />
   </ItemGroup>
 </Project>
