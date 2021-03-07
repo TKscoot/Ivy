@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="audio">
+      <UniqueIdentifier>{B7281C0F-233D-44C0-ECBE-E71F589240F1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="core">
       <UniqueIdentifier>{4E40957C-3A77-960D-E363-7C10CF79120F}</UniqueIdentifier>
     </Filter>
@@ -24,6 +27,21 @@
     <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
     <ClInclude Include="source\Types.h" />
+    <ClInclude Include="source\audio\AudioContext.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="source\audio\AudioSource.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="source\audio\AudioStreamSource.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="source\audio\OpenALHelpers.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\AsyncWorker.h">
+      <Filter>core</Filter>
+    </ClInclude>
     <ClInclude Include="source\core\Engine.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -37,6 +55,9 @@
       <Filter>environment</Filter>
     </ClInclude>
     <ClInclude Include="source\environment\Log.h">
+      <Filter>environment</Filter>
+    </ClInclude>
+    <ClInclude Include="source\environment\LogFormatters.h">
       <Filter>environment</Filter>
     </ClInclude>
     <ClInclude Include="source\environment\Window.h">
@@ -85,6 +106,12 @@
     <ClInclude Include="source\scene\Scene.h">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\components\AudioClip.h">
+      <Filter>scene\components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\components\AudioListener.h">
+      <Filter>scene\components</Filter>
+    </ClInclude>
     <ClInclude Include="source\scene\components\Component.h">
       <Filter>scene\components</Filter>
     </ClInclude>
@@ -92,6 +119,9 @@
       <Filter>scene\components</Filter>
     </ClInclude>
     <ClInclude Include="source\scene\components\Mesh.h">
+      <Filter>scene\components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\components\TerrainMaterial.h">
       <Filter>scene\components</Filter>
     </ClInclude>
     <ClInclude Include="source\scene\components\Transform.h">
@@ -108,6 +138,15 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\audio\AudioContext.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="source\audio\AudioSource.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="source\audio\AudioStreamSource.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
     <ClCompile Include="source\core\Engine.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -157,10 +196,19 @@
     <ClCompile Include="source\scene\Scene.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="source\scene\components\AudioClip.cpp">
+      <Filter>scene\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\components\AudioListener.cpp">
+      <Filter>scene\components</Filter>
+    </ClCompile>
     <ClCompile Include="source\scene\components\Material.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
     <ClCompile Include="source\scene\components\Mesh.cpp">
+      <Filter>scene\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\components\TerrainMaterial.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
     <ClCompile Include="source\scene\renderpasses\PostprocessingRenderPass.cpp">

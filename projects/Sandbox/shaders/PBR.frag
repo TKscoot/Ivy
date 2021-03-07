@@ -55,6 +55,8 @@ struct CascadedShadowMapParams
 
 // Lights
 struct DirLight {
+	float intensity;
+
     vec3 direction;
 	
     vec3 ambient;
@@ -267,9 +269,11 @@ void main()
 
 
 	// FOG
-	//FragColor *= 1.0 - smoothstep(244, 252, length(viewPos));
-	//float fog = smoothstep(fog_near, fog_far, length(v_viewpos));
-    //frag_color = vec4(mix(frag_color, fog_color, fog).rgb, frag_color.a);
+	float fogNear = 100.;
+	float fogFar = 120.;
+	vec4 fogColor = vec4(1.0, 0.4, 0.0, 1.0);
+	float fog = smoothstep(fogNear, fogFar, length(viewPos));
+    FragColor = vec4(mix(FragColor, fogColor, fog).rgb, alpha);
 }
 
 float CalcShadow(sampler2D shadowMap, vec3 fragPosLightSpace, vec3 lightPos, vec3 N)
@@ -424,7 +428,7 @@ vec3 PbrDirectionalLighting(DirLight light, float roughness, float metallic, vec
 	vec3 L = normalize(light.direction);
 	vec3 H = normalize(V + L);
        
-    float attenuation = 1.0;
+    float attenuation = light.intensity;
     vec3 radiance	  = light.diffuse * attenuation;
 
     // Cook-Torrance BRDF

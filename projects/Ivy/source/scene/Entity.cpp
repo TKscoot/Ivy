@@ -14,3 +14,17 @@ void Ivy::Entity::UpdateComponents(float deltaTime)
 		}
 	}
 }
+
+void Ivy::Entity::StartComponents()
+{
+	for(auto& kv : mComponents)
+	{
+		for(auto c : kv.second)
+		{
+			if(c->IsActive())
+			{
+				c->OnStart();
+			}
+		}
+	}
+}

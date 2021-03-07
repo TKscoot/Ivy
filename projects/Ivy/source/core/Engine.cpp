@@ -59,6 +59,8 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 
 void Ivy::Engine::Run()
 {
+
+
 	while (!ShouldTerminate())
 	{
 		NewFrame();

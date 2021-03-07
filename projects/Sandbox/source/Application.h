@@ -1,6 +1,7 @@
 #pragma once
 #include <Ivy.h>
 #include "CameraTracker.h"
+#include "TerrainGenerator.h"
 
 using namespace Ivy;
 

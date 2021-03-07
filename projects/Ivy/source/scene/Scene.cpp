@@ -11,12 +11,14 @@ Ivy::Scene::Scene()
 	mCSM = CreatePtr<ShadowRenderPass>(mCamera);
 	
 	AddDirectionalLight(
+		12.0f,							 //intensity
 		Vec3(-2.0f,  4.0f,   -1.0f),	 //direction
 		Vec3( 0.05f, 0.0492f, 0.0439f),  //ambient
 		Vec3( 1.0f,  0.984f,  0.878f),	 //diffuse
 		Vec3( 0.5f,  0.492f,  0.439f));	 //specular
 
 	mCSM->SetDirLight(mDirLight);
+
 }
 
 Ivy::Scene::~Scene()
@@ -61,6 +63,20 @@ void Ivy::Scene::SetSkybox(String right, String left, String top, String bottom,
 
 void Ivy::Scene::Update(float deltaTime)
 {
+	if(mFirstUpdate)
+	{
+		for(auto& e : mEntities)
+		{
+			if(e->IsActive())
+			{
+				e->OnStart();
+				e->StartComponents();
+			}
+		}
+
+		mFirstUpdate = false;
+	}
+
 	mImGuiHook->NotifyNewFrame();
 
 	mCamera->Update(deltaTime);
@@ -100,6 +116,23 @@ void Ivy::Scene::Update(float deltaTime)
 	v[1] = mDirLight.direction.y;
 	v[2] = mDirLight.direction.z;
 
+	static bool wireframe = false;
+	ImGui::Checkbox("Wireframe", &wireframe);
+
+	if(wireframe)
+	{
+		// Turn on wireframe mode
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		// Turn off wireframe mode
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	static float dirLightIntensity = 1.0f;
+	static Vec3 dirLightDiff = Vec3(1.0f);
+	static Vec3 dirLightAmb  = Vec3(1.0f);
 
 	static float fov = 60.0f;
 	String fovLabel = "FOV";
@@ -119,8 +152,24 @@ void Ivy::Scene::Update(float deltaTime)
 	if(ImGui::SliderFloat3("Sun direction", v, -6.28319f, 6.28319f))
 	{
 		mDirLight.direction = (Vec3(v[0],v[1], v[2]));
-		mCSM->SetDirLight(mDirLight);
 	}
+
+	if(ImGui::SliderFloat("Sun intensity", &dirLightIntensity, 0.0f, 100.0f))
+	{
+		mDirLight.intensity = dirLightIntensity;
+	}
+
+
+	if(ImGui::ColorEdit3("Sun Diffuse", &dirLightDiff.x))
+	{
+		mDirLight.diffuse = dirLightDiff;
+	}
+	if(ImGui::ColorEdit3("Sun Ambient", &dirLightAmb.x))
+	{
+		mDirLight.ambient = dirLightAmb;
+	}
+
+	ImGui::Spacing();
 
 	static float lightIntensity = 1.0f;
 	ImGui::SliderFloat("Light intensity", &lightIntensity, 0.0f, 100.0f);
@@ -153,6 +202,7 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 	// Scene pass
 	mScenePass->Render(currentWindowSize);
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	mPostprocessPass->Render(currentWindowSize, deltaTime);
 
 	if(mRenderGui)
@@ -168,9 +218,10 @@ Ivy::DirectionalLight& Ivy::Scene::AddDirectionalLight(DirectionalLight lightPar
 }
 
 Ivy::DirectionalLight& Ivy::Scene::AddDirectionalLight(
-	Vec3 direction, Vec3 ambient, Vec3 diffuse, Vec3 specular)
+	float intensity, Vec3 direction, Vec3 ambient, Vec3 diffuse, Vec3 specular)
 {
 	DirectionalLight l;
+	l.intensity = intensity;
 	l.direction = direction;
 	l.ambient = ambient;
 	l.diffuse = diffuse;

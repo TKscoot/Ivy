@@ -47,8 +47,6 @@ Ivy::Mesh::Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices) 
 {
 	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
 	mCamera = ent->GetSceneCamera();
-	mLine = CreatePtr<Line>();
-
 }
 
 void Ivy::Mesh::OnUpdate(float deltaTime)
@@ -374,7 +372,7 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 
 		}
 		t.Stop();
-		Debug::CoreCritical("Texture loading took: {} ms", t.ElapsedMilliseconds());
+		Debug::CoreInfo("Texture loading took: {} ms", t.ElapsedMilliseconds());
 	}
 
 	

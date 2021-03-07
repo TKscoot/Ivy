@@ -99,6 +99,8 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 			continue;
 		}
 
+		mEntities[i]->OnDraw(mCamera, currentWindowSize);
+
 		Vector<Ptr<Material>> materials = mEntities[i]->GetComponentsOfType<Material>();
 		Ptr<Shader> shader;
 		for(int j = 0; j < materials.size(); j++)
@@ -150,6 +152,7 @@ void Ivy::SceneRenderPass::PushLightParams(Ptr<Shader> shader)
 	}
 
 	// Directional Light
+	shader->SetUniformFloat( "dirLight.intensity", mDirLight.intensity);
 	shader->SetUniformFloat3("dirLight.direction", mDirLight.direction);
 	shader->SetUniformFloat3("dirLight.ambient", mDirLight.ambient);
 	shader->SetUniformFloat3("dirLight.diffuse", mDirLight.diffuse);

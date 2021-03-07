@@ -31,9 +31,9 @@ Note that this is my honours project for my bachelors degree in Games Programmin
 - Image based lighting
 - Cascaded shadow mapping
 - Postprocessing pass
-- Motion blur & depth of field (todo)
+- Motion blur & depth of field
 - Atmospheric scattering (disabled by default)
-- Skeletal animation (todo)
+- Skeletal animation
 - API Documentation
 
 # Getting Started

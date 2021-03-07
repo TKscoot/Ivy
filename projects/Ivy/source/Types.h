@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <set>
 #include <glm/glm.hpp>
-#include <ostream>
 
 namespace Ivy
 {
@@ -30,6 +29,7 @@ namespace Ivy
 	using VecI2 = glm::ivec2;
 	using VecI3 = glm::ivec3;
 	using VecI4 = glm::ivec4;
+
 
 	// Matrices
 	using Mat2 = glm::mat2;

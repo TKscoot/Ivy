@@ -35,7 +35,7 @@ namespace Ivy
 		virtual void OnCreate() {};
 
 		/*!
-		 * Gets called once the application starts
+		 * Gets called once the application starts and the scene has been loaded
 		 * 
 		 */
 		virtual void OnStart()  {};
