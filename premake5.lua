@@ -146,7 +146,10 @@ project "Ivy"
 		"projects/Ivy/dependencies/stb_image",
 		"projects/Ivy/dependencies/assimp/include",
 		"projects/Ivy/dependencies/ImGui",
-		"projects/Ivy/dependencies/taskflow"
+		"projects/Ivy/dependencies/taskflow",
+		"projects/Ivy/dependencies/OpenAl/include",
+		"projects/Ivy/dependencies/libsndfile/include",
+		"projects/Ivy/dependencies/effolkronium"
 	}
 	
 	libdirs
@@ -154,7 +157,9 @@ project "Ivy"
 		"projects/Ivy/dependencies/GLFW/Lib",
 		"projects/Ivy/dependencies/GLAD/Lib",
 		"projects/Ivy/dependencies/assimp/lib",
-		"projects/Ivy/dependencies/ImGui/lib"
+		"projects/Ivy/dependencies/ImGui/lib",
+		"projects/Ivy/dependencies/OpenAl/lib",
+		"projects/Ivy/dependencies/libsndfile/lib"
 	}
 	
     links 
@@ -166,16 +171,21 @@ project "Ivy"
     filter "system:linux"
         links "glfw"
         links "assimp"
+		links "libsndfile"
     filter {}
 
 	filter{ "system:windows", "configurations:Debug"}
         links "GLFW3"
 		links "assimp-vc141-mt"
+		links "OpenAL32.lib"
+		links "libsndfile-1.lib"
     filter {}
 	
 	filter{ "system:windows", "configurations:Release"}
         links "GLFW3"
 		links "assimp-vc141-mt"
+		links "OpenAL32.lib"
+		links "libsndfile-1.lib"
     filter {}
 
     -- We specify where the source files are.
@@ -206,14 +216,19 @@ project "Sandbox"
 		"projects/Ivy/dependencies/stb_image",
 		"projects/Ivy/dependencies/assimp/include",
 		"projects/Ivy/dependencies/ImGui",
-		"projects/Ivy/dependencies/taskflow"
+		"projects/Ivy/dependencies/taskflow",
+		"projects/Ivy/dependencies/OpenAl/include",
+		"projects/Ivy/dependencies/libsndfile/include",
+		"projects/Ivy/dependencies/effolkronium"
 	}
 	
 
 	libdirs
 	{
 		"projects/Ivy/dependencies/GLAD/Lib",
-		"projects/Ivy/dependencies/ImGui/Lib"
+		"projects/Ivy/dependencies/ImGui/Lib",
+		"projects/Ivy/dependencies/OpenAl/lib",
+		"projects/Ivy/dependencies/libsndfile/lib"
 	}
 
 	LibraryDir = {}
@@ -253,11 +268,15 @@ project "Sandbox"
 	filter{ "system:windows", "configurations:Debug"}
         links "GLFW3"
 		links "assimp-vc141-mt"
+		links "OpenAL32.lib"
+		links "libsndfile-1.lib"
     filter {}
 	
 	filter{ "system:windows", "configurations:Release"}
         links "GLFW3"
-		links "assimp-vc141-mt"
+		links "assimp-vc141-mt"		
+		links "OpenAL32.lib"
+		links "libsndfile-1.lib"
     filter {}
 
     filter "system:linux"
@@ -265,4 +284,6 @@ project "Sandbox"
         links "glfw"
         links "assimp"
         links "pthread"
+		links "openal"
+		links "libsndfile"
     filter {}

@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -68,8 +68,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\assimp\lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\OpenAl\lib;..\Ivy\dependencies\libsndfile\lib;..\Ivy\dependencies\assimp\lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)"
@@ -81,7 +81,7 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -94,8 +94,8 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\assimp\lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\OpenAl\lib;..\Ivy\dependencies\libsndfile\lib;..\Ivy\dependencies\assimp\lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)"
@@ -106,11 +106,15 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
   <ItemGroup>
     <ClInclude Include="source\Application.h" />
     <ClInclude Include="source\CameraTracker.h" />
+    <ClInclude Include="source\Erosion.h" />
+    <ClInclude Include="source\TerrainGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Application.cpp" />
     <ClCompile Include="source\CameraTracker.cpp" />
+    <ClCompile Include="source\Erosion.cpp" />
     <ClCompile Include="source\Sandbox.cpp" />
+    <ClCompile Include="source\TerrainGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ivy\Ivy.vcxproj">

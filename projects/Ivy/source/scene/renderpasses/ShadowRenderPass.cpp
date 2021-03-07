@@ -20,7 +20,7 @@ void Ivy::ShadowRenderPass::RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>&
 	static Mat4 scaleBiasMatrix = glm::scale(Mat4(1.0f), { 0.5f, 0.5f, 0.5f }) * glm::translate(Mat4(1.0f), { 1, 1, 1 });
 
 	CascadeData cascades[4];
-	CalculateCascades(windowSize, cascades, mDirLight.direction);
+	CalculateCascades(windowSize, cascades, mDirLight->direction);
 	mLightViewMatrix = cascades[0].View;
 
 	mDepthShader->Bind();

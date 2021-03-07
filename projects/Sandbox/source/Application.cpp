@@ -30,6 +30,7 @@ void Application::SetupScene()
 void Application::SetupEntities()
 {
 	// Animated Pilot
+	/*
 	Ptr<Entity> pilotEntity = Scene::GetScene()->CreateEntity();
 	pilotEntity->AddComponent(CreatePtr<Mesh>(pilotEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
 	pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
@@ -45,8 +46,8 @@ void Application::SetupEntities()
 		pilotMat->UseIBL(false);
 	}
 	pilotEntity->SetActive(true);
-	
-	
+	*/
+
 	// Sponza scene
 	Ptr<Entity> sponzaEntity = Scene::GetScene()->CreateEntity();
 	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
@@ -61,10 +62,10 @@ void Application::SetupEntities()
 	//	//mat->SetMetallic(0.001f);
 	//	mat->SetTextureTiling(Vec2(4.0f));
 	//}
-	sponzaEntity->SetActive(true);
+	sponzaEntity->SetActive(false);
 
 	/*
-	
+
 	// General testing Entity
 	Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
 	towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
@@ -85,22 +86,22 @@ void Application::SetupEntities()
 	Ptr<Entity> sceneBaseEntity = Scene::GetScene()->CreateEntity();
 	sceneBaseEntity->AddComponent(CreatePtr<Mesh>(sceneBaseEntity.get(), "assets/models/Scene_Base.obj"));
 	sceneBaseMaterials = sceneBaseEntity->GetComponentsOfType<Material>();
-	
+
 	sceneBaseMaterials[1]->SetTextureTiling(Vec2(5.0f, 5.0f));
 	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Grass002_diffuse.png", Material::TextureMapType::DIFFUSE);
 	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Grass002_normal.png", Material::TextureMapType::NORMAL);
 	sceneBaseMaterials[1]->LoadTexture("assets/textures/Scene_Base/Grass002_roughness.png", Material::TextureMapType::ROUGHNESS);
-	
+
 	sceneBaseMaterials[2]->SetTextureTiling(Vec2(5.0f, 5.0f));
 	sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Base_Color.jpg", Material::TextureMapType::DIFFUSE);
 	sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Normal.jpg", Material::TextureMapType::NORMAL);
 	sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Metallic.jpg", Material::TextureMapType::METALLIC);
 	sceneBaseMaterials[2]->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
-	*/
 
 	mBouncingEntity = mScene->CreateEntity();
 	mBouncingEntity->AddComponent(CreatePtr<Mesh>(mBouncingEntity.get(), "assets/models/bunny.obj"));
 	mBouncingEntity->SetActive(false);
+	*/
 
 
 	Ptr<CameraTracker> cameraTracker = Scene::GetScene()->CreateEntity<CameraTracker>(Scene::GetScene()->GetCamera());
@@ -109,7 +110,11 @@ void Application::SetupEntities()
 	cameraTracker->AddTrackingPoint(Vec3(10.0f, 2.0f, -20.0f));
 	cameraTracker->ShouldPlay(false);
 
+	//Ptr<AudioClip> soundClip = CreatePtr<AudioClip>(cameraTracker.get(), "assets/sounds/Polyphia - Nasty.flac", false);
+	//cameraTracker->AddComponent<AudioClip>(soundClip);
+	//soundClip->Play();
 
+	Ptr<TerrainGenerator> terrain = mScene->CreateEntity<TerrainGenerator>();
 }
 
 void Application::Run()
@@ -127,11 +132,12 @@ void Application::Run()
 	while(!mEngine->ShouldTerminate())
 	{
 		timer += mEngine->GetDeltaTime();
+		/*
 		Ptr<Transform> bouncingEntTransform = mBouncingEntity->GetFirstComponentOfType<Transform>();
 		bouncingEntTransform->setRotation(0.0f, timer * 50.0f, 0.0f);
 		bouncingEntTransform->setPosition(0.0f, 3.0f + glm::sin(timer), 0.0f);
 		bouncingEntTransform->setScale(Vec3((glm::sin(timer) + 1.0f) * 0.5f));
-
+		*/
 		
 		if(Input::IsKeyDown(KeyCode::Escape))
 		{

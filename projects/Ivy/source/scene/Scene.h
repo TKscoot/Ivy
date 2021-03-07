@@ -167,7 +167,8 @@ namespace Ivy
 		 * \param specular Specular color
 		 * \return 
 		 */
-		DirectionalLight& AddDirectionalLight(Vec3 direction,
+		DirectionalLight& AddDirectionalLight(float intensity,
+											  Vec3 direction,
 											  Vec3 ambient,
 											  Vec3 diffuse,
 											  Vec3 specular);
@@ -265,7 +266,7 @@ namespace Ivy
 		  */
 		void ToggleGUI() { mRenderGui = !mRenderGui; }
 	private:
-
+		bool mFirstUpdate = true;
 
 
 		static Ptr<Scene>   mInstance;

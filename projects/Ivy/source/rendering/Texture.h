@@ -109,7 +109,13 @@ namespace Ivy
 		// TODO: void SetPixel(Vec2i coord, Vec4 colorValues); 
 
 		static Texture2DData LoadTextureData(String file);
+
+		String GetFilepath() { return mFilepath; }
+
+		void Destroy();
 	private:
+		String	 mFilepath = "";
+
 		GLuint	 mID			 = 0;
 		GLenum	 mInternalFormat;
 		GLenum	 mDataFormat;

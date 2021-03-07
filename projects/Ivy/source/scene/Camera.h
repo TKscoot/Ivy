@@ -43,7 +43,7 @@ namespace Ivy
 		 * 
 		 * \return Returns the view matrix
 		 */
-		Mat4 GetViewMatrix();
+		Mat4& GetViewMatrix();
 
 		/*!
 		 * Calculates the projection matrix
@@ -51,7 +51,7 @@ namespace Ivy
 		 * \param currentWindowSize The currently used window size in pixels
 		 * \return Returns the projection matrix
 		 */
-		Mat4 GetProjectionMatrix(Vec2 currentWindowSize);
+		Mat4& GetProjectionMatrix(Vec2 currentWindowSize);
 
 		/*!
 		 * Gets the world position of the camera

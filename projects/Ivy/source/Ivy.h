@@ -5,3 +5,7 @@
 #include <environment/Log.h>
 #include <core/Timer.h>
 #include <rendering/Line.h>
+#include <rendering/Terrain.h>
+#include <audio/AudioContext.h>
+#include <scene/components/AudioListener.h>
+#include <scene/components/AudioClip.h>

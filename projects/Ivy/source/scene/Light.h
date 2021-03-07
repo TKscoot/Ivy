@@ -5,11 +5,12 @@ namespace Ivy
 {
 	struct DirectionalLight
 	{
-		Vec3 direction = Vec3(0.0f);
-
-		Vec3 ambient   = Vec3(0.0f);
-		Vec3 diffuse   = Vec3(0.0f);
-		Vec3 specular  = Vec3(0.0f);
+		float intensity = 1.0f;
+		Vec3 direction  = Vec3(0.0f);
+					    
+		Vec3 ambient    = Vec3(0.0f);
+		Vec3 diffuse    = Vec3(0.0f);
+		Vec3 specular   = Vec3(0.0f);
 	};
 
 	struct PointLight

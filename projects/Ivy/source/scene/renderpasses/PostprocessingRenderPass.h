@@ -32,7 +32,7 @@ namespace Ivy
 		Ptr<VertexBuffer> mVertexBuffer = nullptr;
 		Ptr<VertexArray>  mVertexArray  = nullptr;
 
-		int   mToneMapIndex		   = 3;
+		int   mToneMapIndex		   = 0;
 		bool  mUseDoF			   = false;
 		bool  mUseMotionBlur	   = true;
 		float mMotionBlurIntensity = 5.0f;

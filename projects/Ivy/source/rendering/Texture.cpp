@@ -61,11 +61,12 @@ Ivy::Texture2D::Texture2D(String filepath, GLenum internalFormat, GLenum dataFor
 
 Ivy::Texture2D::~Texture2D()
 {
-	glDeleteTextures(1, &mID);
+	Destroy();
 }
 
 void Ivy::Texture2D::Load(String filepath)
 {
+	mFilepath = filepath;
 	if (filepath.empty())
 	{
 		Debug::CoreError("Filepath is empty!");
@@ -245,6 +246,11 @@ Ivy::Texture2DData Ivy::Texture2D::LoadTextureData(String file)
 
 	Debug::CoreLog("TEXTURE ASYNC: Loaded texture file: {}", texData.filepath);
 	return texData;
+}
+
+void Ivy::Texture2D::Destroy()
+{
+	glDeleteTextures(1, &mID);
 }
 
 Ivy::TextureCube::TextureCube(Vector<String> filenames)

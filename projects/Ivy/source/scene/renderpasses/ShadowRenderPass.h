@@ -37,7 +37,7 @@ namespace Ivy
 
 		void SetDirLight(DirectionalLight& light) // eventuell buggy wegen reference
 		{
-			mDirLight = light;
+			mDirLight = &light;
 		}
 
 		void SetupShader();
@@ -63,7 +63,7 @@ namespace Ivy
 		Ptr<Shader>			mDepthShader = nullptr;
 		Ptr<Camera>			mCamera		 = nullptr;
 
-		DirectionalLight    mDirLight	 = {};
+		DirectionalLight*   mDirLight;
 		std::array<Mat4, 4>	mLightSpaceMatrices;
 
 		// Params

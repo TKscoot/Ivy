@@ -3,6 +3,17 @@
 
 void Ivy::Camera::Update(float deltaTime)
 {
+	if(Input::IsMouseButtonDown(MouseCode::Button1))
+	{
+		mHandleInput = true;
+		Input::SetMouseCursorVisible(false);
+	}
+	else
+	{
+		mHandleInput = false;
+		Input::SetMouseCursorVisible(true);
+	}
+
 	if(mHandleInput)
 	{
 		// Checks if movement keys are being pressed
@@ -58,7 +69,7 @@ void Ivy::Camera::LookAt(Vec3 lookPos)
 	mLookPos = lookPos;
 }
 
-Ivy::Mat4 Ivy::Camera::GetViewMatrix()
+Ivy::Mat4& Ivy::Camera::GetViewMatrix()
 {
 	if(mHandleInput)
 	{
@@ -68,7 +79,7 @@ Ivy::Mat4 Ivy::Camera::GetViewMatrix()
 	return mView;
 }
 
-Ivy::Mat4 Ivy::Camera::GetProjectionMatrix(Vec2 currentWindowSize)
+Ivy::Mat4& Ivy::Camera::GetProjectionMatrix(Vec2 currentWindowSize)
 {
 	mProjection = glm::perspective(glm::radians(mFOV), currentWindowSize.x / currentWindowSize.y, mNear, mFar);
 

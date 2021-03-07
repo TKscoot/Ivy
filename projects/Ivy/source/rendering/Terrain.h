@@ -1,20 +1,25 @@
 #pragma once
 #include "Types.h"
+#include "scene/Entity.h"
+#include "scene/components/TerrainMaterial.h"
+#include "scene/components/Material.h"
+
+#include "Buffer.h"
+#include "VertexArray.h"
+#include "rendering/Shader.h"
+
+#include <glm/gtc/noise.hpp>
 
 namespace Ivy
 {
-	class Terrain
+	class Material;
+
+	class Terrain : public Entity
 	{
 	public:
 
-		Terrain(int width, int height) 
-		: mWidth(width)
-		, mHeight(height)
-		{
-			mHeights = new float[width*height];
+		Terrain(int width, int height);
 
-			mVertices.resize(width*height);
-		}
 
 		~Terrain()
 		{
@@ -24,15 +29,44 @@ namespace Ivy
 
 		void GenerateMesh();
 
+		void SetHeight(int x, int z, float height);
+		float GetHeight(int x, int z);
 
+		VecI2 GetTerrainDimensions() { return VecI2(mWidth, mHeight); }
+
+		void OnUpdate(float deltaTime) override;
+		void OnDraw(Ptr<Camera> camera, Vec2& currentWindowSize) override;
+
+		void CreateResources();
+		void CalculateNormals(int x, int z);
 	private:
-		int mWidth  = 512;
-		int mHeight = 512;
-		float mUVScale = 64.0f;
 
-		Vector<Vertex>   mVertices;
-		Vector<uint32_t> mIndices;
-		float*			 mHeights;
+		int				  mWidth  = 512;
+		int				  mHeight = 512;
+		float			  mUVScale = 16.0f;
+
+		const float		  mPointWidth = 250.0f;
+
+		float baseFreq = 4.0f;
+		float persistence = 0.5f;
+
+		float*			  mHeights;
+
+		Ptr<TerrainMaterial> mMaterial = nullptr;
+
+		// Rendering
+		Vector<Vertex>    mVertices;
+		Vector<uint32_t>  mIndices;
+		Vector<std::array<Vec3, 3>>	  mFaces;
+
+		Ptr<Shader>		  mShader;
+
+		Ptr<VertexBuffer> mVertexBuffer;
+		Ptr<IndexBuffer>  mIndexBuffer;
+
+		Ptr<VertexArray>  mVertexArray;
+
+		BufferLayout      mBufferLayout = {};
 
 	};
 }

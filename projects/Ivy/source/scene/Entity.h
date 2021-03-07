@@ -136,6 +136,12 @@ namespace Ivy
 		}
 
 		/*!
+		 * This gets called when the scene has been loaded before the first frame
+		 *
+		 */
+		virtual void OnStart() {};
+
+		/*!
 		 * This gets called every frame
 		 * 
 		 */
@@ -151,7 +157,13 @@ namespace Ivy
 		 * This gets called when the entity is being created
 		 * 
 		 */
-		virtual void OnCreate()  {};
+		virtual void OnCreate() {};
+
+		/*!
+		 * This gets called right before the entity is being drawed
+		 *
+		 */
+		virtual void OnDraw(Ptr<Camera> camera, Vec2& currentWindowSize) {};
 
 		/*!
 		 * Wether the entity should be active and seen in the scene
@@ -172,13 +184,14 @@ namespace Ivy
 		 * \return Returns the camera pointer
 		 */
 		Ptr<Camera> GetSceneCamera() { return mCamera; }
-	
+
 	private:
+		void StartComponents();
 		void UpdateComponents(float deltaTime);
 		UnorderedMap<std::type_index, Vector<Ptr<Component>>> mComponents;
+		Ptr<Camera> mCamera = nullptr;
 		
 		uint32_t mIndex = 0;
-		Ptr<Camera> mCamera = nullptr;
 
 		bool mActive = true;
 	};
