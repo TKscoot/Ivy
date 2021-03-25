@@ -9,7 +9,7 @@ Ivy::Line::Line(Vec3 start, Vec3 end)
 	mLineWidth = 1.0f;
 
 	const char *vertexShaderSource =
-		"#version 330 core\n"
+		"#version 450 core\n"
 		"layout (location = 0) in vec3 aPos;\n"
 		"uniform mat4 MVP;\n"
 		"void main()\n"
@@ -17,7 +17,7 @@ Ivy::Line::Line(Vec3 start, Vec3 end)
 		"   gl_Position = MVP * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 		"}\0";
 	const char *fragmentShaderSource =
-		"#version 330 core\n"
+		"#version 450 core\n"
 		"out vec4 FragColor;\n"
 		"uniform vec3 color;\n"
 		"void main()\n"

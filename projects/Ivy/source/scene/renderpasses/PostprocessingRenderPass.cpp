@@ -32,7 +32,6 @@ Ivy::PostprocessingRenderPass::PostprocessingRenderPass(Ptr<SceneRenderPass> sce
 
 	mSceneColorTexture = mScenePass->GetColorTextureID();
 	mSceneDepthTexture = mScenePass->GetDepthTextureID();
-
 }
 
 void Ivy::PostprocessingRenderPass::Render(Vec2 currentWindowSize, float deltaTime)
@@ -52,6 +51,16 @@ void Ivy::PostprocessingRenderPass::Render(Vec2 currentWindowSize, float deltaTi
 	ImGui::Checkbox("Use motion blur", &mUseMotionBlur);
 	ImGui::SliderFloat("Motion blur intensity", &mMotionBlurIntensity, 1.0f, 30.0f);
 	ImGui::SliderInt("Tonemap index", &mToneMapIndex, 0, 4);
+
+	ImGui::Spacing();
+	ImGui::Text("Godray Parameters");
+	ImGui::SliderFloat("density", &godrayParams.density, 0, 10);
+	ImGui::SliderFloat("weight", &godrayParams.weight, 0, 1);
+	ImGui::SliderFloat("decay", &godrayParams.decay, 0, 10);
+	ImGui::SliderFloat("exposure", &godrayParams.exposure, 0, 10);
+	ImGui::SliderInt("samples", &godrayParams.numSamples, 0, 512);
+
+
 	ImGui::End();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -97,5 +106,12 @@ void Ivy::PostprocessingRenderPass::UploadUniforms(float deltaTime)
 	mShader->SetUniformInt(	  "UseMotionBlur",				mUseMotionBlur);
 	mShader->SetUniformFloat("MotionBlurIntensity",			mMotionBlurIntensity);
 	mShader->SetUniformFloat("DofThreshold",				mDofThreshold);
+
+	// Godray stuff
+	mShader->SetUniformFloat("godrayParams.density",    godrayParams.density);
+	mShader->SetUniformFloat("godrayParams.weight",     godrayParams.weight);
+	mShader->SetUniformFloat("godrayParams.decay",      godrayParams.decay);
+	mShader->SetUniformFloat("godrayParams.exposure",   godrayParams.exposure);
+	mShader->SetUniformInt("godrayParams.numSamples", godrayParams.numSamples);
 
 }

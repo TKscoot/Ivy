@@ -28,4 +28,5 @@ private:
 	int			 mTrackingIndex  = 0;
 
 	bool		 mShouldPlay		 = true;
+
 };

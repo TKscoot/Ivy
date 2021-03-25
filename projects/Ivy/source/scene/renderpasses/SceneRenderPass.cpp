@@ -22,6 +22,8 @@ Ivy::SceneRenderPass::SceneRenderPass(Ptr<Camera> camera,
 
 	SetupFramebuffer();
 
+	CreateEnvironmentMap("assets/env/HDR_041_Path.hdr");
+
 }
 
 void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
@@ -81,7 +83,8 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 		mSkyboxShader->SetUniformMat4("projection", projection);
 		mSkyboxShader->SetUniformFloat3("sunPosition", mDirLight.direction);
 		mSkyboxVertexArray->Bind();
-		mSkyboxCubeTexture->Bind(0);
+		//mSkyboxCubeTexture->Bind(0);
+		mEnvUnfiltered->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		mSkyboxVertexArray->Unbind();
@@ -123,7 +126,8 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 
 		if(mSkyboxCubeTexture)
 		{
-			mSkyboxCubeTexture->Bind(6);
+			mEnvUnfiltered->Bind(6);
+			mIrradiance->Bind(7);
 		}
 
 		PushLightParams(shader);
@@ -333,7 +337,7 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	glBindTexture(GL_TEXTURE_2D, mColorTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWindowSize.x, mWindowSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWindowSize.x, mWindowSize.y, 0, GL_RGB, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -372,6 +376,55 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 void Ivy::SceneRenderPass::BindFramebufferForWrite()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+}
+
+void Ivy::SceneRenderPass::CreateEnvironmentMap(String filepath)
+{
+	const uint32_t cubemapSize = 2048;
+	const uint32_t irradianceMapSize = 32;
+
+	mEnvUnfiltered = CreatePtr<TextureCube>(GL_RGBA16F, cubemapSize, cubemapSize);
+
+	mEquirectangularConversionShader = CreatePtr<Shader>("shaders/EquirectangularToCubeMap.comp");
+
+	mEnvEquirect = CreatePtr<HdriTexture>(filepath);
+
+	mEquirectangularConversionShader->Bind();
+	mEnvEquirect->Bind();
+	glBindImageTexture(0, mEnvUnfiltered->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+	glDispatchCompute(cubemapSize / 32, cubemapSize / 32, 6);
+	glGenerateTextureMipmap(mEnvUnfiltered->GetID());
+
+
+	mEnvFilteringShader = CreatePtr<Shader>("shaders/EnvironmentMipFilter.comp");
+
+	mEnvFiltered = CreatePtr<TextureCube>(GL_RGBA16F, cubemapSize, cubemapSize);
+
+	glCopyImageSubData(mEnvUnfiltered->GetID(), GL_TEXTURE_CUBE_MAP, 0, 0, 0, 0,
+		mEnvFiltered->GetID(), GL_TEXTURE_CUBE_MAP, 0, 0, 0, 0,
+		mEnvFiltered->GetWidth(), mEnvFiltered->GetHeight(), 6);
+
+	mEnvFilteringShader->Bind();
+	mEnvUnfiltered->Bind();
+
+	const float deltaRoughness = 1.0f / glm::max((float)(mEnvFiltered->GetMipLevelCount() - 1.0f), 1.0f);
+	for(int level = 1, size = cubemapSize / 2; level < mEnvFiltered->GetMipLevelCount(); level++, size /= 2) // <= ?
+	{
+		const GLuint numGroups = glm::max(1, size / 32);
+		glBindImageTexture(0, mEnvFiltered->GetID(), level, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+		glProgramUniform1f(mEnvFilteringShader->GetRendererID(), 0, level * deltaRoughness);
+		glDispatchCompute(numGroups, numGroups, 6);
+	}
+
+	mIrradianceShader = CreatePtr<Shader>("shaders/EnvironmentIrradiance.comp");
+	mIrradiance = CreatePtr<TextureCube>(GL_RGBA16F, irradianceMapSize, irradianceMapSize);
+	mIrradianceShader->Bind();
+	mEnvFiltered->Bind();
+
+	glBindImageTexture(0, mIrradiance->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+	glDispatchCompute(mIrradiance->GetWidth() / 32, mIrradiance->GetHeight() / 32, 6);
+	glGenerateTextureMipmap(mIrradiance->GetID());
+
 }
 
 

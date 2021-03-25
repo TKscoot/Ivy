@@ -8,6 +8,7 @@ namespace Ivy
 	{
 	public:
 		Shader(const String vertexFilepath, const String fragmentFilepath);
+		Shader(const String& computeFilepath);
 		~Shader();
 
 		///

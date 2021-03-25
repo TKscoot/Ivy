@@ -4,8 +4,10 @@
 void Ivy::ShadowRenderPass::Update()
 {
 	ImGui::Begin("Shadow Settings!");
+	ImGui::Checkbox("Old shadows", &mOldShadows);
 	ImGui::Checkbox("Show Cascades", &mShowCascades);
 	ImGui::Checkbox("Cascade fading", &mCascadeFading);
+	ImGui::Checkbox("Soft shadows", &mSoftShadows);
 	ImGui::SliderFloat("Cascade Split Lambda", &mCascadeSplitLambda, 0.0f, 1.0f);
 	ImGui::SliderFloat("Light Size", &mLightSize, 0.0f, 1.0f);
 	ImGui::SliderFloat("Max shadow distance", &mMaxShadowDistance, 0.0f, 1000.0f);
@@ -83,6 +85,8 @@ void Ivy::ShadowRenderPass::UpdateShaderUniforms(Ptr<Shader> shader)
 	shader->SetUniformMat4("lightSpaceMatrix3", bias * mLightSpaceMatrices[3]);
 
 	//Params
+	shader->SetUniformInt("csm.oldShadows", mOldShadows);
+
 	shader->SetUniformMat4("csm.lightView", mLightViewMatrix);	// TODO: weiß nicht ob das so stimmt??
 
 	shader->SetUniformInt("csm.showCascades", mShowCascades);

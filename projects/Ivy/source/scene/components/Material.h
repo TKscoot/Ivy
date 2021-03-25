@@ -213,6 +213,8 @@ namespace Ivy
 			mShader->Unbind();
 		}
 
+		void SetIblStrength(float value) { mIblStrength = value; }
+
 		/*!
 		 * Internal
 		 * Updates if texture type should be used
@@ -251,6 +253,7 @@ namespace Ivy
 		float mMetallic		 = 0.1f;
 		float mRoughness	 = 0.9f;
 		bool  mUseIBL		 = true;
+		float mIblStrength   = 0.5f;
 		Vec2  mTextureTiling = Vec2(1.0f, 1.0f);
 
 

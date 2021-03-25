@@ -23,12 +23,15 @@ out vec2 TexCoords;
 out vec3 Normal;
 out mat3 TBN;
 out vec4 FragPosLightSpace[4];
+out mat4 Projection;
+out mat4 View;
 
 void main()
 {
     FragPos = vec3(model * vec4(aPosition.xyz, 1.0));   
     TexCoords = aTexCoord;
 	ViewPosition = vec3(view * vec4(FragPos, 1.0));
+	Projection = projection;
 
 	mat3 modelVector = transpose(inverse(mat3(model)));
     

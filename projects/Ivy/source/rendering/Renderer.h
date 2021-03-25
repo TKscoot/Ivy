@@ -1,4 +1,6 @@
 #pragma once
+#include <filesystem>
+#include <fstream>
 #include "Types.h"
 #include "Buffer.h"
 #include "VertexArray.h"
@@ -69,6 +71,8 @@ namespace Ivy
 		// Methods
 		void EnableDebugMessages();
 		void InitLoadingScreen();
+
+		void AddShaderIncludes();
 
 		// Variables
 		Ptr<Window>       mWindow;

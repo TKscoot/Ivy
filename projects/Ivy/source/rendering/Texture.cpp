@@ -127,6 +127,9 @@ void Ivy::Texture2D::Load(String filepath)
 	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
 
 	stbi_image_free(data);
+
+	stbi_set_flip_vertically_on_load(0);
+
 }
 
 void Ivy::Texture2D::Load(String filepath, GLenum internalFormat, GLenum dataFormat)
@@ -261,6 +264,31 @@ Ivy::TextureCube::TextureCube(Vector<String> filenames)
 	Load(filenames);
 }
 
+uint32_t CalculateMipMapCount(uint32_t width, uint32_t height)
+{
+	uint32_t levels = 1;
+	while((width | height) >> levels)
+		levels++;
+
+	return levels;
+}
+
+Ivy::TextureCube::TextureCube(GLenum format, uint32_t width, uint32_t height)
+{
+	mWidth = width;
+	mHeight = height;
+
+	uint32_t levels = CalculateMipMapCount(width, height);
+
+	glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &mID);
+	glTextureStorage2D( mID, levels, format, width, height);
+	glTextureParameteri(mID, GL_TEXTURE_MIN_FILTER, levels > 1 ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+	glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+}
+
 Ivy::TextureCube::TextureCube(String right, String left, String top, String bottom, String back, String front)
 {
 
@@ -298,6 +326,9 @@ void Ivy::TextureCube::Load(Vector<String> filenames)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	mWidth = width;
+	mHeight = height;
 }
 
 void Ivy::TextureCube::Load(String right, String left, String top, String bottom, String back, String front)
@@ -319,4 +350,38 @@ void Ivy::TextureCube::Bind(uint32_t slot)
 	{
 		glBindTextureUnit(slot, mID);
 	}
+}
+
+Ivy::HdriTexture::HdriTexture(String filename)
+{
+	Load(filename);
+}
+
+void Ivy::HdriTexture::Load(String filename)
+{
+	//stbi_set_flip_vertically_on_load(true);
+	int width, height, nrComponents;
+	float *data = stbi_loadf(filename.c_str(), &width, &height, &nrComponents, 0);
+	if(data)
+	{
+		glGenTextures(1, &mID);
+		glBindTexture(GL_TEXTURE_2D, mID);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		stbi_image_free(data);
+	}
+	else
+	{
+		Debug::CoreError("Failed to load HDR image: {}", filename);
+	}
+}
+
+void Ivy::HdriTexture::Bind(uint32_t slot)
+{
+	glBindTextureUnit(slot, mID);
 }

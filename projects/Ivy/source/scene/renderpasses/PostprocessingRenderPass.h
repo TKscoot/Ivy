@@ -37,5 +37,17 @@ namespace Ivy
 		bool  mUseMotionBlur	   = true;
 		float mMotionBlurIntensity = 5.0f;
 		float mDofThreshold		   = 0.99;
+
+		struct GodrayParameters
+		{
+			float density = 1.0f;
+			float weight = 0.01f;
+			float decay = 1.0f;
+			float exposure = 1.0f;
+			int numSamples = 128;
+		};
+
+		GodrayParameters godrayParams = {};
+
 	};
 }

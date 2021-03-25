@@ -10,6 +10,7 @@ TerrainGenerator::TerrainGenerator()
 void TerrainGenerator::OnStart()
 {
 	GenerateHeightmap();
+	//mTerrain->GetFirstComponentOfType<Transform>()->setScale(Vec3(50.0f));
 
 }
 

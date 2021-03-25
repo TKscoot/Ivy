@@ -29,6 +29,23 @@ Ivy::Shader::Shader(const String vertexFilepath, const String fragmentFilepath)
 	Compile();
 }
 
+Ivy::Shader::Shader(const String & computeFilepath)
+{
+	if(computeFilepath.find(".glsl") != std::string::npos ||
+		computeFilepath.find(".comp") != std::string::npos)
+	{
+		sources[GL_COMPUTE_SHADER] = ReadFile(computeFilepath);
+	}
+	else
+	{
+		Debug::CoreError("Vertex shader file extension not supported. Use .glsl or .vert ({})", computeFilepath);
+		return;
+	}
+
+
+	Compile();
+}
+
 Ivy::Shader::~Shader()
 {
 	glDeleteProgram(mProgram);
@@ -123,7 +140,7 @@ void Ivy::Shader::Compile()
 {
 	mProgram = glCreateProgram();
 
-	std::array<GLuint, 2> shaderIDs;
+	std::array<GLuint, 2> shaderIDs = { 0, 0 };
 
 	// Debugging vars
 	int  success;
@@ -166,7 +183,10 @@ void Ivy::Shader::Compile()
 
 	for (auto id : shaderIDs)
 	{
-		glDetachShader(mProgram, id);
-		glDeleteShader(id);
+		if(id != 0)
+		{
+			glDetachShader(mProgram, id);
+			glDeleteShader(id);
+		}
 	}
 }

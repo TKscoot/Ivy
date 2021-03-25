@@ -53,7 +53,7 @@ namespace Ivy
 		void BindFboForWriting(uint32_t cascadeIndex);
 
 		const unsigned int CASCADE_COUNT = 4;
-		const unsigned int SHADOW_WIDTH	 = 2048, SHADOW_HEIGHT = 2048;
+		const unsigned int SHADOW_WIDTH	 = 4096, SHADOW_HEIGHT = 4096;
 
 		//Ptr<Framebuffer>	mFramebuffer = nullptr;
 		GLuint mFBO = 0;
@@ -67,12 +67,14 @@ namespace Ivy
 		std::array<Mat4, 4>	mLightSpaceMatrices;
 
 		// Params
+		bool mOldShadows = false;
+
 		float mCascadeSplitLambda	 = 0.7f;
 		float mCascadeFarPlaneOffset = 15.0f, mCascadeNearPlaneOffset = -15.0f;
 		bool  mShowCascades			 = false;
 		bool  mSoftShadows			 = true;
 		bool  mCascadeFading		 = true;
-		float mLightSize			 = 0.5f;
+		float mLightSize			 = 0.1f;
 		float mMaxShadowDistance	 = 200.0f;
 		float mShadowFade			 = 25.0f;
 		float mCascadeTransitionFade = 1.0f;

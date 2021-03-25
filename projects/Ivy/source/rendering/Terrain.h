@@ -32,6 +32,10 @@ namespace Ivy
 		void SetHeight(int x, int z, float height);
 		float GetHeight(int x, int z);
 
+		// heights array has to be of size width * height of terrain
+		void SetHeights(float* heights);
+
+		
 		VecI2 GetTerrainDimensions() { return VecI2(mWidth, mHeight); }
 
 		void OnUpdate(float deltaTime) override;

@@ -42,6 +42,8 @@ private:
 	float mWater	= 1.0f;
 	float mSediment = 0.0f;
 
+	Ptr<Erosion<compute_mode_e::serial>> mEroder = nullptr;
+
 };
 
 struct Particle

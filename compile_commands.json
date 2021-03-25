@@ -1,182 +1,265 @@
 [
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Sandbox", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Sandbox/Debug/CameraTracker.o -MF E:/Projects/Ivy Engine/Build/Obj/Sandbox/Debug/CameraTracker.d -c E:/Projects/Ivy Engine/projects/Sandbox/source/CameraTracker.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Sandbox/source/CameraTracker.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Input.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Input.d -c E:/Projects/Ivy Engine/projects/Ivy/source/environment/Input.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/environment/Input.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Terrain.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Terrain.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Terrain.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Terrain.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/ImGuiHook.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/ImGuiHook.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/ImGuiHook.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/ImGuiHook.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Sandbox", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Sandbox/Debug/Sandbox.o -MF E:/Projects/Ivy Engine/Build/Obj/Sandbox/Debug/Sandbox.d -c E:/Projects/Ivy Engine/projects/Sandbox/source/Sandbox.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Sandbox/source/Sandbox.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Sandbox", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Sandbox/Debug/Application.o -MF E:/Projects/Ivy Engine/Build/Obj/Sandbox/Debug/Application.d -c E:/Projects/Ivy Engine/projects/Sandbox/source/Application.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Sandbox/source/Application.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_stdlib.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_stdlib.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/misc/cpp/imgui_stdlib.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/misc/cpp/imgui_stdlib.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Log.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Log.d -c E:/Projects/Ivy Engine/projects/Ivy/source/environment/Log.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/environment/Log.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Material.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Material.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/Material.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/Material.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Texture.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Texture.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Texture.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Texture.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_widgets.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_widgets.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_widgets.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_widgets.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Window.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Window.d -c E:/Projects/Ivy Engine/projects/Ivy/source/environment/Window.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/environment/Window.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Mesh.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Mesh.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/Mesh.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/Mesh.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/binary_to_compressed_c.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/binary_to_compressed_c.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/misc/fonts/binary_to_compressed_c.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/misc/fonts/binary_to_compressed_c.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_demo.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_demo.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_demo.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_demo.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Line.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Line.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Line.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Line.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Entity.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Entity.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/Entity.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/Entity.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/VertexArray.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/VertexArray.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/VertexArray.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/VertexArray.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_draw.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_draw.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_draw.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_draw.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Scene.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Scene.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/Scene.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/Scene.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/Lib/Debug/glad.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/Lib/Debug/glad.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/src/glad.c", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/src/glad.c"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_impl_glfw.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_impl_glfw.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/backends/imgui_impl_glfw.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/backends/imgui_impl_glfw.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/ShadowRenderPass.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/ShadowRenderPass.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/ShadowRenderPass.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/ShadowRenderPass.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Framebuffer.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Framebuffer.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Framebuffer.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Framebuffer.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Engine.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Engine.d -c E:/Projects/Ivy Engine/projects/Ivy/source/core/Engine.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/core/Engine.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_themes.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_themes.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_themes.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_themes.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_impl_opengl3.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_impl_opengl3.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/backends/imgui_impl_opengl3.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/backends/imgui_impl_opengl3.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/ivypch.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/ivypch.d -c E:/Projects/Ivy Engine/projects/Ivy/source/ivypch.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/ivypch.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -g -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_tables.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Debug/imgui_tables.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_tables.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_tables.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Shader.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Shader.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Shader.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Shader.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Buffer.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Buffer.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Buffer.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Buffer.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Renderer.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Renderer.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Renderer.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Renderer.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Camera.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/Camera.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/Camera.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/Camera.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/SceneRenderPass.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/SceneRenderPass.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/SceneRenderPass.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/SceneRenderPass.cpp"
- }, 
- {
-  "directory": "E:/Projects/Ivy Engine/projects/Ivy", 
-  "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -m64 -g -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/PostprocessingRenderPass.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Debug/PostprocessingRenderPass.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/PostprocessingRenderPass.cpp", 
-  "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/PostprocessingRenderPass.cpp"
- }
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/src/glad.c",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/Lib/Release/glad.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/Lib/Release/glad.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/src/glad.c"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/backends/imgui_impl_glfw.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_impl_glfw.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_impl_glfw.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/backends/imgui_impl_glfw.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/backends/imgui_impl_opengl3.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_impl_opengl3.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_impl_opengl3.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/backends/imgui_impl_opengl3.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_demo.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_demo.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_demo.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_demo.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_draw.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_draw.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_draw.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_draw.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_tables.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_tables.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_tables.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_tables.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_themes.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_themes.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_themes.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_themes.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_widgets.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_widgets.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_widgets.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/imgui_widgets.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/misc/cpp/imgui_stdlib.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_stdlib.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/imgui_stdlib.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/misc/cpp/imgui_stdlib.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/misc/fonts/binary_to_compressed_c.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -m64 -O2 -o E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/binary_to_compressed_c.o -MF E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/Lib/Release/binary_to_compressed_c.d -c E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui/misc/fonts/binary_to_compressed_c.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/audio/AudioContext.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioContext.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioContext.d -c E:/Projects/Ivy Engine/projects/Ivy/source/audio/AudioContext.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/audio/AudioSource.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioSource.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioSource.d -c E:/Projects/Ivy Engine/projects/Ivy/source/audio/AudioSource.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/audio/AudioStreamSource.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioStreamSource.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioStreamSource.d -c E:/Projects/Ivy Engine/projects/Ivy/source/audio/AudioStreamSource.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/core/Engine.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Engine.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Engine.d -c E:/Projects/Ivy Engine/projects/Ivy/source/core/Engine.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/environment/Input.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Input.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Input.d -c E:/Projects/Ivy Engine/projects/Ivy/source/environment/Input.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/environment/Log.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Log.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Log.d -c E:/Projects/Ivy Engine/projects/Ivy/source/environment/Log.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/environment/Window.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Window.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Window.d -c E:/Projects/Ivy Engine/projects/Ivy/source/environment/Window.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/ivypch.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/ivypch.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/ivypch.d -c E:/Projects/Ivy Engine/projects/Ivy/source/ivypch.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Buffer.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Buffer.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Buffer.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Buffer.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Framebuffer.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Framebuffer.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Framebuffer.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Framebuffer.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/ImGuiHook.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/ImGuiHook.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/ImGuiHook.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/ImGuiHook.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Line.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Line.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Line.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Line.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Renderer.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Renderer.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Renderer.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Renderer.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Shader.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Shader.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Shader.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Shader.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Terrain.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Terrain.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Terrain.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Terrain.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Texture.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Texture.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Texture.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/Texture.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/rendering/VertexArray.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/VertexArray.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/VertexArray.d -c E:/Projects/Ivy Engine/projects/Ivy/source/rendering/VertexArray.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/Camera.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Camera.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Camera.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/Camera.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/Entity.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Entity.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Entity.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/Entity.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/Scene.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Scene.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Scene.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/Scene.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/AudioClip.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioClip.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioClip.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/AudioClip.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/AudioListener.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioListener.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/AudioListener.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/AudioListener.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/Material.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Material.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Material.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/Material.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/Mesh.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Mesh.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/Mesh.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/Mesh.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/TerrainMaterial.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/TerrainMaterial.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/TerrainMaterial.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/components/TerrainMaterial.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/PostprocessingRenderPass.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/PostprocessingRenderPass.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/PostprocessingRenderPass.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/PostprocessingRenderPass.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/SceneRenderPass.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/SceneRenderPass.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/SceneRenderPass.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/SceneRenderPass.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Ivy",
+            "file": "E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/ShadowRenderPass.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/ShadowRenderPass.o -MF E:/Projects/Ivy Engine/Build/Obj/Ivy/Release/ShadowRenderPass.d -c E:/Projects/Ivy Engine/projects/Ivy/source/scene/renderpasses/ShadowRenderPass.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Sandbox",
+            "file": "E:/Projects/Ivy Engine/projects/Sandbox/source/Application.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/Application.o -MF E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/Application.d -c E:/Projects/Ivy Engine/projects/Sandbox/source/Application.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Sandbox",
+            "file": "E:/Projects/Ivy Engine/projects/Sandbox/source/CameraTracker.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/CameraTracker.o -MF E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/CameraTracker.d -c E:/Projects/Ivy Engine/projects/Sandbox/source/CameraTracker.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Sandbox",
+            "file": "E:/Projects/Ivy Engine/projects/Sandbox/source/Erosion.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/Erosion.o -MF E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/Erosion.d -c E:/Projects/Ivy Engine/projects/Sandbox/source/Erosion.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Sandbox",
+            "file": "E:/Projects/Ivy Engine/projects/Sandbox/source/Sandbox.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/Sandbox.o -MF E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/Sandbox.d -c E:/Projects/Ivy Engine/projects/Sandbox/source/Sandbox.cpp"
+          }
+,
+          {
+            "directory": "E:/Projects/Ivy Engine/projects/Sandbox",
+            "file": "E:/Projects/Ivy Engine/projects/Sandbox/source/TerrainGenerator.cpp",
+            "command": "cc -MMD -MP -I\"E:/Projects/Ivy Engine/projects/Ivy/source\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLFW/Include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/GLAD/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/spdlog/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/glm\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/stb_image\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/assimp/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/ImGui\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/taskflow\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/OpenAl/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/libsndfile/include\" -I\"E:/Projects/Ivy Engine/projects/Ivy/dependencies/effolkronium\" -m64 -O2 -o E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/TerrainGenerator.o -MF E:/Projects/Ivy Engine/Build/Obj/Sandbox/Release/TerrainGenerator.d -c E:/Projects/Ivy Engine/projects/Sandbox/source/TerrainGenerator.cpp"
+          }
 ]

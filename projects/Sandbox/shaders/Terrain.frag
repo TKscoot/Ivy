@@ -43,7 +43,7 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = specularStrength * spec * Cd.xyz;  
         
-    vec3 result = (ambient + diffuse + specular);// * diffTex;
+    vec3 result = (ambient + diffuse + specular) * diffTex;
 
     FragColor = vec4(vec3(result), 1.0);
 }

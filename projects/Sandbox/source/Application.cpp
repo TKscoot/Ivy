@@ -29,8 +29,8 @@ void Application::SetupScene()
 
 void Application::SetupEntities()
 {
-	// Animated Pilot
 	/*
+	// Animated Pilot
 	Ptr<Entity> pilotEntity = Scene::GetScene()->CreateEntity();
 	pilotEntity->AddComponent(CreatePtr<Mesh>(pilotEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
 	pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
@@ -51,20 +51,19 @@ void Application::SetupEntities()
 	// Sponza scene
 	Ptr<Entity> sponzaEntity = Scene::GetScene()->CreateEntity();
 	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
+	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/MetalRoughSpheres.gltf"));
+	//auto mat = sponzaEntity->GetFirstComponentOfType<Material>();
+	//auto transform = sponzaEntity->GetFirstComponentOfType<Transform>();
+	//transform->setRotationX(180);
+	//transform->setPositionX(50);
+	//mat->UseIBL(false);
+	//mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Metal.png", Material::TextureMapType::METALLIC);
+	//mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Roughness.png", Material::TextureMapType::ROUGHNESS);
 	sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
-	//for(auto& mat : sponzaEntity->GetComponentsOfType<Material>())
-	//{
-	//	mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Base Color.jpg", Material::TextureMapType::DIFFUSE);
-	//	//mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Normal.jpg", Material::TextureMapType::NORMAL);
-	//	mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Metallic.jpg", Material::TextureMapType::METALLIC);
-	//	//mat->LoadTexture("assets/textures/Concrete_Wall/2K-concrete_48_Roughness.jpg", Material::TextureMapType::ROUGHNESS);
-	//	mat->UseIBL(false);
-	//	//mat->SetMetallic(0.001f);
-	//	mat->SetTextureTiling(Vec2(4.0f));
-	//}
-	sponzaEntity->SetActive(false);
-
 	/*
+
+	sponzaEntity->SetActive(true);
+
 
 	// General testing Entity
 	Ptr<Entity> towerEntity = Scene::GetScene()->CreateEntity();
@@ -114,7 +113,7 @@ void Application::SetupEntities()
 	//cameraTracker->AddComponent<AudioClip>(soundClip);
 	//soundClip->Play();
 
-	Ptr<TerrainGenerator> terrain = mScene->CreateEntity<TerrainGenerator>();
+	//Ptr<TerrainGenerator> terrain = mScene->CreateEntity<TerrainGenerator>();
 }
 
 void Application::Run()
@@ -132,12 +131,17 @@ void Application::Run()
 	while(!mEngine->ShouldTerminate())
 	{
 		timer += mEngine->GetDeltaTime();
-		/*
-		Ptr<Transform> bouncingEntTransform = mBouncingEntity->GetFirstComponentOfType<Transform>();
-		bouncingEntTransform->setRotation(0.0f, timer * 50.0f, 0.0f);
-		bouncingEntTransform->setPosition(0.0f, 3.0f + glm::sin(timer), 0.0f);
-		bouncingEntTransform->setScale(Vec3((glm::sin(timer) + 1.0f) * 0.5f));
-		*/
+
+		if(Input::IsMouseButtonDown(MouseCode::Button1))
+		{
+			mScene->GetCamera()->HandleInput(true);
+			Input::SetMouseCursorVisible(false);
+		}
+		else
+		{
+			mScene->GetCamera()->HandleInput(false);
+			Input::SetMouseCursorVisible(true);
+		}
 		
 		if(Input::IsKeyDown(KeyCode::Escape))
 		{

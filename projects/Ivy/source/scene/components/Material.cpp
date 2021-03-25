@@ -156,6 +156,7 @@ void Ivy::Material::UpdateMaterialUniforms()
 	mShader->SetUniformFloat3("material.specular",  mSpecular);
 	mShader->SetUniformFloat( "material.metallic",  mMetallic);
 	mShader->SetUniformFloat( "material.roughness", mRoughness);
+	mShader->SetUniformFloat("material.iblStrength", mIblStrength);
 	//mShader->SetUniformInt(   "useIBL",		   (int)mUseIBL);
 }
 
