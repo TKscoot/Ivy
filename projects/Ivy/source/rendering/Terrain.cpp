@@ -81,8 +81,7 @@ void Ivy::Terrain::SetHeight(int x, int z, float height)
 {
 	mHeights[z * mWidth + x] = height;
 	mVertices[z * mWidth + x].position = Vec4(mVertices[z * mWidth + x].position.x, height, mVertices[z * mWidth + x].position.z, 1.0f);
-
-
+	
 }
 
 float Ivy::Terrain::GetHeight(int x, int z)
@@ -90,6 +89,23 @@ float Ivy::Terrain::GetHeight(int x, int z)
 	return mHeights[z * mWidth + x];
 }
 
+void Ivy::Terrain::SetHeights(float* heights)
+{
+	if(sizeof(heights)/sizeof(heights[0]) != mWidth * mHeight)
+	{
+		Debug::CoreError("Heights array is not the size of terrain points!");
+		return;
+	}
+
+	
+	for(int z = 0; z < mHeight; z++)
+	{
+		for(int x = 0; x < mWidth; x++)
+		{
+			SetHeight(x, z, heights[z * mWidth + x]);
+		}
+	}
+}
 
 void Ivy::Terrain::OnUpdate(float deltaTime)
 {

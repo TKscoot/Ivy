@@ -11,13 +11,15 @@ Ivy::Scene::Scene()
 	mCSM = CreatePtr<ShadowRenderPass>(mCamera);
 	
 	AddDirectionalLight(
-		12.0f,							 //intensity
+		3.0f,							 //intensity
 		Vec3(-2.0f,  4.0f,   -1.0f),	 //direction
 		Vec3( 0.05f, 0.0492f, 0.0439f),  //ambient
 		Vec3( 1.0f,  0.984f,  0.878f),	 //diffuse
 		Vec3( 0.5f,  0.492f,  0.439f));	 //specular
 
 	mCSM->SetDirLight(mDirLight);
+
+	glGenQueries(1, &mQuery);
 
 }
 
@@ -148,6 +150,22 @@ void Ivy::Scene::Update(float deltaTime)
 	}
 
 	ImGui::Text("Lighting settings");
+	static bool useIBL = true;
+	static float iblStrength = 0.2f;
+	if(ImGui::Checkbox("Use IBL", &useIBL) || ImGui::SliderFloat("IBL Strength", &iblStrength, 0, 1))
+	{
+		for(auto& e : mEntities)
+		{
+			for(auto& c : e->GetComponentsOfType<Material>())
+			{
+				if(c != nullptr)
+				{
+					c->UseIBL(useIBL);
+					c->SetIblStrength(iblStrength);
+				}
+			}
+		}
+	}
 
 	if(ImGui::SliderFloat3("Sun direction", v, -6.28319f, 6.28319f))
 	{
@@ -197,6 +215,8 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//glBeginQuery(GL_SAMPLES_PASSED, mQuery);
+
 	// Shadow Pass
 	mCSM->RenderShadows(currentWindowSize, mEntities);
 	// Scene pass
@@ -209,6 +229,8 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 	{
 		mImGuiHook->Render();
 	}
+
+	//glEndQuery(mQuery);
 }
 
 Ivy::DirectionalLight& Ivy::Scene::AddDirectionalLight(DirectionalLight lightParams)

@@ -1,7 +1,11 @@
-#version 450 core
+﻿#version 450 core
+#extension GL_ARB_shading_language_include : require
+#include "/remap.glsl"
+
 out vec4 FragColor;
 
 in vec2 TexCoords;
+in vec2 Pos;
 
 layout(binding = 0) uniform sampler2D sceneColorMap;
 layout(binding = 1) uniform sampler2D sceneDepthMap;
@@ -26,6 +30,17 @@ uniform bool UseDepthOfField;
 uniform bool UseMotionBlur;
 uniform float MotionBlurIntensity;
 uniform float DofThreshold;
+
+struct GodrayParameters
+{
+	float density;
+	float weight;
+	float decay;
+	float exposure;
+	int numSamples;
+};
+
+GodrayParameters godrayParams;
 
 
 // Tonemapping implementation from shadow-swan by Tobias Arrskog (https://github.com/topfs2/shadow-swan/blob/master/shaders/tonemap.glsl)
@@ -69,6 +84,10 @@ float nearDof = 0.0001f;
 float falloff = 2.0f;
 float minStrength = 0.0f;
 
+float draw_circle(vec2 coord, float radius) {
+    return step(length(coord), radius);
+}
+
 // =====================MAIN=====================
 void main()
 {
@@ -91,29 +110,55 @@ void main()
 		color = mix(blurred, color, dofStrength);
 	}
 
-	vec4 sunPos = Projection * View * vec4(-2.0, 4.0, -1.0, 1.0);
+	vec4 sunPos = Projection * View *  vec4(-2.0, 4.0, -1.0, 1.0);
 	vec2 screenSpaceSunPos = vec2(0.0);
 	screenSpaceSunPos.x = sunPos.x / sunPos.w;
 	screenSpaceSunPos.y = sunPos.y / sunPos.w;
 
 	//color += godrays(
-	//1.0,
-	//0.01,
-	//1.0,
-	//1.0,
+	//godrayParams.density,	 
+	//godrayParams.weight, 
+	//godrayParams.decay,	 
+	//godrayParams.exposure , 
+	//godrayParams.numSamples,
+	//godrayOcclusionMap,
+	//screenSpaceSunPos,
+	//TexCoords
+	//);
+
+	//color += godrays(
+	//1.0,	 
+	//0.01, 
+	//1.0,	 
+	//1.0, 
 	//128,
 	//godrayOcclusionMap,
 	//screenSpaceSunPos,
 	//TexCoords
 	//);
 
+	const vec4 backgroundColor = vec4(0.18,0.18,0.18,1);
+	const vec4 crosshairsColor = vec4(1,0,0,1);
+	const vec2 centerUV = vec2(0.5, 0.5);
+	const int thickness = 1;
+	const int len = 8;
+
+
+    ivec2 fragCoordi = ivec2(gl_FragCoord.xy);
+    ivec2 center = ivec2(WindowResolution.xy * centerUV);
+    ivec2 d = abs(center - fragCoordi);
 
 	
+	if (min(d.x, d.y) < thickness && max(d.x,d.y) < len)
+    {
+        color = vec3(1,0.18,0.18);
+    }
+
 	// gamma correct
 	color = pow(color, vec3(1.0/2.2)); 
-	
+
 	// tonemapping
-	vec3 mappedColor = tonemapAuto(color);
+	vec3 mappedColor = tonemapAuto(color) ;
 
 	// Final color output!
 	FragColor = vec4(mappedColor, texture2D(sceneColorMap, TexCoords).a);
@@ -235,20 +280,7 @@ vec3 godrays(
 	float illuminationDecay = 1.0;
 
 
-	for(int i=0; i < 100 ; i++){
-
-
-		/*
-		This makes sure that the loop only runs `numSamples` many times.
-		We have to do it this way in WebGL, since you can't have a for loop
-		that runs a variable number times in WebGL.
-		This little hack gets around that.
-		But the drawback of this is that we have to specify an upper bound to the
-		number of iterations(but 100 is good enough for almost all cases.)
-		*/
-		if(numSamples < i) {
-			break;
-		}
+	for(int i=0; i < numSamples ; i++){
 
 		textCoo -= deltaTextCoord;
 		vec3 samp = texture2D(occlusionTexture, textCoo   ).xyz;

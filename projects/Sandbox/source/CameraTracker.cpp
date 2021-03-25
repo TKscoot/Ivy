@@ -3,6 +3,7 @@
 CameraTracker::CameraTracker(Ptr<Camera> camera)
 	: mCamera(camera)
 {
+
 }
 
 void CameraTracker::OnCreate()
@@ -18,7 +19,7 @@ void CameraTracker::OnUpdate(float deltaTime)
 	static float rotationSpeed = 10.0f;
 	Vec3 camPos = mCamera->GetPosition();
 	ImGui::Text("Camera Position: x: %.00f, y: %.00f, z: %.00f", camPos.x, camPos.y, camPos.z);
-	
+
 	ImGui::Spacing();
 
 	if(ImGui::Combo("Camera mode", &mCurrentCameraMode, mCameraModes.data(), mCameraModes.size()))
@@ -93,7 +94,6 @@ void CameraTracker::OnUpdate(float deltaTime)
 			mTimer = 0.0f;
 		}
 	}
-
 
 }
 

@@ -70,6 +70,8 @@ namespace Ivy
 
 		void BindFramebufferForWrite();
 
+		void CreateEnvironmentMap(String filepath);
+
 
 
 
@@ -97,12 +99,20 @@ namespace Ivy
 
 		// Skybox
 		bool			    mShouldRenderSkybox = false;
-		Vector<String>		mSkyboxFilepaths = {};
-		Ptr<TextureCube>    mSkyboxCubeTexture = nullptr;
-		Ptr<Shader>			mSkyboxShader = nullptr;
+		Vector<String>		mSkyboxFilepaths	= {};
+		Ptr<TextureCube>    mSkyboxCubeTexture	= nullptr;
+		Ptr<Shader>			mSkyboxShader		= nullptr;
 		Ptr<VertexBuffer>   mSkyboxVertexBuffer = nullptr;
-		Ptr<VertexArray>    mSkyboxVertexArray = nullptr;
+		Ptr<VertexArray>    mSkyboxVertexArray	= nullptr;
 
+		// IBL
+		Ptr<Shader>		 mEquirectangularConversionShader = nullptr;
+		Ptr<Shader>		 mEnvFilteringShader			  = nullptr;
+		Ptr<Shader>		 mIrradianceShader				  = nullptr;
+		Ptr<TextureCube> mEnvUnfiltered					  = nullptr;
+		Ptr<HdriTexture> mEnvEquirect					  = nullptr;
+		Ptr<TextureCube> mEnvFiltered					  = nullptr;
+		Ptr<TextureCube> mIrradiance					  = nullptr;
 
 	};
 }

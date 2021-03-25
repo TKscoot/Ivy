@@ -268,6 +268,8 @@ namespace Ivy
 	private:
 		bool mFirstUpdate = true;
 
+		GLuint mQuery = 0;
+
 
 		static Ptr<Scene>   mInstance;
 

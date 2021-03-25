@@ -133,6 +133,14 @@ namespace Ivy
 		 * \param filenames Vector of files to use as Cube texture
 		 */
 		TextureCube(Vector<String> filenames);
+
+		/*!
+		 * TextureCube constructor
+		 * Creates cube texture object
+		 *
+		 * \param filenames Vector of files to use as Cube texture
+		 */
+		TextureCube(GLenum format, uint32_t width, uint32_t height);
 		
 		/*!
 		 * TextureCube constructor
@@ -173,8 +181,80 @@ namespace Ivy
 		 */
 		void Bind(uint32_t slot = 0);
 
+		/*!
+		 * Gets the renderer ID
+		 * \return Opengl Renderobject ID
+		 * 
+		 */
+		GLuint GetID() { return mID; }
+
+
+		/*!
+		 * Gets the width in pixels
+		 * 
+		 * \return width of the texture in pixels
+		 */
+		uint32_t GetWidth() { return mWidth; }
+
+		/*!
+		 * Gets the width in pixels
+		 *
+		 * \return width of the texture in pixels
+		 */
+		uint32_t GetHeight() { return mHeight; }
+
+		/*!
+		 * Calculates the count of mip levels
+		 * 
+		 * \return count of mip levels
+		 */
+		uint32_t GetMipLevelCount()
+		{
+			uint32_t levels = 1;
+			while((mWidth | mHeight) >> levels)
+				levels++;
+
+			return levels;
+		}
+
+	private:
+		GLuint	 mID = 0;
+
+		uint32_t mWidth  = 0;
+		uint32_t mHeight = 0;
+
+	};
+
+	class HdriTexture
+	{
+	public:
+		/*!
+		* HdriTextureCube constructor
+		* Creates cube texture object
+		*
+		* \param filename HDRI file
+		*/
+		HdriTexture(String filename);
+
+
+
+		/*!
+		 * Loads cube texture with specified images
+		 *
+		 * \param filenames Vector of files to use as Cube texture
+		 */
+		void Load(String filename);
+
+		/*!
+		 * Binds the cube texture to the shader
+		 *
+		 * \param slot Which slot it should be bound to shader. Default = 0
+		 */
+		void Bind(uint32_t slot = 0);
+
 	private:
 		GLuint	 mID = 0;
 
 	};
+
 }

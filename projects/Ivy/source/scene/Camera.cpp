@@ -3,16 +3,7 @@
 
 void Ivy::Camera::Update(float deltaTime)
 {
-	if(Input::IsMouseButtonDown(MouseCode::Button1))
-	{
-		mHandleInput = true;
-		Input::SetMouseCursorVisible(false);
-	}
-	else
-	{
-		mHandleInput = false;
-		Input::SetMouseCursorVisible(true);
-	}
+
 
 	if(mHandleInput)
 	{
