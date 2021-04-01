@@ -26,12 +26,12 @@ void Application::SetupScene()
 		"assets/textures/skybox/back.jpg"
 	};
 	mScene->SetSkybox(skyboxTextures);
+	mScene2->SetSkybox(skyboxTextures);
 }
 
 void Application::SetupEntities()
 {
 	// Animated Pilot
-	/*
 	Ptr<Entity> pilotEntity = mScene2->CreateEntity();
 	pilotEntity->AddComponent(CreatePtr<Mesh>(pilotEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
 	pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
@@ -47,6 +47,7 @@ void Application::SetupEntities()
 		pilotMat->UseIBL(false);
 	}
 	pilotEntity->SetActive(true);
+	/*
 	*/
 
 	// Sponza scene
@@ -135,12 +136,12 @@ void Application::Run()
 
 		if(Input::IsMouseButtonDown(MouseCode::Button1))
 		{
-			mScene->GetCamera()->HandleInput(true);
+			SceneManager::GetInstance()->GetActiveScene()->GetCamera()->HandleInput(true);
 			Input::SetMouseCursorVisible(false);
 		}
 		else
 		{
-			mScene->GetCamera()->HandleInput(false);
+			SceneManager::GetInstance()->GetActiveScene()->GetCamera()->HandleInput(false);
 			Input::SetMouseCursorVisible(true);
 		}
 		
@@ -149,9 +150,14 @@ void Application::Run()
 			exit(0);
 		}
 
-		if(Input::IsKeyDown(KeyCode::P))
+		if(Input::IsKeyDown(KeyCode::D2))
 		{
 			SceneManager::GetInstance()->SetActiveScene("TestScene2");
+		}
+
+		if(Input::IsKeyDown(KeyCode::D1))
+		{
+			SceneManager::GetInstance()->SetActiveScene("TestScene");
 		}
 
 		if(Input::IsKeyDown(M))
