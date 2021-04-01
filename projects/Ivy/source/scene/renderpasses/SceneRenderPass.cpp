@@ -40,7 +40,7 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, mWindowSize.x, mWindowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
 		glBindTexture(GL_TEXTURE_2D, mColorTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWindowSize.x, mWindowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, mWindowSize.x, mWindowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
 		glBindTexture(GL_TEXTURE_2D, mGodrayOcclusionTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWindowSize.x, mWindowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
@@ -337,7 +337,7 @@ void Ivy::SceneRenderPass::SetupFramebuffer()
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	glBindTexture(GL_TEXTURE_2D, mColorTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWindowSize.x, mWindowSize.y, 0, GL_RGB, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, mWindowSize.x, mWindowSize.y, 0, GL_RGB, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -387,7 +387,7 @@ void Ivy::SceneRenderPass::CreateEnvironmentMap(String filepath)
 
 	mEquirectangularConversionShader = CreatePtr<Shader>("shaders/EquirectangularToCubeMap.comp");
 
-	mEnvEquirect = CreatePtr<HdriTexture>(filepath);
+	mEnvEquirect = CreatePtr<TextureHDRI>(filepath);
 
 	mEquirectangularConversionShader->Bind();
 	mEnvEquirect->Bind();
@@ -424,7 +424,6 @@ void Ivy::SceneRenderPass::CreateEnvironmentMap(String filepath)
 	glBindImageTexture(0, mIrradiance->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 	glDispatchCompute(mIrradiance->GetWidth() / 32, mIrradiance->GetHeight() / 32, 6);
 	glGenerateTextureMipmap(mIrradiance->GetID());
-
 }
 
 

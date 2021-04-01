@@ -128,6 +128,7 @@
     <ClInclude Include="source\scene\Entity.h" />
     <ClInclude Include="source\scene\Light.h" />
     <ClInclude Include="source\scene\Scene.h" />
+    <ClInclude Include="source\scene\SceneManager.h" />
     <ClInclude Include="source\scene\components\AudioClip.h" />
     <ClInclude Include="source\scene\components\AudioListener.h" />
     <ClInclude Include="source\scene\components\Component.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="source\scene\Camera.cpp" />
     <ClCompile Include="source\scene\Entity.cpp" />
     <ClCompile Include="source\scene\Scene.cpp" />
+    <ClCompile Include="source\scene\SceneManager.cpp" />
     <ClCompile Include="source\scene\components\AudioClip.cpp" />
     <ClCompile Include="source\scene\components\AudioListener.cpp" />
     <ClCompile Include="source\scene\components\Material.cpp" />

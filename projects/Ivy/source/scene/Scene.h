@@ -19,7 +19,7 @@ namespace Ivy
 	 * Handles everything that is in the scene (Lights, Skybox, Entities, ...)
 	 * 
 	 */
-	class Scene
+	class Scene : public std::enable_shared_from_this<Scene>
 	{
 	public:
 
@@ -41,7 +41,7 @@ namespace Ivy
 		 * Constructor
 		 * 
 		 */
-		Scene();
+		Scene(String name);
 		~Scene();
 
 		/*!
@@ -65,6 +65,7 @@ namespace Ivy
 			ent->AddComponent(CreatePtr<Transform>());
 			ent->AddComponent(CreatePtr<Material>());
 			ent->OnCreate();
+			ent->mScene = shared_from_this();
 			Debug::CoreLog("Created entity with index {}", ent->mIndex);
 
 			mEntities.push_back(ent);
@@ -116,15 +117,15 @@ namespace Ivy
 		 * 
 		 * \return Returns pointer to the scene instance
 		 */
-		static Ptr<Scene> GetScene()
-		{
-			if (!mInstance)
-			{
-				mInstance = CreatePtr<Scene>();
-			}
-
-			return mInstance;
-		}
+		//static Ptr<Scene> GetScene()
+		//{
+		//	if (!mInstance)
+		//	{
+		//		mInstance = CreatePtr<Scene>();
+		//	}
+		//
+		//	return mInstance;
+		//}
 
 		/*!
 		 * Gets all entities. Including inactives.
@@ -240,7 +241,7 @@ namespace Ivy
 		 */
 		void InitializeGUI(Ptr<Window> window) 
 		{
-			mImGuiHook = CreatePtr<ImGuiHook>(window->GetHandle());
+			mImGuiHook = CreatePtr<ImGuiHook>(window);
 		}
 
 		/*!
@@ -265,7 +266,16 @@ namespace Ivy
 		  * 
 		  */
 		void ToggleGUI() { mRenderGui = !mRenderGui; }
+
+
+		String GetName()
+		{
+			return mName;
+		}
+
 	private:
+		String mName = "";
+
 		bool mFirstUpdate = true;
 
 		GLuint mQuery = 0;

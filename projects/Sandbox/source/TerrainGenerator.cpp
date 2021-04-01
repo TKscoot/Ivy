@@ -2,7 +2,6 @@
 
 TerrainGenerator::TerrainGenerator()
 {
-	mScene = Scene::GetScene();
 	mDimensions = { 256, 256 };
 	mTerrain = mScene->CreateEntity<Terrain>(mDimensions.x, mDimensions.y);
 }

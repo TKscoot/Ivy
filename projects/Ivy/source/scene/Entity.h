@@ -185,6 +185,11 @@ namespace Ivy
 		 */
 		Ptr<Camera> GetSceneCamera() { return mCamera; }
 
+		Ptr<Scene> GetAttachedScene() { return mScene; }
+
+	protected:
+		Ptr<Scene> mScene = nullptr;
+	
 	private:
 		void StartComponents();
 		void UpdateComponents(float deltaTime);

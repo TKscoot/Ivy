@@ -352,12 +352,12 @@ void Ivy::TextureCube::Bind(uint32_t slot)
 	}
 }
 
-Ivy::HdriTexture::HdriTexture(String filename)
+Ivy::TextureHDRI::TextureHDRI(String filename)
 {
 	Load(filename);
 }
 
-void Ivy::HdriTexture::Load(String filename)
+void Ivy::TextureHDRI::Load(String filename)
 {
 	//stbi_set_flip_vertically_on_load(true);
 	int width, height, nrComponents;
@@ -381,7 +381,7 @@ void Ivy::HdriTexture::Load(String filename)
 	}
 }
 
-void Ivy::HdriTexture::Bind(uint32_t slot)
+void Ivy::TextureHDRI::Bind(uint32_t slot)
 {
 	glBindTextureUnit(slot, mID);
 }

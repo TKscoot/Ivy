@@ -106,6 +106,9 @@
     <ClInclude Include="source\scene\Scene.h">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\SceneManager.h">
+      <Filter>scene</Filter>
+    </ClInclude>
     <ClInclude Include="source\scene\components\AudioClip.h">
       <Filter>scene\components</Filter>
     </ClInclude>
@@ -194,6 +197,9 @@
       <Filter>scene</Filter>
     </ClCompile>
     <ClCompile Include="source\scene\Scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\SceneManager.cpp">
       <Filter>scene</Filter>
     </ClCompile>
     <ClCompile Include="source\scene\components\AudioClip.cpp">

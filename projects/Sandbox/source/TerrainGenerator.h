@@ -17,7 +17,7 @@ private:
 
 
 	Ptr<Terrain> mTerrain = nullptr;
-	Ptr<Scene>   mScene   = nullptr;
+	//Ptr<Scene>   mScene   = nullptr;
 
 	Vector<float> mHeightmap = { 0.0f };
 	VecI2 mDimensions = VecI2(0.0f);

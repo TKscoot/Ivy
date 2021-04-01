@@ -9,6 +9,7 @@
 #include "scene/components/Transform.h"
 #include "scene/components/Material.h"
 #include "scene/Scene.h"
+#include "scene/SceneManager.h"
 #include "Texture.h"
 #include "scene/Camera.h"
 
@@ -66,6 +67,11 @@ namespace Ivy
 								  const char* message,
 								  const void* userParam);
 
+		void NotifyImGuiNewFrame()
+		{
+			mImGuiHook->NotifyNewFrame();
+		}
+
 	private:
 
 		// Methods
@@ -82,6 +88,8 @@ namespace Ivy
 		Ptr<VertexBuffer> mVertexBuffer;
 		Ptr<VertexArray>  mVertexArray;
 		Ptr<Texture2D>	  mLoadingScreenTexture;
+
+		Ptr<ImGuiHook>	  mImGuiHook = nullptr;
 
 	};
 }
