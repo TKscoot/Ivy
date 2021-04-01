@@ -154,7 +154,7 @@ void main()
 	float shadow = 0.0;
 	if(csm.oldShadows)
 	{
-		shadow = CalcCascadedShadows(N);
+		shadow = 1 - CalcCascadedShadows(N);
 	}
 	else
 	{
