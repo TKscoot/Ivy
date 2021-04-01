@@ -1,4 +1,5 @@
 #pragma once
+#include "environment/Window.h"
 #include "imgui.h"
 #include "imgui_themes.h"
 #include "backends/imgui_impl_glfw.h"
@@ -19,13 +20,14 @@ namespace Ivy
 		 * 
 		 * \param window The glfw program window handle
 		 */
-		ImGuiHook(GLFWwindow* window);
+		ImGuiHook(Ptr<Ivy::Window> window);
 		~ImGuiHook();
-	private:
-		friend class Scene;
-
-
 		void NotifyNewFrame();
 		void Render();
+	private:
+		friend class Scene;
+		friend class Renderer;
+
+
 	};
 }

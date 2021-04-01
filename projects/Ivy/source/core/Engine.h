@@ -6,6 +6,7 @@
 #include "environment/Input.h"
 #include "rendering/Renderer.h"
 #include "scene/Entity.h"
+#include "scene/SceneManager.h"
 #include "core/Timer.h"
 
 // Forward declare GLFWwindow to avoid including glfw3.h

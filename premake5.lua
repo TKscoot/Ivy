@@ -1,5 +1,6 @@
 -- Helper Functions
 require "export-compile-commands"
+require "deploy"
 
 function useIvyLib()
 	-- The library's public headers
@@ -25,8 +26,6 @@ workspace "Ivy"
 	architecture "x86_64"
 	
 	-- Configurations are often used to store some compiler / linker settings together.
-        -- The Debug configuration will be used by us while debugging.
-        -- The optimized Release configuration will be used when shipping the app.
 	configurations { "Debug", "Release" }
 	
 	-- We use filters to set options, a new feature of Premake5.
@@ -52,7 +51,9 @@ workspace "Ivy"
 	objdir ("Build/Obj/%{prj.name}/%{cfg.longname}")
 
 	
-
+project "Buildfiles"  -- selects workspace scope, if you haven't seen it before
+	kind "None"
+    files { "*.lua" } -- workspace level files
 
 project "GLAD"
 	
@@ -133,7 +134,6 @@ project "Ivy"
 	
 	location "projects/Ivy"
 	
-	-- kind is used to indicate the type of this project.
 	kind "StaticLib"
 	
 	includedirs
@@ -258,7 +258,7 @@ project "Sandbox"
 			"cd \"$(SolutionDir)\"",
 			"call \"$(SolutionDir)MergeLibs.bat\" /OUT:IvyMerged.lib %{LibraryDir.Ivy} %{LibraryDir.Assimp} %{LibraryDir.GLFW} %{LibraryDir.GLAD} %{LibraryDir.ImGui}",
 			-- copying shaders to build folder
-			"xcopy \"$(SolutionDir)projects\\Sandbox\\shaders\\*.*\" \"$(TargetDir)shaders\\\" /y /e /i /f" 
+			"xcopy \"$(SolutionDir)projects\\Sandbox\\shaders\\*.*\" \"$(TargetDir)shaders\\\" /y /e /i /f"
 		}
     filter{}
 
@@ -287,3 +287,5 @@ project "Sandbox"
 		links "openal"
 		links "libsndfile"
     filter {}
+
+

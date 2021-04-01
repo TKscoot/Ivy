@@ -1,12 +1,39 @@
 #include "ivypch.h"
 #include "Shader.h"
 
-Ivy::Shader::Shader(const String vertexFilepath, const String fragmentFilepath)
+Ivy::Shader::Shader(const String& vertexFilepath, const String& fragmentFilepath)
 {
-	if (vertexFilepath.find(".glsl") != std::string::npos ||
+	AddShaderSource(vertexFilepath, fragmentFilepath);
+}
+
+Ivy::Shader::Shader(const String & computeFilepath)
+{
+	if(computeFilepath.find(".glsl") != std::string::npos ||
+		computeFilepath.find(".comp") != std::string::npos)
+	{
+		sources[GL_COMPUTE_SHADER] = ReadFile(computeFilepath);
+	}
+	else
+	{
+		Debug::CoreError("Compute shader file extension not supported. Use .glsl or .comp ({})", computeFilepath);
+		return;
+	}
+
+
+	Compile();
+}
+
+Ivy::Shader::~Shader()
+{
+	glDeleteProgram(mProgram);
+}
+
+void Ivy::Shader::AddShaderSource(const String & vertexFilepath, const String & fragmentFilepath)
+{
+	if(vertexFilepath.find(".glsl") != std::string::npos ||
 		vertexFilepath.find(".vert") != std::string::npos)
 	{
-		sources[GL_VERTEX_SHADER]   = ReadFile(vertexFilepath);
+		sources[GL_VERTEX_SHADER] = ReadFile(vertexFilepath);
 	}
 	else
 	{
@@ -14,7 +41,7 @@ Ivy::Shader::Shader(const String vertexFilepath, const String fragmentFilepath)
 		return;
 	}
 
-	if (fragmentFilepath.find(".glsl") != std::string::npos ||
+	if(fragmentFilepath.find(".glsl") != std::string::npos ||
 		fragmentFilepath.find(".frag") != std::string::npos)
 	{
 		sources[GL_FRAGMENT_SHADER] = ReadFile(fragmentFilepath);
@@ -27,28 +54,6 @@ Ivy::Shader::Shader(const String vertexFilepath, const String fragmentFilepath)
 
 
 	Compile();
-}
-
-Ivy::Shader::Shader(const String & computeFilepath)
-{
-	if(computeFilepath.find(".glsl") != std::string::npos ||
-		computeFilepath.find(".comp") != std::string::npos)
-	{
-		sources[GL_COMPUTE_SHADER] = ReadFile(computeFilepath);
-	}
-	else
-	{
-		Debug::CoreError("Vertex shader file extension not supported. Use .glsl or .vert ({})", computeFilepath);
-		return;
-	}
-
-
-	Compile();
-}
-
-Ivy::Shader::~Shader()
-{
-	glDeleteProgram(mProgram);
 }
 
 void Ivy::Shader::Bind()
@@ -189,4 +194,28 @@ void Ivy::Shader::Compile()
 			glDeleteShader(id);
 		}
 	}
+}
+
+Ivy::ComputeShader::ComputeShader(const String & computeFilepath)
+{
+	if(computeFilepath.find(".glsl") != std::string::npos ||
+		computeFilepath.find(".comp") != std::string::npos)
+	{
+		sources[GL_COMPUTE_SHADER] = ReadFile(computeFilepath);
+	}
+	else
+	{
+		Debug::CoreError("Compute shader file extension not supported. Use .glsl or .comp ({})", computeFilepath);
+		return;
+	}
+
+
+	Compile();
+}
+
+void Ivy::ComputeShader::Dispatch(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ)
+{
+	auto tex = std::get<Ptr<TextureHDRI>>(mTexture);
+	//glBindImageTexture(0, tex->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+	glDispatchCompute(groupCountX, groupCountY, groupCountZ);
 }

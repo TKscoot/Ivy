@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{61705900-4DFC-870B-B6AA-880BA255880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{76FF3A1C-62A1-65F2-4B5C-7946379DEC42}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\Application.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CameraTracker.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Erosion.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TerrainGenerator.h">
+      <Filter>source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Application.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CameraTracker.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Erosion.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Sandbox.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TerrainGenerator.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\deploy.lua">
+      <Filter>..</Filter>
+    </None>
+    <None Include="..\..\export-compile-commands.lua">
+      <Filter>..</Filter>
+    </None>
+    <None Include="..\..\ninja.lua">
+      <Filter>..</Filter>
+    </None>
+    <None Include="..\..\premake5.lua">
+      <Filter>..</Filter>
+    </None>
+  </ItemGroup>
+</Project>

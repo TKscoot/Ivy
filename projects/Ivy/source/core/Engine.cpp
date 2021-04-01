@@ -71,10 +71,10 @@ void Ivy::Engine::NewFrame()
 {
 	static auto lastTime = std::chrono::high_resolution_clock::now();
 
-	if (!mWnd)
-	{
-		throw "You need to create a window first!";
-	}
+	//if (!mWnd)
+	//{
+	//	throw "You need to create a window first!";
+	//}
 
 	auto newtime = std::chrono::high_resolution_clock::now();
 	lastTime = std::chrono::high_resolution_clock::now();
@@ -83,7 +83,9 @@ void Ivy::Engine::NewFrame()
 
 	if(!mWnd->IsIconified())
 	{
-		Scene::GetScene()->Update(mDeltaTime);
+		mRenderer->NotifyImGuiNewFrame();
+
+		SceneManager::GetInstance()->GetActiveScene()->Update(mDeltaTime);
 		
 		mRenderer->Render(mDeltaTime);
 

@@ -6,7 +6,8 @@ Application::Application()
 	mEngine->Initialize(1600, 900, "Ivy Sandbox v0.3.7");
 	//mEngine->GetWindow()->SetWindowIcon("assets/textures/Misc/awesomeface.png");
 
-	mScene = Scene::GetScene();
+	mScene = SceneManager::GetInstance()->CreateSceneAndSetActive("TestScene");
+	mScene2 = SceneManager::GetInstance()->CreateScene("TestScene2");
 
 	SetupScene();
 	SetupEntities();
@@ -29,9 +30,9 @@ void Application::SetupScene()
 
 void Application::SetupEntities()
 {
-	/*
 	// Animated Pilot
-	Ptr<Entity> pilotEntity = Scene::GetScene()->CreateEntity();
+	/*
+	Ptr<Entity> pilotEntity = mScene2->CreateEntity();
 	pilotEntity->AddComponent(CreatePtr<Mesh>(pilotEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
 	pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
 	Vector<Ptr<Material>> pilotMaterials = pilotEntity->GetComponentsOfType<Material>();
@@ -49,7 +50,7 @@ void Application::SetupEntities()
 	*/
 
 	// Sponza scene
-	Ptr<Entity> sponzaEntity = Scene::GetScene()->CreateEntity();
+	Ptr<Entity> sponzaEntity = mScene->CreateEntity();
 	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
 	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/MetalRoughSpheres.gltf"));
 	//auto mat = sponzaEntity->GetFirstComponentOfType<Material>();
@@ -103,7 +104,7 @@ void Application::SetupEntities()
 	*/
 
 
-	Ptr<CameraTracker> cameraTracker = Scene::GetScene()->CreateEntity<CameraTracker>(Scene::GetScene()->GetCamera());
+	Ptr<CameraTracker> cameraTracker = mScene->CreateEntity<CameraTracker>(mScene->GetCamera());
 	cameraTracker->AddTrackingPoint(Vec3(-10.0f, 2.0f, -10.0f));
 	cameraTracker->AddTrackingPoint(Vec3(0.0f, 2.0f, 0.0f));
 	cameraTracker->AddTrackingPoint(Vec3(10.0f, 2.0f, -20.0f));
@@ -113,7 +114,7 @@ void Application::SetupEntities()
 	//cameraTracker->AddComponent<AudioClip>(soundClip);
 	//soundClip->Play();
 
-	//Ptr<TerrainGenerator> terrain = mScene->CreateEntity<TerrainGenerator>();
+	//Ptr<TerrainGenerator> terrain = mScene2->CreateEntity<TerrainGenerator>();
 }
 
 void Application::Run()
@@ -146,6 +147,11 @@ void Application::Run()
 		if(Input::IsKeyDown(KeyCode::Escape))
 		{
 			exit(0);
+		}
+
+		if(Input::IsKeyDown(KeyCode::P))
+		{
+			SceneManager::GetInstance()->SetActiveScene("TestScene2");
 		}
 
 		if(Input::IsKeyDown(M))

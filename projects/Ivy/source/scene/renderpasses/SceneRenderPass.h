@@ -110,9 +110,8 @@ namespace Ivy
 		Ptr<Shader>		 mEnvFilteringShader			  = nullptr;
 		Ptr<Shader>		 mIrradianceShader				  = nullptr;
 		Ptr<TextureCube> mEnvUnfiltered					  = nullptr;
-		Ptr<HdriTexture> mEnvEquirect					  = nullptr;
+		Ptr<TextureHDRI> mEnvEquirect					  = nullptr;
 		Ptr<TextureCube> mEnvFiltered					  = nullptr;
 		Ptr<TextureCube> mIrradiance					  = nullptr;
-
 	};
 }

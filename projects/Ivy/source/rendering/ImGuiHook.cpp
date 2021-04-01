@@ -1,7 +1,7 @@
 #include "ivypch.h"
 #include "ImGuiHook.h"
 
-Ivy::ImGuiHook::ImGuiHook(GLFWwindow* window)
+Ivy::ImGuiHook::ImGuiHook(Ptr<Window> window)
 {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -9,7 +9,7 @@ Ivy::ImGuiHook::ImGuiHook(GLFWwindow* window)
 	ImGuiIO &io = ImGui::GetIO();
 
 	// Setup Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplGlfw_InitForOpenGL(window->GetHandle(), true);
 	ImGui_ImplOpenGL3_Init("#version 450 core");
 
 	// Setup Dear ImGui style

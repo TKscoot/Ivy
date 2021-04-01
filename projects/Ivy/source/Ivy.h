@@ -9,3 +9,4 @@
 #include <audio/AudioContext.h>
 #include <scene/components/AudioListener.h>
 #include <scene/components/AudioClip.h>
+#include <scene/SceneManager.h>

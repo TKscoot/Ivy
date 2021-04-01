@@ -28,6 +28,7 @@ layout(binding = 8) uniform sampler2D   shadowMap0;
 layout(binding = 9) uniform sampler2D   shadowMap1;
 layout(binding = 10) uniform sampler2D  shadowMap2;
 layout(binding = 11) uniform sampler2D  shadowMap3;
+//layout(binding = 12) uniform sampler2D  noiseTexture;
 
 
 //uniform vec3 lightPos;
@@ -203,7 +204,6 @@ void main()
 			break;
 		}
 	}
-
 
 	FragColor = vec4(color, alpha);
 	GodRayOcclusionColor = vec4(0.0, 0.0, 0.0, 1.0);
@@ -458,7 +458,7 @@ float FindBlockerDistance_DirectionalLight(sampler2D shadowMap, vec3 shadowCoord
 {
 	float bias = GetShadowBias(normal);
 
-	int numBlockerSearchSamples = 64;
+	int numBlockerSearchSamples = 32;
 	int blockers = 0;
 	float avgBlockerDistance = 0;
 	

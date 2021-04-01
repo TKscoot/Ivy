@@ -4,8 +4,9 @@
 
 Ivy::Ptr<Ivy::Scene> Ivy::Scene::mInstance = nullptr;
 
-Ivy::Scene::Scene()
+Ivy::Scene::Scene(String name)
 {
+	mName = name;
 	mCamera = CreatePtr<Camera>(Vec3(0.0f, 0.0f, 0.0f));
 	
 	mCSM = CreatePtr<ShadowRenderPass>(mCamera);
@@ -18,8 +19,6 @@ Ivy::Scene::Scene()
 		Vec3( 0.5f,  0.492f,  0.439f));	 //specular
 
 	mCSM->SetDirLight(mDirLight);
-
-	glGenQueries(1, &mQuery);
 
 }
 
@@ -36,6 +35,7 @@ Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
 	ent->AddComponent(CreatePtr<Transform>());
 	ent->AddComponent(CreatePtr<Material>());
 	ent->OnCreate();
+	ent->mScene = shared_from_this();
 	Debug::CoreLog("Created entity with index {}", ent->mIndex);
 	
 	mEntities.push_back(ent);
@@ -79,7 +79,7 @@ void Ivy::Scene::Update(float deltaTime)
 		mFirstUpdate = false;
 	}
 
-	mImGuiHook->NotifyNewFrame();
+	//mImGuiHook->NotifyNewFrame();
 
 	mCamera->Update(deltaTime);
 
@@ -225,10 +225,10 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	mPostprocessPass->Render(currentWindowSize, deltaTime);
 
-	if(mRenderGui)
-	{
-		mImGuiHook->Render();
-	}
+	//if(mRenderGui)
+	//{
+	//	mImGuiHook->Render();
+	//}
 
 	//glEndQuery(mQuery);
 }

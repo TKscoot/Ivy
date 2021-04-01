@@ -18,6 +18,7 @@ private:
 
 	Ptr<Engine> mEngine = nullptr;
 	Ptr<Scene>  mScene = nullptr;
+	Ptr<Scene>  mScene2 = nullptr;
 
 	Ptr<Entity> mBouncingEntity = nullptr;
 	Vector<Ptr<Material>> sceneBaseMaterials;

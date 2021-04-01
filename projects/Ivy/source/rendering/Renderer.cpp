@@ -24,17 +24,25 @@ void Ivy::Renderer::Initialize()
 
 	AddShaderIncludes();
 
-	mScene = Scene::GetScene();
-	mScene->InitializeGUI(mWindow);
-	mScene->InitializeScenePass(mWindow);
+	auto smInst = SceneManager::GetInstance();
+	smInst->SetWindow(mWindow);
+	//mScene->InitializeGUI(mWindow);
+	//mScene->InitializeScenePass(mWindow);
+
+	mImGuiHook = CreatePtr<ImGuiHook>(mWindow);
 }
 
 void Ivy::Renderer::Render(float deltaTime)
 {
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+	mScene = SceneManager::GetInstance()->GetActiveScene();
+
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	mScene->Render(deltaTime, mWindow->GetWindowSize());
+
+	mImGuiHook->Render();
 }
 
 void Ivy::Renderer::GLLogCallback(unsigned source, unsigned type, unsigned id, unsigned severity, int length, const char* message,

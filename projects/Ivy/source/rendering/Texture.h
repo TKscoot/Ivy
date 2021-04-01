@@ -225,7 +225,7 @@ namespace Ivy
 
 	};
 
-	class HdriTexture
+	class TextureHDRI
 	{
 	public:
 		/*!
@@ -234,7 +234,7 @@ namespace Ivy
 		*
 		* \param filename HDRI file
 		*/
-		HdriTexture(String filename);
+		TextureHDRI(String filename);
 
 
 

@@ -1,15 +1,20 @@
 #pragma once
+#include <variant>
 #include <Types.h>
 #include <environment/Log.h>
+#include "Texture.h"
 
 namespace Ivy
 {
 	class Shader
 	{
 	public:
-		Shader(const String vertexFilepath, const String fragmentFilepath);
+		Shader() {};
+		Shader(const String& vertexFilepath, const String& fragmentFilepath);
 		Shader(const String& computeFilepath);
 		~Shader();
+
+		void AddShaderSource(const String& vertexFilepath, const String& fragmentFilepath);
 
 		///
 		/// Binds the shader program. This tells the renderer to use this program.
@@ -103,7 +108,7 @@ namespace Ivy
 		 */
 		static uint32_t GetCurrentlyUsedShaderID();
 
-	private:
+	protected:
 		// Methods
 		String ReadFile(const String filepath);
 		void Compile();
@@ -112,5 +117,18 @@ namespace Ivy
 		UnorderedMap<GLuint, String> sources;
 		GLuint mProgram = 0;
 
+	};
+
+
+	class ComputeShader : public Shader
+	{
+	public:
+		ComputeShader(const String& computeFilepath);
+
+		void Dispatch(uint32_t groupCountX = 1, uint32_t groupCountY = 1, uint32_t groupCountZ = 1);
+
+	private:
+		// TODO: TESTING FOR LATER WITH IMGUI: ImGui::Image((void*)my_texture_view, ImVec2(512,512));
+		std::variant<Ptr<Texture2D>, Ptr<TextureCube>, Ptr<TextureHDRI>> mTexture;
 	};
 }
