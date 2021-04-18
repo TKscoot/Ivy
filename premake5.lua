@@ -149,7 +149,9 @@ project "Ivy"
 		"projects/Ivy/dependencies/taskflow",
 		"projects/Ivy/dependencies/OpenAl/include",
 		"projects/Ivy/dependencies/libsndfile/include",
-		"projects/Ivy/dependencies/effolkronium"
+		"projects/Ivy/dependencies/effolkronium",
+		"projects/Ivy/dependencies/FMOD/inc",
+		"projects/Ivy/dependencies/irrKlang/include"
 	}
 	
 	libdirs
@@ -159,7 +161,9 @@ project "Ivy"
 		"projects/Ivy/dependencies/assimp/lib",
 		"projects/Ivy/dependencies/ImGui/lib",
 		"projects/Ivy/dependencies/OpenAl/lib",
-		"projects/Ivy/dependencies/libsndfile/lib"
+		"projects/Ivy/dependencies/libsndfile/lib",
+		"projects/Ivy/dependencies/FMOD/lib/x64",
+		"projects/Ivy/dependencies/irrKlang/lib"
 	}
 	
     links 
@@ -179,6 +183,8 @@ project "Ivy"
 		links "assimp-vc141-mt"
 		links "OpenAL32.lib"
 		links "libsndfile-1.lib"
+		links "fmod_vc.lib"
+		links "irrKlang.lib"
     filter {}
 	
 	filter{ "system:windows", "configurations:Release"}
@@ -186,6 +192,8 @@ project "Ivy"
 		links "assimp-vc141-mt"
 		links "OpenAL32.lib"
 		links "libsndfile-1.lib"
+		links "fmod_vc.lib"
+		links "irrKlang.lib"
     filter {}
 
     -- We specify where the source files are.
@@ -219,7 +227,9 @@ project "Sandbox"
 		"projects/Ivy/dependencies/taskflow",
 		"projects/Ivy/dependencies/OpenAl/include",
 		"projects/Ivy/dependencies/libsndfile/include",
-		"projects/Ivy/dependencies/effolkronium"
+		"projects/Ivy/dependencies/effolkronium",
+		"projects/Ivy/dependencies/FMOD/inc",
+		"projects/Ivy/dependencies/irrKlang/include"
 	}
 	
 
@@ -228,7 +238,9 @@ project "Sandbox"
 		"projects/Ivy/dependencies/GLAD/Lib",
 		"projects/Ivy/dependencies/ImGui/Lib",
 		"projects/Ivy/dependencies/OpenAl/lib",
-		"projects/Ivy/dependencies/libsndfile/lib"
+		"projects/Ivy/dependencies/libsndfile/lib",
+		"projects/Ivy/dependencies/FMOD/lib/x64",
+		"projects/Ivy/dependencies/irrKlang/lib"
 	}
 
 	LibraryDir = {}
@@ -270,6 +282,8 @@ project "Sandbox"
 		links "assimp-vc141-mt"
 		links "OpenAL32.lib"
 		links "libsndfile-1.lib"
+		links "fmod_vc.lib"
+		links "irrKlang.lib"
     filter {}
 	
 	filter{ "system:windows", "configurations:Release"}
@@ -277,6 +291,8 @@ project "Sandbox"
 		links "assimp-vc141-mt"		
 		links "OpenAL32.lib"
 		links "libsndfile-1.lib"
+		links "fmod_vc.lib"
+		links "irrKlang.lib"
     filter {}
 
     filter "system:linux"

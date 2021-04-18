@@ -264,6 +264,11 @@ Ivy::TextureCube::TextureCube(Vector<String> filenames)
 	Load(filenames);
 }
 
+Ivy::TextureCube::~TextureCube()
+{
+	Destroy();
+}
+
 uint32_t CalculateMipMapCount(uint32_t width, uint32_t height)
 {
 	uint32_t levels = 1;
@@ -331,6 +336,12 @@ void Ivy::TextureCube::Load(Vector<String> filenames)
 	mHeight = height;
 }
 
+void Ivy::TextureCube::Destroy()
+{
+	glDeleteTextures(1, &mID);
+	mID = 0;
+}
+
 void Ivy::TextureCube::Load(String right, String left, String top, String bottom, String back, String front)
 {
 	Vector<String> filenames;
@@ -357,6 +368,17 @@ Ivy::TextureHDRI::TextureHDRI(String filename)
 	Load(filename);
 }
 
+Ivy::TextureHDRI::~TextureHDRI()
+{
+	Destroy();
+}
+
+void Ivy::TextureHDRI::Destroy()
+{
+	glDeleteTextures(1, &mID);
+	mID = 0;
+}
+
 void Ivy::TextureHDRI::Load(String filename)
 {
 	//stbi_set_flip_vertically_on_load(true);
@@ -379,6 +401,7 @@ void Ivy::TextureHDRI::Load(String filename)
 	{
 		Debug::CoreError("Failed to load HDR image: {}", filename);
 	}
+
 }
 
 void Ivy::TextureHDRI::Bind(uint32_t slot)

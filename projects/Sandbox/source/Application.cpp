@@ -6,15 +6,19 @@ Application::Application()
 	mEngine->Initialize(1600, 900, "Ivy Sandbox v0.3.7");
 	//mEngine->GetWindow()->SetWindowIcon("assets/textures/Misc/awesomeface.png");
 
-	mScene = SceneManager::GetInstance()->CreateSceneAndSetActive("TestScene");
+	mScene = SceneManager::GetInstance()->CreateScene("TestScene");
 	mScene2 = SceneManager::GetInstance()->CreateScene("TestScene2");
 
 	SetupScene();
 	SetupEntities();
+
+	SceneManager::GetInstance()->SetActiveScene("TestScene");
+
 }
 
 void Application::SetupScene()
 {
+	/*
 	// Setting up skybox with 6 textures for the cubetexture
 	Vector<String> skyboxTextures =
 	{
@@ -27,6 +31,11 @@ void Application::SetupScene()
 	};
 	mScene->SetSkybox(skyboxTextures);
 	mScene2->SetSkybox(skyboxTextures);
+	*/
+	
+	mScene->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
+	mScene2->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
+
 }
 
 void Application::SetupEntities()
@@ -52,16 +61,16 @@ void Application::SetupEntities()
 
 	// Sponza scene
 	Ptr<Entity> sponzaEntity = mScene->CreateEntity();
-	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
-	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/MetalRoughSpheres.gltf"));
-	//auto mat = sponzaEntity->GetFirstComponentOfType<Material>();
-	//auto transform = sponzaEntity->GetFirstComponentOfType<Transform>();
-	//transform->setRotationX(180);
-	//transform->setPositionX(50);
-	//mat->UseIBL(false);
-	//mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Metal.png", Material::TextureMapType::METALLIC);
-	//mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Roughness.png", Material::TextureMapType::ROUGHNESS);
-	sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
+	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
+	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/MetalRoughSpheres.gltf"));
+	auto mat = sponzaEntity->GetFirstComponentOfType<Material>();
+	auto transform = sponzaEntity->GetFirstComponentOfType<Transform>();
+	transform->setRotationX(180);
+	transform->setPositionX(50);
+	mat->UseIBL(false);
+	mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Metal.png", Material::TextureMapType::METALLIC);
+	mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Roughness.png", Material::TextureMapType::ROUGHNESS);
+	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	/*
 
 	sponzaEntity->SetActive(true);
@@ -116,6 +125,10 @@ void Application::SetupEntities()
 	//soundClip->Play();
 
 	//Ptr<TerrainGenerator> terrain = mScene2->CreateEntity<TerrainGenerator>();
+	
+	Ptr<AudioTest> audioTest = mScene->CreateEntity<AudioTest>();
+
+
 }
 
 void Application::Run()
@@ -127,12 +140,9 @@ void Application::Run()
 
 	bool setFullscreen = !mEngine->GetWindow()->IsFullscreen();
 
-	float timer = 0;
-
 	// Beginning the game loop
 	while(!mEngine->ShouldTerminate())
 	{
-		timer += mEngine->GetDeltaTime();
 
 		if(Input::IsMouseButtonDown(MouseCode::Button1))
 		{
@@ -150,15 +160,15 @@ void Application::Run()
 			exit(0);
 		}
 
+		if(Input::IsKeyDown(KeyCode::D1))
+		{
+			SceneManager::GetInstance()->SetActiveScene("TestScene");
+		}
 		if(Input::IsKeyDown(KeyCode::D2))
 		{
 			SceneManager::GetInstance()->SetActiveScene("TestScene2");
 		}
 
-		if(Input::IsKeyDown(KeyCode::D1))
-		{
-			SceneManager::GetInstance()->SetActiveScene("TestScene");
-		}
 
 		if(Input::IsKeyDown(M))
 		{
@@ -173,6 +183,24 @@ void Application::Run()
 			mEngine->GetWindow()->SetFullscreen(setFullscreen);
 			setFullscreen = !setFullscreen;
 		}
+
+		if(Input::IsKeyDown(C))
+		{
+			Ptr<Entity> towerEntity = mScene->CreateEntity();
+			towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
+			Ptr<Material> towerMat = towerEntity->GetFirstComponentOfType<Material>();
+			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_A.tga", Material::TextureMapType::DIFFUSE);
+			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);
+			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
+			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_R.tga", Material::TextureMapType::ROUGHNESS);
+			//
+			Ptr<Transform> towerTransform = towerEntity->GetFirstComponentOfType<Transform>();
+			//towerTransform->setPosition(0.0f, 5.0f, -30.0f);
+			towerTransform->setPosition(0.0f, 5.0f, -3.0f);
+			towerTransform->setScale(0.05f, 0.05f, 0.05f);
+			towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
+		}
+
 
 		// Begin new frame
 		mEngine->NewFrame();

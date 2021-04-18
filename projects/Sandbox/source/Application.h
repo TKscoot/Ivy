@@ -2,6 +2,7 @@
 #include <Ivy.h>
 #include "CameraTracker.h"
 #include "TerrainGenerator.h"
+#include "AudioTest.h"
 
 using namespace Ivy;
 

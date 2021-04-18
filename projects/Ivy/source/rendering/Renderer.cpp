@@ -30,12 +30,22 @@ void Ivy::Renderer::Initialize()
 	//mScene->InitializeScenePass(mWindow);
 
 	mImGuiHook = CreatePtr<ImGuiHook>(mWindow);
+
+	SceneManager::GetInstance()->RegisterSceneLoadCallback([&](Ptr<Scene> scene) {
+		if(scene)
+		{
+			mScene = scene;
+		}
+		else
+		{
+			Debug::Error("Could not register scene load callback! Scene is invalid!");
+		}
+
+	});
 }
 
 void Ivy::Renderer::Render(float deltaTime)
 {
-
-	mScene = SceneManager::GetInstance()->GetActiveScene();
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -54,7 +64,7 @@ void Ivy::Renderer::GLLogCallback(unsigned source, unsigned type, unsigned id, u
         Debug::CoreCritical(message);
         return;
     case GL_DEBUG_SEVERITY_MEDIUM:
-        Debug::CoreError(message);
+        Debug::CoreWarning(message);
         return;
     case GL_DEBUG_SEVERITY_LOW:
         Debug::CoreWarning(message);

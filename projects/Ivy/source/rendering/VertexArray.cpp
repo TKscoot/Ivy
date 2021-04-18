@@ -5,11 +5,12 @@ Ivy::VertexArray::VertexArray(BufferLayout& layout)
 {
 	mBufferLayout = layout;
 	glCreateVertexArrays(1, &mID);
+	//glGenVertexArrays(1, &mID);
 }
 
 Ivy::VertexArray::~VertexArray()
 {
-	glDeleteVertexArrays(1, &mID);
+	Destroy();
 }
 
 void Ivy::VertexArray::Bind()

@@ -1,6 +1,17 @@
 #include "ivypch.h"
 #include "Engine.h"
 
+// Don’t forget the array version of new/delete
+void* operator new[](size_t size)
+{
+	return malloc(size);
+}
+
+void operator delete[](void* mem)
+{
+	free(mem);
+}
+
 Ivy::Engine::Engine()
 {
 }
@@ -43,7 +54,7 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 		Debug::CoreError("Failed to initialize GLAD!");
 	}
 
-	
+	FModContext::GetInstance();
 
 	CheckGLVersion(4, 0);
 
@@ -52,6 +63,18 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 
 	mRenderer = CreatePtr<Renderer>(mWnd);
 	mRenderer->Initialize();
+
+	SceneManager::GetInstance()->RegisterSceneLoadCallback([&](Ptr<Scene> scene) {
+		if(scene)
+		{
+			mCurrentScene = scene;
+		}
+		else
+		{
+			Debug::Error("Could not register scene load callback! Scene is invalid!");
+		}
+
+	});
 
 
 	Debug::CoreInfo(" *** Engine initialized! *** ");
@@ -85,11 +108,12 @@ void Ivy::Engine::NewFrame()
 	{
 		mRenderer->NotifyImGuiNewFrame();
 
-		SceneManager::GetInstance()->GetActiveScene()->Update(mDeltaTime);
+		mCurrentScene->Update(mDeltaTime);
 		
 		mRenderer->Render(mDeltaTime);
 
 		mWnd->SwapBuffers();
+		FModContext::GetInstance()->Update();
 	}
 
 	newtime = std::chrono::high_resolution_clock::now();
@@ -103,7 +127,7 @@ void Ivy::Engine::NewFrame()
 	{
 		std::ostringstream ss;
 		ss << "Ivy Sandbox v0.0.1 | frame time: ";
-		ss << delta.count();
+		ss << delta.count() * 1000;
 		ss << " | FPS: ";
 		ss << (1 / delta.count());
 		mWnd->SetTitle(ss.str());

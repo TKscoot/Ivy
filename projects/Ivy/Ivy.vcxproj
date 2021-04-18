@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ivypch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;dependencies\OpenAl\include;dependencies\libsndfile\include;dependencies\effolkronium;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;dependencies\OpenAl\include;dependencies\libsndfile\include;dependencies\effolkronium;dependencies\FMOD\inc;dependencies\irrKlang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -69,8 +69,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;dependencies\OpenAl\lib;dependencies\libsndfile\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;fmod_vc.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;dependencies\OpenAl\lib;dependencies\libsndfile\lib;dependencies\FMOD\lib\x64;dependencies\irrKlang\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -78,7 +78,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ivypch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;dependencies\OpenAl\include;dependencies\libsndfile\include;dependencies\effolkronium;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;dependencies\OpenAl\include;dependencies\libsndfile\include;dependencies\effolkronium;dependencies\FMOD\inc;dependencies\irrKlang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -93,8 +93,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;dependencies\OpenAl\lib;dependencies\libsndfile\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;fmod_vc.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;dependencies\OpenAl\lib;dependencies\libsndfile\lib;dependencies\FMOD\lib\x64;dependencies\irrKlang\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -104,6 +104,7 @@
     <ClInclude Include="source\audio\AudioContext.h" />
     <ClInclude Include="source\audio\AudioSource.h" />
     <ClInclude Include="source\audio\AudioStreamSource.h" />
+    <ClInclude Include="source\audio\FModContext.h" />
     <ClInclude Include="source\audio\OpenALHelpers.h" />
     <ClInclude Include="source\core\AsyncWorker.h" />
     <ClInclude Include="source\core\Engine.h" />
@@ -144,6 +145,7 @@
     <ClCompile Include="source\audio\AudioContext.cpp" />
     <ClCompile Include="source\audio\AudioSource.cpp" />
     <ClCompile Include="source\audio\AudioStreamSource.cpp" />
+    <ClCompile Include="source\audio\FModContext.cpp" />
     <ClCompile Include="source\core\Engine.cpp" />
     <ClCompile Include="source\environment\Input.cpp" />
     <ClCompile Include="source\environment\Log.cpp" />

@@ -118,13 +118,19 @@ namespace Ivy
 		 */
 		void OnUpdate(float deltaTime) final;
 
+		void OnSceneLoad() final;
+		void OnSceneUnload() final;
+
+		void Destroy();
+
 		/*!
 		 * Loads a mesh from file
 		 *
 		 * \param filepath The path to the mesh file
 		 * \param useMtlIfProvided Bool to determine if MTL Materials should be used. Default = true
 		 */
-		void Load(String filepath, bool useMtlIfProvided = true);
+		void Load();
+
 
 		unsigned int getNumAnimations();
 		void setAnimation(unsigned int a);
@@ -214,11 +220,7 @@ namespace Ivy
 
 		std::unique_ptr<Assimp::Importer> mImporter;
 
-		static UnorderedMap<String, Ivy::Ptr<Mesh>> mLoadedMeshes;
-
 		Vector<Submesh> mSubmeshes;
-		UnorderedMap<String, Ivy::Ptr<Texture2D>> mLoadedTextures;
-
 
 		Vector<Vertex>		   mVertices;
 		Vector<AnimatedVertex> mAnimatedVertices;
@@ -235,11 +237,14 @@ namespace Ivy
 		Ptr<Entity> mEnt;
 		Ptr<Camera> mCamera;
 
-		String mMeshName;
+		String mFilePath = "";
+		bool mUseMtlIfProvided = true;
+		String mMeshName = "";
 
 		std::array<GLuint, 5> textures;
 
 		const aiScene* mAssimpScene;
+
 		// Animation
 		bool mIsAnimated	   = false;
 		
@@ -248,7 +253,7 @@ namespace Ivy
 		std::vector<BoneInfo> mBoneInfo;
 		glm::mat4 mGlobalInverseTransform;
 
-		Vector<Mat4> mBoneTransforms;
+		Vector<Mat4>		   mBoneTransforms;
 		Vector<VertexBoneData> mBoneData;
 
 		/* duration of the animation, can be changed if frames are not present in all interval */

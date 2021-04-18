@@ -2,6 +2,8 @@
 #include "audio/AudioContext.h"
 #include "Component.h"
 #include "scene/Entity.h"
+#include "AL/al.h"
+#include "AL/alc.h"
 
 
 namespace Ivy

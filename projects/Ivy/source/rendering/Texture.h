@@ -65,6 +65,7 @@ namespace Ivy
 		 */
 		void Load(String filepath, GLenum internalFormat, GLenum dataFormat);
 
+
 		/*!
 		 * Sets the pixeldata of the texture
 		 * 
@@ -133,6 +134,7 @@ namespace Ivy
 		 * \param filenames Vector of files to use as Cube texture
 		 */
 		TextureCube(Vector<String> filenames);
+		~TextureCube();
 
 		/*!
 		 * TextureCube constructor
@@ -161,6 +163,8 @@ namespace Ivy
 		 * \param filenames Vector of files to use as Cube texture
 		 */
 		void Load(Vector<String> filenames);
+
+		void Destroy();
 
 		/*!
 		 * Loads cube texture with specified images
@@ -235,8 +239,9 @@ namespace Ivy
 		* \param filename HDRI file
 		*/
 		TextureHDRI(String filename);
+		~TextureHDRI();
 
-
+		void Destroy();
 
 		/*!
 		 * Loads cube texture with specified images
@@ -251,6 +256,8 @@ namespace Ivy
 		 * \param slot Which slot it should be bound to shader. Default = 0
 		 */
 		void Bind(uint32_t slot = 0);
+
+		GLuint GetID() { return mID; }
 
 	private:
 		GLuint	 mID = 0;

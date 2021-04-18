@@ -9,7 +9,7 @@
 
 namespace Ivy
 {
-	class AudioClip : public Component
+	class AudioClip : public Component, public ISoundStopEventReceiver
 	{
 	public:
 		enum AudioSourceType
@@ -20,13 +20,41 @@ namespace Ivy
 
 		AudioClip(Entity* ent, String filename, bool playOnStart = false);
 
-		void AddSoundClip(String filename);
-		void Play();
-		void Pause();
-		void Resume();
-		void Stop();
+		virtual void AddSoundClip(String filename);
+		virtual void Play();
+		virtual void Pause();
+		virtual void Resume();
+		virtual void Stop();
+
+		void OnSoundStopped(ISound* sound, E_STOP_EVENT_CAUSE reason, void* userData) override;
+
+
+
+
+		float GetVolume();
+
+		void  SetVolume(float volume);
+
+		float GetPan();
+
+		void  SetPan(float pan);
+
+		bool  IsFinished();
+
+		int	  GetDuration();
+
+		int   GetPlaybackPosition();
+
+		void  SetPlaybackPosition(int position);
+
+		float GetPlaybackSpeed();
+		void  SetPlaybackSpeed(float speed);
+
+
+
 
 		void ShouldLoop(bool loop);
+		bool IsLooping();
 
 		void PlayOnStart(bool shouldPlay) { mPlayOnStart = shouldPlay; }
 
@@ -35,8 +63,13 @@ namespace Ivy
 
 
 	private:
+		String mFilePath = "";
+
 		bool mPlayOnStart = false;
 
-		Ptr<AudioStreamSource> mAudioStream = nullptr;
+		ISound* mSound = nullptr;
+		Ptr<AudioContext> mContext = nullptr;
+
+		ik_u32 mPlayPositionAfterPause = 0;
 	};
 }

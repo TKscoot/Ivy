@@ -21,6 +21,7 @@ namespace Ivy
 		// because userspace should not get access of UpdateComponents() but it needs to
 		// be called in core
 		friend class Scene;
+		friend class SceneManager;
 
 		/*!
 		 * 
@@ -186,9 +187,14 @@ namespace Ivy
 		Ptr<Camera> GetSceneCamera() { return mCamera; }
 
 		Ptr<Scene> GetAttachedScene() { return mScene; }
+		bool AttachedSceneIsActive()
+		{
+			return mAttachedSceneIsActive;
+		}
 
 	protected:
 		Ptr<Scene> mScene = nullptr;
+		bool mAttachedSceneIsActive = false;
 	
 	private:
 		void StartComponents();
