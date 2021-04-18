@@ -33,6 +33,11 @@ namespace Ivy
 		
 		void SetWindow(Ptr<Window> window) { mWindow = window; }
 
+		void RegisterSceneLoadCallback(std::function<void(Ptr<Scene>)> callback)
+		{
+			mSceneLoadCallbacks.push_back(callback);
+		}
+
 	private:
 		friend class Renderer;
 
@@ -42,5 +47,8 @@ namespace Ivy
 
 		Ptr<Scene> mActiveScene = nullptr;
 		Ptr<Window> mWindow = nullptr;
+
+		// Callbacks
+		Vector<std::function<void(Ptr<Scene>)>> mSceneLoadCallbacks;
 	};
 }

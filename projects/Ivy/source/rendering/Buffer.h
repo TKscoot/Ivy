@@ -73,6 +73,12 @@ namespace Ivy
             return mID;
         }
 
+		void Destroy()
+		{
+			glDeleteBuffers(1, &mID);
+			mID = 0;
+		}
+
     protected:
         GLuint mID = 0;
     };

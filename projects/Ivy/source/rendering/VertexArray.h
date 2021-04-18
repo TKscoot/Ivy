@@ -87,6 +87,13 @@ namespace Ivy
 		 * 
 		 */
 		void EnableVertexAttributes();
+
+		void Destroy()
+		{
+			glDeleteVertexArrays(1, &mID);
+			mID = 0;
+		}
+
 	private:
 
 		GLuint mID;

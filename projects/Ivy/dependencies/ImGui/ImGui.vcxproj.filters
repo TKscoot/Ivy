@@ -99,13 +99,13 @@
     <None Include="Lib\Debug\ImGui.pdb">
       <Filter>Lib\Debug</Filter>
     </None>
+    <None Include="Lib\Debug\ImGui.tlog\CL.269808.write.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
     <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog">
       <Filter>Lib\Debug\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Debug\ImGui.tlog\CL.read.1.tlog">
-      <Filter>Lib\Debug\ImGui.tlog</Filter>
-    </None>
-    <None Include="Lib\Debug\ImGui.tlog\CL.write.1.tlog">
       <Filter>Lib\Debug\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Debug\ImGui.tlog\ImGui.lastbuildstate">

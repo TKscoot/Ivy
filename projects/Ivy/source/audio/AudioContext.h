@@ -1,8 +1,9 @@
 #pragma once
-#include "AL/al.h"
-#include "AL/alc.h"
+#include <irrKlang.h>
 
-#include "OpenALHelpers.h"
+#include "Types.h"
+
+using namespace irrklang;
 
 namespace Ivy
 {
@@ -24,6 +25,9 @@ namespace Ivy
 			return mInstance;
 		}
 
+		ISoundEngine* GetEngine() { return mEngine; }
+
+
 	private:
 		// Methods
 		void OpenDefaultDevice();
@@ -34,9 +38,6 @@ namespace Ivy
 		// Variables
 		static Ptr<AudioContext> mInstance;
 
-		// OpenAL Handles
-		ALCcontext* mAlcContext    = nullptr;
-		ALCdevice*  mCurrentDevice = nullptr;
-
+		ISoundEngine* mEngine = nullptr;
 	};
 }

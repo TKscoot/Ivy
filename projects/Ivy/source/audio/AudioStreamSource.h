@@ -1,9 +1,9 @@
 #pragma once
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alext.h>
+#include <fmod.hpp>
+#include <fmod_errors.h>
 #include <sndfile.h>
 #include "OpenALHelpers.h"
+#include "audio/FModContext.h"
 #include "AudioContext.h"
 #include "AudioSource.h"
 #include "Types.h"
@@ -22,17 +22,13 @@ namespace Ivy
 
 		void Update() override
 		{
-			UpdateBufferStream();
 		};
 
 		void AddSoundClip(String filename) override;
 
 	private:
-		void UpdateBufferStream();
+		FMOD::Sound* mSound = nullptr;
+		FMOD::Channel* mChannel = nullptr;
 
-
-		static const int BUFFER_SAMPLES = 8192;
-		static const int NUM_BUFFERS = 4;
-		ALuint mBuffers[NUM_BUFFERS];
 	};
 }

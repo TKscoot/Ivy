@@ -22,8 +22,6 @@ Ivy::SceneRenderPass::SceneRenderPass(Ptr<Camera> camera,
 
 	SetupFramebuffer();
 
-	CreateEnvironmentMap("assets/env/HDR_041_Path.hdr");
-
 }
 
 void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
@@ -83,8 +81,7 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 		mSkyboxShader->SetUniformMat4("projection", projection);
 		mSkyboxShader->SetUniformFloat3("sunPosition", mDirLight.direction);
 		mSkyboxVertexArray->Bind();
-		//mSkyboxCubeTexture->Bind(0);
-		mEnvUnfiltered->Bind();
+		mSkyboxCubeTexture->Bind(0);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		mSkyboxVertexArray->Unbind();
@@ -126,8 +123,11 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 
 		if(mSkyboxCubeTexture)
 		{
-			mEnvUnfiltered->Bind(6);
-			mIrradiance->Bind(7);
+			mSkyboxCubeTexture->Bind(6);
+			if(mUseHdri)
+			{
+				mIrradiance->Bind(7);
+			}
 		}
 
 		PushLightParams(shader);
@@ -142,6 +142,27 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+}
+
+void Ivy::SceneRenderPass::UnloadEnvironmentMap()
+{
+	mEquirectangularConversionShader->Destroy();
+	mEnvFilteringShader->Destroy();
+	mIrradianceShader->Destroy();
+	mEnvUnfiltered->Destroy();
+	mEnvEquirect->Destroy();
+	mEnvFiltered->Destroy();
+	mIrradiance->Destroy();
+}
+
+void Ivy::SceneRenderPass::DestroySkybox()
+{
+
+	mSkyboxShader->Destroy();
+	mSkyboxVertexBuffer->Destroy();
+	mSkyboxVertexArray->Destroy();
+
+	mShouldRenderSkybox = false;
 }
 
 void Ivy::SceneRenderPass::PushLightParams(Ptr<Shader> shader)
@@ -204,6 +225,72 @@ void Ivy::SceneRenderPass::SetupSkybox(Vector<String> filepaths)
 		return;
 	}
 	mSkyboxCubeTexture = CreatePtr<TextureCube>(mSkyboxFilepaths);
+
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+
+	SetupSkyboxShaders();
+
+	BufferLayout layout =
+	{
+		{ShaderDataType::Float3, "aPos", 0}
+	};
+
+	mSkyboxVertexArray = CreatePtr<VertexArray>(layout);
+	mSkyboxVertexBuffer = CreatePtr<VertexBuffer>();
+	mSkyboxVertexArray->SetVertexBuffer(mSkyboxVertexBuffer);
+	mSkyboxVertexArray->Bind();
+	mSkyboxVertexBuffer->SetBufferData(&skyboxVertices, sizeof(skyboxVertices));
+
+	mSkyboxShader->Bind();
+	mShouldRenderSkybox = true;
+}
+
+void Ivy::SceneRenderPass::SetupSkybox(Ptr<TextureCube> tex)
+{
+	mSkyboxCubeTexture = tex;
 
 	float skyboxVertices[] = {
 		// positions          
@@ -378,7 +465,7 @@ void Ivy::SceneRenderPass::BindFramebufferForWrite()
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 }
 
-void Ivy::SceneRenderPass::CreateEnvironmentMap(String filepath)
+void Ivy::SceneRenderPass::SetEnvironmentMap(String filepath)
 {
 	const uint32_t cubemapSize = 2048;
 	const uint32_t irradianceMapSize = 32;
@@ -393,8 +480,10 @@ void Ivy::SceneRenderPass::CreateEnvironmentMap(String filepath)
 	mEnvEquirect->Bind();
 	glBindImageTexture(0, mEnvUnfiltered->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 	glDispatchCompute(cubemapSize / 32, cubemapSize / 32, 6);
+	//glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 	glGenerateTextureMipmap(mEnvUnfiltered->GetID());
 
+	mEnvEquirect->Destroy();
 
 	mEnvFilteringShader = CreatePtr<Shader>("shaders/EnvironmentMipFilter.comp");
 
@@ -423,7 +512,15 @@ void Ivy::SceneRenderPass::CreateEnvironmentMap(String filepath)
 
 	glBindImageTexture(0, mIrradiance->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 	glDispatchCompute(mIrradiance->GetWidth() / 32, mIrradiance->GetHeight() / 32, 6);
+	//glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 	glGenerateTextureMipmap(mIrradiance->GetID());
+
+	mEnvFiltered->Destroy();
+
+	SetupSkybox(mEnvUnfiltered);
+
+	mUseHdri	= true;
+	mUseSkybox  = false;
 }
 
 

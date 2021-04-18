@@ -2,9 +2,6 @@
 #include "Mesh.h"
 
 
-Ivy::UnorderedMap<Ivy::String, Ivy::Ptr<Ivy::Mesh>> Ivy::Mesh::mLoadedMeshes = {};
-
-
 static inline glm::vec3 vec3_cast(const aiVector3D &v) { return glm::vec3(v.x, v.y, v.z); }
 static inline glm::vec2 vec2_cast(const aiVector3D &v) { return glm::vec2(v.x, v.y); } // it's aiVector3D because assimp's texture coordinates use that
 static inline glm::quat quat_cast(const aiQuaternion &q) { return glm::quat(q.w, q.x, q.y, q.z); }
@@ -24,28 +21,24 @@ Ivy::Mat4 Mat4FromAssimpMat4(const aiMatrix4x4& matrix)
 
 Ivy::Mesh::Mesh(Entity* ent) : Ivy::Component::Component(ent)
 {
-	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
-    //CreateResources();
+
 	mCamera = ent->GetSceneCamera();
-	mLine = CreatePtr<Line>();
 }
 
 Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Component::Component(ent)
 {
-	//uint32_t entidx = GetEntityIndex();
-	//Debug::CoreLog("entidx: {}", entidx);
-	//mEnt = Scene::GetScene()->GetEntityWithIndex(entidx); //TODO: GetEntityIndex not working properly
 
-    //CreateResources();
-	mCamera = ent->GetSceneCamera();
-	mLine = CreatePtr<Line>();
+	mFilePath = filepath;
+	mUseMtlIfProvided = useMtlIfProvided;
 
-    Load(filepath, useMtlIfProvided);
+	if(mEntity->AttachedSceneIsActive())
+	{
+		Load();
+	}
 }
 
 Ivy::Mesh::Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices) : Ivy::Component::Component(ent)
 {
-	//mEnt = Scene::GetScene()->GetEntityWithIndex(GetEntityIndex());
 	mCamera = ent->GetSceneCamera();
 }
 
@@ -71,9 +64,39 @@ void Ivy::Mesh::OnUpdate(float deltaTime)
 	}
 }
 
-void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
+void Ivy::Mesh::OnSceneLoad()
 {
-	mMeshName = filepath;
+	mCamera = mEntity->GetSceneCamera();
+
+	Load();
+}
+
+void Ivy::Mesh::OnSceneUnload()
+{
+	Destroy();
+}
+
+void Ivy::Mesh::Destroy()
+{
+	mSubmeshes.clear();
+	mVertices.clear();
+	mIndices.clear();
+	mBoneMapping.clear();
+	mBoneInfo.clear();
+	mBoneTransforms.clear();
+	mBoneData.clear();
+	mNumBones = 0;
+
+	if(mVertexBuffer) mVertexBuffer->Destroy();
+	if(mIndexBuffer)  mIndexBuffer->Destroy();
+	if(mVertexArray)  mVertexArray->Destroy();
+
+}
+
+void Ivy::Mesh::Load()
+{
+	mMeshName = mFilePath;
+
 
 	RemoveUntilCharacterInString(mMeshName, '/');
 	RemoveUntilCharacterInString(mMeshName, '\\');
@@ -90,7 +113,7 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 
 
 	mImporter = std::make_unique<Assimp::Importer>();
-	const aiScene* scene = mImporter->ReadFile(filepath.c_str(), flags);
+	const aiScene* scene = mImporter->ReadFile(mFilePath.c_str(), flags);
 	mAssimpScene = scene;
 
 	if(!mAssimpScene)
@@ -225,7 +248,7 @@ void Ivy::Mesh::Load(String filepath, bool useMtlIfProvided)
 	SetResourceData();
 
 	//material assignment
-	if(useMtlIfProvided)
+	if(mUseMtlIfProvided)
 	{
 
 		if(mAssimpScene->HasMaterials())
@@ -439,12 +462,6 @@ void Ivy::Mesh::Draw(bool bindTextures)
 			(void*)(sizeof(uint32_t) * mSubmeshes[i].baseIndex), 
 			mSubmeshes[i].baseVertex);
 		mVertexArray->Unbind();
-
-		// Draw lines
-		//Mat4 projection = mCamera->GetProjectionMatrix();
-		//Mat4 view = mCamera->GetViewMatrix();
-		//Mat4 mvp = projection * view * Mat4(1.0f);
-		//mLine->Draw(mvp);
 	}
 }
 

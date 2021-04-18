@@ -36,7 +36,8 @@ Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
 	ent->AddComponent(CreatePtr<Material>());
 	ent->OnCreate();
 	ent->mScene = shared_from_this();
-	Debug::CoreLog("Created entity with index {}", ent->mIndex);
+	ent->mAttachedSceneIsActive = mIsActiveScene;
+	Debug::CoreLog("Created entity with index {} in scene {}", ent->mIndex, mName);
 	
 	mEntities.push_back(ent);
 
@@ -52,15 +53,25 @@ void Ivy::Scene::SetSkybox(Vector<String> filepaths)
 
 void Ivy::Scene::SetSkybox(String right, String left, String top, String bottom, String back, String front)
 {
-	Vector<String> filenames;
-	filenames.push_back(right);
-	filenames.push_back(left);
-	filenames.push_back(top);
-	filenames.push_back(bottom);
-	filenames.push_back(back);
-	filenames.push_back(front);
+	mSkyboxPaths.push_back(right);
+	mSkyboxPaths.push_back(left);
+	mSkyboxPaths.push_back(top);
+	mSkyboxPaths.push_back(bottom);
+	mSkyboxPaths.push_back(back);
+	mSkyboxPaths.push_back(front);
 
-	SetSkybox(filenames);
+	mUseEnvMap = false;
+	mUseSkybox = true;
+
+	SetSkybox(mSkyboxPaths);
+}
+
+void Ivy::Scene::SetHdriEnvironment(String path)
+{
+	mEnvMapPath = path;
+	mUseEnvMap = true;
+	mUseSkybox = false;
+	mScenePass->SetEnvironmentMap(mEnvMapPath);
 }
 
 void Ivy::Scene::Update(float deltaTime)
@@ -215,22 +226,14 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glBeginQuery(GL_SAMPLES_PASSED, mQuery);
-
 	// Shadow Pass
 	mCSM->RenderShadows(currentWindowSize, mEntities);
 	// Scene pass
 	mScenePass->Render(currentWindowSize);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	mPostprocessPass->Render(currentWindowSize, deltaTime);
 
-	//if(mRenderGui)
-	//{
-	//	mImGuiHook->Render();
-	//}
-
-	//glEndQuery(mQuery);
 }
 
 Ivy::DirectionalLight& Ivy::Scene::AddDirectionalLight(DirectionalLight lightParams)
@@ -308,4 +311,57 @@ Ivy::SpotLight& Ivy::Scene::AddSpotLight(
 	mSpotLights.push_back(l);
 
 	return mSpotLights[index];
+}
+
+void Ivy::Scene::Load()
+{
+	if(!mEnvMapPath.empty() && mUseEnvMap && !mUseSkybox)
+	{
+		mScenePass->SetEnvironmentMap(mEnvMapPath);
+	}
+	else if(!mSkyboxPaths.empty() && mUseSkybox && !mUseEnvMap)
+	{
+		mScenePass->SetupSkybox(mSkyboxPaths);
+	}
+
+
+	for(auto& e : mEntities)
+	{
+		for(auto& m : e->mComponents)
+		{
+			auto components = m.second;
+			for(auto& c : components)
+			{
+				if(c)
+				{
+					c->OnSceneLoad(); // Load components such as meshes for resource management
+				}
+			}
+		}
+		Debug::CoreLog("Loaded Entity {} in Scene: {}!", e->mIndex, mName);
+	}
+
+	Debug::CoreInfo("Scene load complete: {}!", mName);
+}
+
+void Ivy::Scene::Unload()
+{
+	for(auto& e : mEntities)
+	{
+		for(auto& m : e->mComponents)
+		{
+			auto components = m.second;
+			for(auto& c : components)
+			{
+				if(c)
+				{
+					c->OnSceneUnload();
+				}
+			}
+		}
+	}
+
+	mScenePass->UnloadEnvironmentMap();
+	mScenePass->DestroySkybox();
+
 }

@@ -100,7 +100,8 @@ void Ivy::PostprocessingRenderPass::UploadUniforms(float deltaTime)
 	mShader->SetUniformFloat3("PreviousCameraPositon",		mSceneData.previousCameraPosition);
 	mShader->SetUniformFloat( "NearPlane",					mSceneData.nearPlane);
 	mShader->SetUniformFloat( "FarPlane",					mSceneData.farPlane);
-	mShader->SetUniformFloat( "FrameTime",					deltaTime);
+	mShader->SetUniformFloat("FrameTime",				    deltaTime);
+	mShader->SetUniformFloat( "ElapsedTime",				(float)glfwGetTime());
 	mShader->SetUniformInt(	  "Tonemap",					mToneMapIndex);
 	mShader->SetUniformInt(	  "UseDepthOfField",	        mUseDoF);
 	mShader->SetUniformInt(	  "UseMotionBlur",				mUseMotionBlur);

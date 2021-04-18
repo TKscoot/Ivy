@@ -134,9 +134,9 @@
     <None Include="Lib\Debug\ImGui.idb" />
     <None Include="Lib\Debug\ImGui.log" />
     <None Include="Lib\Debug\ImGui.pdb" />
+    <None Include="Lib\Debug\ImGui.tlog\CL.269808.write.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\CL.read.1.tlog" />
-    <None Include="Lib\Debug\ImGui.tlog\CL.write.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\ImGui.lastbuildstate" />
     <None Include="Lib\Debug\ImGui.tlog\Lib-link.read.1.tlog" />
     <None Include="Lib\Debug\ImGui.tlog\Lib-link.write.1.tlog" />

@@ -24,6 +24,7 @@ namespace Ivy
 	public:
 
 		friend class Renderer;
+		friend class SceneManager;
 
 		struct FrustumBounds
 		{
@@ -97,6 +98,8 @@ namespace Ivy
 			String back,
 			String front);
 
+		void SetHdriEnvironment(String path);
+
 		/*!
 		 * Updates the scene data
 		 * Internal use! Dont call this!
@@ -111,21 +114,6 @@ namespace Ivy
 		*
 		*/
 		void Render(float deltaTime, Vec2 currentWindowSize);
-		
-		/*!
-		 * Gets the scene instance
-		 * 
-		 * \return Returns pointer to the scene instance
-		 */
-		//static Ptr<Scene> GetScene()
-		//{
-		//	if (!mInstance)
-		//	{
-		//		mInstance = CreatePtr<Scene>();
-		//	}
-		//
-		//	return mInstance;
-		//}
 
 		/*!
 		 * Gets all entities. Including inactives.
@@ -273,8 +261,19 @@ namespace Ivy
 			return mName;
 		}
 
+		bool IsActiveScene() { return mIsActiveScene; }
+
 	private:
+		void Load();
+		void Unload();
+
 		String mName = "";
+		bool mIsActiveScene = false;
+
+		Vector<String> mSkyboxPaths;
+		String mEnvMapPath = "";
+		bool mUseSkybox = false;
+		bool mUseEnvMap = false;
 
 		bool mFirstUpdate = true;
 

@@ -29,6 +29,20 @@ namespace Ivy
 		}
 
 		/*!
+		 * Gets called when scene is being set to active and loaded
+		 * Load your resources here!! Else they will be loaded on program start!
+		 * 
+		 */
+		virtual void OnSceneLoad() {};
+
+		/*!
+		 * Gets called when scene is being unloaded and other scene gets loaded
+		 * Unload your resources here!!
+		 *
+		 */
+		virtual void OnSceneUnload() {};
+
+		/*!
 		 * Gets called when component is being created
 		 * 
 		 */

@@ -21,6 +21,7 @@
     <ClInclude Include="source\TerrainGenerator.h">
       <Filter>source</Filter>
     </ClInclude>
+    <ClInclude Include="source\AudioTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Application.cpp">
@@ -38,19 +39,6 @@
     <ClCompile Include="source\TerrainGenerator.cpp">
       <Filter>source</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\deploy.lua">
-      <Filter>..</Filter>
-    </None>
-    <None Include="..\..\export-compile-commands.lua">
-      <Filter>..</Filter>
-    </None>
-    <None Include="..\..\ninja.lua">
-      <Filter>..</Filter>
-    </None>
-    <None Include="..\..\premake5.lua">
-      <Filter>..</Filter>
-    </None>
+    <ClCompile Include="source\AudioTest.cpp" />
   </ItemGroup>
 </Project>

@@ -36,6 +36,9 @@
     <ClInclude Include="source\audio\AudioStreamSource.h">
       <Filter>audio</Filter>
     </ClInclude>
+    <ClInclude Include="source\audio\FModContext.h">
+      <Filter>audio</Filter>
+    </ClInclude>
     <ClInclude Include="source\audio\OpenALHelpers.h">
       <Filter>audio</Filter>
     </ClInclude>
@@ -148,6 +151,9 @@
       <Filter>audio</Filter>
     </ClCompile>
     <ClCompile Include="source\audio\AudioStreamSource.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="source\audio\FModContext.cpp">
       <Filter>audio</Filter>
     </ClCompile>
     <ClCompile Include="source\core\Engine.cpp">

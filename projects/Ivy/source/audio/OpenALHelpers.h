@@ -529,4 +529,5 @@ namespace Ivy::WavLoader
 
 		return data;
 	}
+
 }

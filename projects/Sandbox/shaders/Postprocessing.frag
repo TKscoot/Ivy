@@ -25,6 +25,7 @@ uniform vec3 PreviousCameraPosition;
 uniform float NearPlane;
 uniform float FarPlane;
 uniform float FrameTime;
+uniform float ElapsedTime;
 uniform int  Tonemap;	
 uniform bool UseDepthOfField;
 uniform bool UseMotionBlur;
@@ -87,6 +88,8 @@ float minStrength = 0.0f;
 float draw_circle(vec2 coord, float radius) {
     return step(length(coord), radius);
 }
+
+vec3 snowing(in vec2 uv);
 
 // =====================MAIN=====================
 void main()
@@ -154,11 +157,19 @@ void main()
         color = vec3(1,0.18,0.18);
     }
 
+	// SNOW    
+	//vec2 uv = WindowResolution.xy + vec2(1.,WindowResolution.y/WindowResolution.x)*gl_FragCoord.xy / WindowResolution.xy;
+	//
+	//vec3 snow = snowing(uv.xy);
+	//color += snow;
+
 	// gamma correct
 	color = pow(color, vec3(1.0/2.2)); 
 
 	// tonemapping
 	vec3 mappedColor = tonemapAuto(color) ;
+
+
 
 	// Final color output!
 	FragColor = vec4(mappedColor, texture2D(sceneColorMap, TexCoords).a);
@@ -410,4 +421,42 @@ float depthStrength()
 
 
 	return mix(minStrength, 1.0f,dofStrength);
+}
+
+
+#define LAYERS 66
+
+#define DEPTH .3
+#define WIDTH .4
+#define SPEED .6
+
+#define DEPTH2 .1
+#define WIDTH2 .3
+#define SPEED2 .1
+
+vec3 snowing(in vec2 uv)
+{
+	float iTime = ElapsedTime;
+
+  	const mat3 p = mat3(13.323122,23.5112,21.71123,21.1212,28.7312,11.9312,21.8112,14.7212,61.3934);
+	vec3 acc = vec3(0.0);
+	float dof = 5.*sin(iTime*.1);
+	for (int i=0;i<LAYERS;i++) {
+		float fi = float(i);
+		vec2 q = uv*(1.+fi*DEPTH);
+		q += vec2(q.y*(WIDTH*mod(fi*7.238917,1.)-WIDTH*.5),SPEED*iTime/(1.+fi*DEPTH*.03));
+		vec3 n = vec3(floor(q),31.189+fi);
+		vec3 m = floor(n)*.00001 + fract(n);
+		vec3 mp = (31415.9+m)/fract(p*m);
+		vec3 r = fract(mp);
+		vec2 s = abs(mod(q,1.)-.5+.9*r.xy-.45);
+		s += .01*abs(2.*fract(10.*q.yx)-1.); 
+		float d = .6*max(s.x-s.y,s.x+s.y)+max(s.x,s.y)-.01;
+		float edge = .005+.05*min(.5*abs(fi-5.-dof),1.);
+		acc += vec3(smoothstep(edge,-edge,d)*(r.x/(1.+.02*fi*DEPTH)));
+	}
+
+
+
+  return acc;
 }

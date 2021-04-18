@@ -27,6 +27,12 @@ namespace Ivy
 		void Unbind();
 
 		/*!
+		 * Destroys shader object(s)
+		 * 
+		 */
+		void Destroy();
+
+		/*!
 		 * Sets an int as a uniform in the shader
 		 * 
 		 * \param name the name of the uniform in the shader

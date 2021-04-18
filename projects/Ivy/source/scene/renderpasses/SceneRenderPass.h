@@ -44,6 +44,9 @@ namespace Ivy
 		void Render(Vec2 currentWindowSize);
 
 		void SetupSkybox(Vector<String> filepaths);
+		void SetupSkybox(Ptr<TextureCube> tex);
+
+		void SetEnvironmentMap(String filepath);
 
 		GLuint GetColorTextureID()
 		{
@@ -62,6 +65,9 @@ namespace Ivy
 
 		SceneRenderData& GetSceneRenderData() { return mRenderData; }
 
+		void UnloadEnvironmentMap();
+		void DestroySkybox();
+
 	private:
 		void PushLightParams(Ptr<Shader> shader);
 		void SetupSkyboxShaders();
@@ -70,7 +76,6 @@ namespace Ivy
 
 		void BindFramebufferForWrite();
 
-		void CreateEnvironmentMap(String filepath);
 
 
 
@@ -104,6 +109,9 @@ namespace Ivy
 		Ptr<Shader>			mSkyboxShader		= nullptr;
 		Ptr<VertexBuffer>   mSkyboxVertexBuffer = nullptr;
 		Ptr<VertexArray>    mSkyboxVertexArray	= nullptr;
+		bool mUseSkybox = false;
+		bool mUseHdri = false;
+
 
 		// IBL
 		Ptr<Shader>		 mEquirectangularConversionShader = nullptr;

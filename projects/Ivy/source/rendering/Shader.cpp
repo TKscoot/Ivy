@@ -66,6 +66,13 @@ void Ivy::Shader::Unbind()
 	glUseProgram(0);
 }
 
+void Ivy::Shader::Destroy()
+{
+	sources.clear();
+	glDeleteProgram(mProgram);
+	mProgram = 0;
+}
+
 void Ivy::Shader::SetUniformInt(const String & name, int value)
 {
 	GLint location = glGetUniformLocation(mProgram, name.c_str());

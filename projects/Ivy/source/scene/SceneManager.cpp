@@ -38,7 +38,30 @@ Ivy::Ptr<Ivy::Scene> Ivy::SceneManager::GetScene(String name)
 
 void Ivy::SceneManager::SetActiveScene(String name)
 {
+	if(mActiveScene)
+	{
+		mActiveScene->Unload();
+		mActiveScene->mIsActiveScene = false;
+
+		for(auto& e : mActiveScene->mEntities)
+		{
+			e->mAttachedSceneIsActive = false;
+		}
+
+	}
+
+
 	mActiveScene = mScenes[name];
+	mActiveScene->mIsActiveScene = true;
+	for(auto& e : mActiveScene->mEntities)
+	{
+		e->mAttachedSceneIsActive = true;
+	}
+	mActiveScene->Load();
+	for(auto& c : mSceneLoadCallbacks)
+	{
+		c(mActiveScene);
+	}
 }
 
 void Ivy::SceneManager::SetActiveScene(Ptr<Scene> scene)
@@ -49,12 +72,26 @@ void Ivy::SceneManager::SetActiveScene(Ptr<Scene> scene)
 		return;
 	}
 
-	if(mScenes.find(scene->GetName()) == mScenes.end())
+	if(mActiveScene)
 	{
-		mScenes[scene->GetName()] = scene;
+		mActiveScene->Unload();
+		mActiveScene->mIsActiveScene = false;
+
+		for(auto& e : mActiveScene->mEntities)
+		{
+			e->mAttachedSceneIsActive = false;
+		}
+
 	}
 
 	mActiveScene = mScenes[scene->GetName()];
+	mActiveScene->mIsActiveScene = true;
+	for(auto& e : mActiveScene->mEntities)
+	{
+		e->mAttachedSceneIsActive = true;
+	}
+	mActiveScene->Load();
+
 }
 
 Ivy::Ptr<Ivy::Scene> Ivy::SceneManager::GetActiveScene()
