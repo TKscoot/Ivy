@@ -1,6 +1,7 @@
 #pragma once
 #include "Types.h"
 #include "environment/Input.h"
+#include "components/Transform.h"
 
 namespace Ivy
 {
@@ -17,9 +18,10 @@ namespace Ivy
 		 * \param position The initial position of the camera.
 		 */
 		Camera(Vec3 position)
-			: mPosition(position)
 		{
-			mView = glm::lookAt(mPosition, mPosition + mFront, mUp);
+			mTransform = CreatePtr<Transform>();
+			mTransform->mPosition = position;
+			mView = glm::lookAt(mTransform->mPosition, mTransform->mPosition + mTransform->mFront, mTransform->mUp);
 			UpdateCameraVectors();
 		}
 
@@ -38,6 +40,8 @@ namespace Ivy
 		 * \param lookPos Position vector to look at
 		 */
 		void LookAt(Vec3 lookPos);
+
+		Vec3 GetLookAt() { return mLookPos; }
 
 		/*!
 		 * 
@@ -58,14 +62,14 @@ namespace Ivy
 		 * 
 		 * \return Returns world position
 		 */
-		Vec3 GetPosition() { return mPosition; }
+		Vec3 GetPosition() { return mTransform->mPosition; }
 
 		/*!
 		 * Sets the world position of the camera
 		 * 
 		 * \param position Desired world position
 		 */
-		void SetPosition(Vec3 position) { mPosition = position; }
+		void SetPosition(Vec3 position) { mTransform->mPosition = position; }
 
 		/*!
 		 * Sets the X rotation
@@ -74,15 +78,15 @@ namespace Ivy
 		 */
 		void SetRotation(float rotation) 
 		{
-			mFront.x = glm::cos(glm::radians(rotation)) * glm::cos(glm::radians(rotation));
-			mFront = glm::normalize(mFront);
+			mTransform->mFront.x = glm::cos(glm::radians(rotation)) * glm::cos(glm::radians(rotation));
+			mTransform->mFront = glm::normalize(mTransform->mFront);
 		}
 
 		/*!
 		 * Gets the front vector
 		 * 
 		 */
-		Vec3 GetFront() { return mFront; }
+		Vec3 GetFront() { return mTransform->mFront; }
 
 		/*!
 		 * Checks and handles input events
@@ -118,32 +122,38 @@ namespace Ivy
 		 */
 		void Reset()
 		{
-			mPosition = Vec3(0.0f);
-			mFront = Vec3(0.0f, 0.0f, -1.0f);
-			mUp = Vec3(0.0f, 1.0f, 0.0f);
-			mRight = Vec3(1.0f, 0.0f, 0.0f);
-			mWorldUp = Vec3(0.0f, 1.0f, 0.0f);
+			mTransform->mPosition = Vec3(0.0f);
+			mTransform->mFront	  = Vec3(0.0f, 0.0f, -1.0f);
+			mTransform->mUp		  = Vec3(0.0f, 1.0f, 0.0f);
+			mTransform->mRight    = Vec3(1.0f, 0.0f, 0.0f);
+
+			mWorldUp  = Vec3(0.0f, 1.0f, 0.0f);
 
 			mVelocity = Vec3(0.0f);
 
-			mLookPos = Vec3(0.0f);
+			mLookPos  = Vec3(0.0f);
 
 			mProjection = Mat4(0.0f);
-			mView = Mat4(0.0f);
-			mFOV = 60.0f;
-			mNear = 0.1f;
-			mFar = 512.0f;
+			mView		= Mat4(0.0f);
+			mFOV		= 60.0f;
+			mNear		= 0.1f;
+			mFar		= 512.0f;
 		}
+
+		Ptr<Transform> GetTransform() { return mTransform; }
 
 	private:
 		void UpdateCameraVectors();
 
+		Ptr<Transform> mTransform = nullptr;
+
 		// camera Attributes
-		Vec3  mPosition = Vec3(0.0f);
-		Vec3  mFront	= Vec3(0.0f, 0.0f, -1.0f);
-		Vec3  mUp		= Vec3(0.0f, 1.0f, 0.0f);
-		Vec3  mRight	= Vec3(1.0f, 0.0f, 0.0f);
+		//Vec3  mPosition = Vec3(0.0f);
+		//Vec3  mFront	= Vec3(0.0f, 0.0f, 1.0f);
+		//Vec3  mUp		= Vec3(0.0f, 1.0f, 0.0f);
+		//Vec3  mRight	= Vec3(1.0f, 0.0f, 0.0f);
 		Vec3  mWorldUp	= Vec3(0.0f, 1.0f, 0.0f);
+
 
 		Vec3  mVelocity = Vec3(0.0f);
 

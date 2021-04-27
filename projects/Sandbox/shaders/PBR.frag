@@ -24,10 +24,8 @@ layout(binding = 4) uniform sampler2D   brdfLutTexture;
 layout(binding = 5) uniform sampler2D   aoMap;
 layout(binding = 6) uniform samplerCube radianceMap;
 layout(binding = 7) uniform samplerCube irradianceMap;
-layout(binding = 8) uniform sampler2D   shadowMap0;
-layout(binding = 9) uniform sampler2D   shadowMap1;
-layout(binding = 10) uniform sampler2D  shadowMap2;
-layout(binding = 11) uniform sampler2D  shadowMap3;
+layout(binding = 8) uniform sampler2D   shadowMap0[4];
+// ACHTUNG! NEXT SAMPLER BINDING == 12
 //layout(binding = 12) uniform sampler2D  noiseTexture;
 
 
@@ -87,7 +85,6 @@ float ShadowFade   = 1.0;
 // Function Prototypes
 float CalcShadow(sampler2D shadowMap, vec3 fragPosLightSpace, vec3 lightPos, vec3 N);
 float CalcCascadedShadows(vec3 N);
-vec3  PbrDirectionalLighting(DirLight light, float roughness, float metallic, vec3 albedo, vec3 N, vec3 V, vec3 F0);
 vec3 IBL(vec3 F0, vec3 Lr, vec3 normal, float roughness, float metallic, vec3 albedo, float NdotV, vec3 view);
 vec3 RotateVectorAboutY(float angle, vec3 vec);
 
@@ -146,11 +143,9 @@ void main()
 
 	vec3 radiance = vec3(1.0);
 
-	// Directional Light
-	//vec3 Lo = PbrDirectionalLighting(dirLight, roughness, metallic, albedo, N, V, F0);
 
 	float NdotV = max(dot(N, V), 0.0);
-	//float shadow = CalcCascadedShadows(N);
+
 	float shadow = 0.0;
 	if(csm.oldShadows)
 	{
@@ -164,14 +159,15 @@ void main()
 
 	vec3 Lo = vec3(0.0);
 	vec3 Lr = 2.0 * NdotV * N - V;
-	//vec3 IBL(vec3 F0, vec3 Lr, vec3 normal, float roughness, float metallic, vec3 albedo, float NdotV, vec3 view);
+
 	vec3 iblContribution = vec3(0.0);
 	if(useIBL)
 	{
 		iblContribution = IBL(F0, Lr, N, roughness, metallic, albedo, NdotV, V) * material.iblStrength;
 	}
-	vec3 lightContribution = Lighting(dirLight, F0, V, N, roughness, metallic, NdotV, albedo) * shadow;
 	
+	vec3 lightContribution = Lighting(dirLight, F0, V, N, roughness, metallic, NdotV, albedo) * shadow;
+
 	Lo = lightContribution + iblContribution;
 
 	// Point Lights
@@ -287,9 +283,9 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 		{
 			// Sample 0 & 1
 			vec3 shadowMapCoords = (FragPosLightSpace[0].xyz / FragPosLightSpace[0].w);
-			float shadowAmount0 = CalcShadow(shadowMap0, shadowMapCoords, dirLight.direction, N);
+			float shadowAmount0 = CalcShadow(shadowMap0[0], shadowMapCoords, dirLight.direction, N);
 			shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
-			float shadowAmount1 = CalcShadow(shadowMap1, shadowMapCoords, dirLight.direction, N);
+			float shadowAmount1 = CalcShadow(shadowMap0[1], shadowMapCoords, dirLight.direction, N);
 
 			shadowAmount = mix(shadowAmount0, shadowAmount1, c0);
 		}
@@ -297,9 +293,9 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 		{
 			// Sample 1 & 2
 			vec3 shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
-			float shadowAmount1 = CalcShadow(shadowMap1, shadowMapCoords, dirLight.direction, N);
+			float shadowAmount1 = CalcShadow(shadowMap0[1], shadowMapCoords, dirLight.direction, N);
 			shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
-			float shadowAmount2 = CalcShadow(shadowMap2, shadowMapCoords, dirLight.direction, N);
+			float shadowAmount2 = CalcShadow(shadowMap0[2], shadowMapCoords, dirLight.direction, N);
 
 			shadowAmount = mix(shadowAmount1, shadowAmount2, c1);
 		}
@@ -307,54 +303,22 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 		{
 			// Sample 2 & 3
 			vec3 shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
-			float shadowAmount2 = CalcShadow(shadowMap2, shadowMapCoords, dirLight.direction, N);
+			float shadowAmount2 = CalcShadow(shadowMap0[2], shadowMapCoords, dirLight.direction, N);
 			shadowMapCoords = (FragPosLightSpace[3].xyz / FragPosLightSpace[3].w);
-			float shadowAmount3 = CalcShadow(shadowMap3, shadowMapCoords, dirLight.direction, N);
+			float shadowAmount3 = CalcShadow(shadowMap0[3], shadowMapCoords, dirLight.direction, N);
 
 			shadowAmount = mix(shadowAmount2, shadowAmount3, c2);
 		}
 		else
 		{
 			vec3 shadowMapCoords = (FragPosLightSpace[CascadeIndex].xyz / FragPosLightSpace[CascadeIndex].w);
-			if(CascadeIndex == 0)
-			{
-				shadowAmount = CalcShadow(shadowMap0, shadowMapCoords, dirLight.direction, N);
-			}
-			if(CascadeIndex == 1)
-			{
-				shadowAmount = CalcShadow(shadowMap1, shadowMapCoords, dirLight.direction, N);
-			}
-			if(CascadeIndex == 2)
-			{
-				shadowAmount = CalcShadow(shadowMap2, shadowMapCoords, dirLight.direction, N);
-			}
-			if(CascadeIndex == 3)
-			{
-				shadowAmount = CalcShadow(shadowMap3, shadowMapCoords, dirLight.direction, N);
-			}
-			//shadowAmount = u_SoftShadows ? PCSS_DirectionalLight(u_ShadowMapTexture[CascadeIndex], shadowMapCoords, u_LightSize) : HardShadows_DirectionalLight(u_ShadowMapTexture[CascadeIndex], shadowMapCoords);
+			shadowAmount = CalcShadow(shadowMap0[CascadeIndex], shadowMapCoords, dirLight.direction, N);
 		}
 	}
 	else
 	{
 		vec3 shadowMapCoords = (FragPosLightSpace[CascadeIndex].xyz / FragPosLightSpace[CascadeIndex].w);
-			if(CascadeIndex == 0)
-			{
-				shadowAmount = CalcShadow(shadowMap0, shadowMapCoords, dirLight.direction, N);
-			}
-			if(CascadeIndex == 1)
-			{
-				shadowAmount = CalcShadow(shadowMap1, shadowMapCoords, dirLight.direction, N);
-			}
-			if(CascadeIndex == 2)
-			{
-				shadowAmount = CalcShadow(shadowMap2, shadowMapCoords, dirLight.direction, N);
-			}
-			if(CascadeIndex == 3)
-			{
-				shadowAmount = CalcShadow(shadowMap3, shadowMapCoords, dirLight.direction, N);
-			}
-		//shadowAmount = u_SoftShadows ? PCSS_DirectionalLight(u_ShadowMapTexture[CascadeIndex], shadowMapCoords, u_LightSize) : HardShadows_DirectionalLight(u_ShadowMapTexture[CascadeIndex], shadowMapCoords);
+		shadowAmount = CalcShadow(shadowMap0[CascadeIndex], shadowMapCoords, dirLight.direction, N);
 	}
 
 	float NdotL = dot(N, dirLight.direction);
@@ -362,49 +326,6 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 	shadowAmount *= (NdotL * 1.0);
 
 	return shadowAmount;
-}
-
-vec3 PbrDirectionalLighting(DirLight light, float roughness, float metallic, vec3 albedo, vec3 N, vec3 V, vec3 F0)
-{
-	vec3 directLighting = vec3(0.0);
-
-	// calculate per-light radiance
-	vec3 L = normalize(light.direction);
-	vec3 H = normalize(V + L);
-
-    float attenuation = light.intensity;
-    vec3 radiance	  = light.diffuse * attenuation;
-
-    // Cook-Torrance BRDF
-    float NDF = DistributionGGX(N, H, roughness);
-    float G   = GeometrySmith(N, V, L, roughness);
-    vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
-
-    vec3 nominator    = NDF * G * F;
-    float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
-    vec3 specular	  = nominator / denominator;
-
-    // kS is equal to Fresnel
-    vec3 kS = F;
-    // for energy conservation, the diffuse and specular light can't
-    // be above 1.0 (unless the surface emits light); to preserve this
-    // relationship the diffuse component (kD) should equal 1.0 - kS.
-    vec3 kD = vec3(1.0) - kS;
-    // multiply kD by the inverse metalness such that only non-metals
-    // have diffuse lighting, or a linear blend if partly metal (pure metals
-    // have no diffuse light).
-    kD *= 1.0 - metallic;
-
-    // scale light by NdotL
-    float NdotL = max(dot(N, L), 0.0);
-
-	//float shadow = CalcShadow(FragPosLightSpace[0], N, L);
-	float shadow = CalcCascadedShadows(N);
-
-    // add to outgoing radiance Lo
-	directLighting = (kD * albedo / PI + specular) * radiance * NdotL * (1.0 - shadow);// * intensity;
-
-	return directLighting;
 }
 
 vec3 RotateVectorAboutY(float angle, vec3 vec)
@@ -416,10 +337,9 @@ vec3 RotateVectorAboutY(float angle, vec3 vec)
     return rotationMatrix * vec;
 }
 
-
 vec3 IBL(vec3 F0, vec3 Lr, vec3 normal, float roughness, float metallic, vec3 albedo, float NdotV, vec3 view)
 {
-	vec3 irradiance = texture(irradianceMap,normal).rgb;
+	vec3 irradiance = texture(irradianceMap, normal).rgb;
 	vec3 F = fresnelSchlickRoughness(NdotV, F0, roughness);
 	vec3 kd = (1.0 - F) * (1.0 - metallic);
 	vec3 diffuseIBL = albedo * irradiance;
@@ -461,7 +381,7 @@ float FindBlockerDistance_DirectionalLight(sampler2D shadowMap, vec3 shadowCoord
 	int numBlockerSearchSamples = 32;
 	int blockers = 0;
 	float avgBlockerDistance = 0;
-	
+
 	float zEye = -(csm.lightView * vec4(FragPos, 1.0)).z;
 	vec2 searchWidth = searchRegionRadiusUV(zEye);
 	for (int i = 0; i < numBlockerSearchSamples; i++)
@@ -484,13 +404,26 @@ float HardShadows_DirectionalLight(sampler2D shadowMap, vec3 shadowCoords, vec3 
 {
 	float bias = GetShadowBias(normal);
 	float z = texture(shadowMap, shadowCoords.xy).x;
-	return 1.0 - step(z + bias, shadowCoords.z) * ShadowFade;
+
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += shadowCoords.z - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+
+	return 1.0 - shadow/*1.0 - step(z + bias, shadowCoords.z)  * ShadowFade*/;
 }
 
 float PCF_DirectionalLight(sampler2D shadowMap, vec3 shadowCoords, float uvRadius, vec3 normal)
 {
 	float bias = GetShadowBias(normal);
-	int numPCFSamples = 64;
+	int numPCFSamples = 32;
 	float sum = 0;
 	for (int i = 0; i < numPCFSamples; i++)
 	{
@@ -504,7 +437,7 @@ float PCSS_DirectionalLight(sampler2D shadowMap, vec3 shadowCoords, float uvLigh
 {
 	float blockerDistance = FindBlockerDistance_DirectionalLight(shadowMap, shadowCoords, uvLightSize, normal);
 	if (blockerDistance == -1)
-		return 1;		
+		return 1;
 
 	float penumbraWidth = (shadowCoords.z - blockerDistance) / blockerDistance;
 
@@ -523,7 +456,7 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 			CascadeIndex = i + 1;
 	}
 
-	float shadowDistance = csm.maxShadowDistance;//u_CascadeSplits[3];
+	float shadowDistance = csm.maxShadowDistance;
 	float transitionDistance = csm.shadowFade;
 	float dist = length(ViewPosition);
 	ShadowFade = dist - (shadowDistance - transitionDistance);
@@ -535,7 +468,7 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 	if (fadeCascades)
 	{
 		float cascadeTransitionFade = csm.cascadeTransitionFade;
-		
+
 		float c0 = smoothstep(csm.cascadeSplits[0] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[0] - cascadeTransitionFade * 0.5f, ViewPosition.z);
 		float c1 = smoothstep(csm.cascadeSplits[1] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[1] - cascadeTransitionFade * 0.5f, ViewPosition.z);
 		float c2 = smoothstep(csm.cascadeSplits[2] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[2] - cascadeTransitionFade * 0.5f, ViewPosition.z);
@@ -543,9 +476,9 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 		{
 			// Sample 0 & 1
 			vec3 shadowMapCoords = (FragPosLightSpace[0].xyz / FragPosLightSpace[0].w);
-			float shadowAmount0 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0, shadowMapCoords, normal);
+			float shadowAmount0 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[0], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[0], shadowMapCoords, normal);
 			shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
-			float shadowAmount1 = csm.softShadows ? PCSS_DirectionalLight(shadowMap1, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap1, shadowMapCoords, normal);
+			float shadowAmount1 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[1], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[1], shadowMapCoords, normal);
 
 			shadowAmount = mix(shadowAmount0, shadowAmount1, c0);
 		}
@@ -553,9 +486,9 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 		{
 			// Sample 1 & 2
 			vec3 shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
-			float shadowAmount1 = csm.softShadows ? PCSS_DirectionalLight(shadowMap1, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap1, shadowMapCoords, normal);
+			float shadowAmount1 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[1], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[1], shadowMapCoords, normal);
 			shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
-			float shadowAmount2 = csm.softShadows ? PCSS_DirectionalLight(shadowMap2, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap2, shadowMapCoords, normal);
+			float shadowAmount2 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[2], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[2], shadowMapCoords, normal);
 
 			shadowAmount = mix(shadowAmount1, shadowAmount2, c1);
 		}
@@ -563,54 +496,22 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 		{
 			// Sample 2 & 3
 			vec3 shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
-			float shadowAmount2 = csm.softShadows ? PCSS_DirectionalLight(shadowMap2, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap2, shadowMapCoords, normal);
+			float shadowAmount2 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[2], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[2], shadowMapCoords, normal);
 			shadowMapCoords = (FragPosLightSpace[3].xyz / FragPosLightSpace[3].w);
-			float shadowAmount3 = csm.softShadows ? PCSS_DirectionalLight(shadowMap3, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap3, shadowMapCoords, normal);
+			float shadowAmount3 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[3], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[3], shadowMapCoords, normal);
 
 			shadowAmount = mix(shadowAmount2, shadowAmount3, c2);
 		}
 		else
 		{
 			vec3 shadowMapCoords = (FragPosLightSpace[CascadeIndex].xyz / FragPosLightSpace[CascadeIndex].w);
-			
-			switch(CascadeIndex)
-			{
-			case 0:
-				shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap0, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0, shadowMapCoords, normal);
-				break;
-			case 1:
-				shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap1, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap1, shadowMapCoords, normal);
-				break;
-			case 2:
-				shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap2, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap2, shadowMapCoords, normal);
-				break;
-			case 3:
-				shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap3, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap3, shadowMapCoords, normal);
-				break;
-			}
-		
+			shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[CascadeIndex], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[CascadeIndex], shadowMapCoords, normal);
 		}
 	}
 	else
 	{
 		vec3 shadowMapCoords = (FragPosLightSpace[CascadeIndex].xyz / FragPosLightSpace[CascadeIndex].w);
-		
-		switch(CascadeIndex)
-		{
-		case 0:
-			shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap0, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0, shadowMapCoords, normal);
-			break;
-		case 1:
-			shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap1, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap1, shadowMapCoords, normal);
-			break;
-		case 2:
-			shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap2, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap2, shadowMapCoords, normal);
-			break;
-		case 3:
-			shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap3, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap3, shadowMapCoords, normal);
-			break;
-		}
-	
+		shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[CascadeIndex], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[CascadeIndex], shadowMapCoords, normal);
 	}
 
 	float NdotL = dot(normal, dirLight.direction);

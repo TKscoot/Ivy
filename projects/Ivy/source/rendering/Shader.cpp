@@ -202,7 +202,7 @@ void Ivy::Shader::Compile()
 		}
 	}
 }
-
+/*
 Ivy::ComputeShader::ComputeShader(const String & computeFilepath)
 {
 	if(computeFilepath.find(".glsl") != std::string::npos ||
@@ -226,3 +226,4 @@ void Ivy::ComputeShader::Dispatch(uint32_t groupCountX, uint32_t groupCountY, ui
 	//glBindImageTexture(0, tex->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 	glDispatchCompute(groupCountX, groupCountY, groupCountZ);
 }
+*/

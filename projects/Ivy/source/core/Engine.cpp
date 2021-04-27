@@ -1,17 +1,6 @@
 #include "ivypch.h"
 #include "Engine.h"
 
-// Don’t forget the array version of new/delete
-void* operator new[](size_t size)
-{
-	return malloc(size);
-}
-
-void operator delete[](void* mem)
-{
-	free(mem);
-}
-
 Ivy::Engine::Engine()
 {
 }
@@ -54,7 +43,6 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 		Debug::CoreError("Failed to initialize GLAD!");
 	}
 
-	FModContext::GetInstance();
 
 	CheckGLVersion(4, 0);
 
@@ -75,6 +63,18 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 		}
 
 	});
+
+	SceneManager::GetInstance()->RegisterSceneCreateCallback([&](Ptr<Scene> scene) {
+		if (scene)
+		{
+			mScenes.push_back(scene);
+		}
+		else
+		{
+			Debug::Error("Could not register scene create callback! Scene is invalid!");
+		}
+
+		});
 
 
 	Debug::CoreInfo(" *** Engine initialized! *** ");
@@ -113,7 +113,6 @@ void Ivy::Engine::NewFrame()
 		mRenderer->Render(mDeltaTime);
 
 		mWnd->SwapBuffers();
-		FModContext::GetInstance()->Update();
 	}
 
 	newtime = std::chrono::high_resolution_clock::now();

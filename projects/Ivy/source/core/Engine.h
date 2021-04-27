@@ -8,7 +8,6 @@
 #include "scene/Entity.h"
 #include "scene/SceneManager.h"
 #include "core/Timer.h"
-#include "audio/FModContext.h"
 
 // Forward declare GLFWwindow to avoid including glfw3.h
 struct GLFWwindow;
@@ -86,6 +85,7 @@ namespace Ivy
 		Ptr<Renderer> mRenderer		= nullptr;
 
 		Ptr<Scene>    mCurrentScene = nullptr;
+		Vector<Ptr<Scene>> mScenes;
 
 		float mDeltaTime = 0;
 		static inline bool mTerminate = false;

@@ -3,7 +3,7 @@
 TerrainGenerator::TerrainGenerator()
 {
 	mDimensions = { 256, 256 };
-	mTerrain = mScene->CreateEntity<Terrain>(mDimensions.x, mDimensions.y);
+	//mTerrain = mScene->CreateEntity<Terrain>(mDimensions.x, mDimensions.y);
 }
 
 void TerrainGenerator::OnStart()
@@ -47,7 +47,7 @@ void TerrainGenerator::OnUpdate(float deltaTime)
 		{
 			auto start = std::chrono::steady_clock::now();
 			
-			Erode();
+			//Erode();
 		
 			auto end = std::chrono::steady_clock::now();
 			erosionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
@@ -128,6 +128,8 @@ void TerrainGenerator::GenerateHeightmap()
 
 }
 
+
+/*
 void TerrainGenerator::Erode()
 {
 	
@@ -155,3 +157,4 @@ void TerrainGenerator::Erode()
 	t.Stop();
 	Debug::Info("CreateResources() took {0:.8f}ms to calculate!", t.ElapsedMilliseconds());
 }
+*/

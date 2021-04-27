@@ -27,6 +27,14 @@ namespace Ivy
 
 		ISoundEngine* GetEngine() { return mEngine; }
 
+		vec3df Vec3ToVec3df(Vec3 vec)
+		{
+			vec3df v;
+			v.X = vec.x;
+			v.Y = vec.y;
+			v.Z = vec.z;
+			return v;
+		}
 
 	private:
 		// Methods

@@ -2,7 +2,6 @@
 #include <variant>
 #include <Types.h>
 #include <environment/Log.h>
-#include "Texture.h"
 
 namespace Ivy
 {
@@ -125,7 +124,7 @@ namespace Ivy
 
 	};
 
-
+	/*
 	class ComputeShader : public Shader
 	{
 	public:
@@ -137,4 +136,5 @@ namespace Ivy
 		// TODO: TESTING FOR LATER WITH IMGUI: ImGui::Image((void*)my_texture_view, ImVec2(512,512));
 		std::variant<Ptr<Texture2D>, Ptr<TextureCube>, Ptr<TextureHDRI>> mTexture;
 	};
+	*/
 }

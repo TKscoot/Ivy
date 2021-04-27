@@ -15,6 +15,11 @@ Ivy::Ptr<Ivy::Scene> Ivy::SceneManager::CreateScene(String name)
 	//mScenes[name]->InitializeGUI(mWindow);
 	mScenes[name]->InitializeScenePass(mWindow);
 
+	for (auto& c : mSceneCreateCallbacks)
+	{
+		c(mScenes[name]);
+	}
+
 	return scene;
 }
 

@@ -38,6 +38,11 @@ namespace Ivy
 			mSceneLoadCallbacks.push_back(callback);
 		}
 
+		void RegisterSceneCreateCallback(std::function<void(Ptr<Scene>)> callback)
+		{
+			mSceneCreateCallbacks.push_back(callback);
+		}
+
 	private:
 		friend class Renderer;
 
@@ -50,5 +55,6 @@ namespace Ivy
 
 		// Callbacks
 		Vector<std::function<void(Ptr<Scene>)>> mSceneLoadCallbacks;
+		Vector<std::function<void(Ptr<Scene>)>> mSceneCreateCallbacks;
 	};
 }
