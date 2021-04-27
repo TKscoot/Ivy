@@ -29,12 +29,12 @@ void Ivy::Camera::Update(float deltaTime)
 
 		float velocity = mFastMove ? (mMovementSpeed + 20.0f) * deltaTime : mMovementSpeed * deltaTime;
 
-		if(mGoingForward) mPosition += mFront * velocity;
-		if(mGoingBack)    mPosition -= mFront * velocity;
-		if(mGoingRight)   mPosition += mRight * velocity;
-		if(mGoingLeft)    mPosition -= mRight * velocity;
-		if(mGoingUp)      mPosition += mUp * velocity;
-		if(mGoingDown)    mPosition -= mUp * velocity;
+		if(mGoingForward) mTransform->mPosition += mTransform->mFront * velocity;
+		if(mGoingBack)    mTransform->mPosition -= mTransform->mFront * velocity;
+		if(mGoingRight)   mTransform->mPosition += mTransform->mRight * velocity;
+		if(mGoingLeft)    mTransform->mPosition -= mTransform->mRight * velocity;
+		if(mGoingUp)      mTransform->mPosition += mTransform->mUp * velocity;
+		if(mGoingDown)    mTransform->mPosition -= mTransform->mUp * velocity;
 
 	}
 	Vec2 mousePos = Input::GetMouseDelta();
@@ -64,9 +64,9 @@ Ivy::Mat4& Ivy::Camera::GetViewMatrix()
 {
 	if(mHandleInput)
 	{
-		mLookPos = mPosition + mFront;
+		mLookPos = mTransform->mPosition + mTransform->mFront;
 	}
-	mView = glm::lookAt(mPosition, mLookPos, mUp);
+	mView = glm::lookAt(mTransform->mPosition, mLookPos, mTransform->mUp);
 	return mView;
 }
 
@@ -84,9 +84,9 @@ void Ivy::Camera::UpdateCameraVectors()
 	front.x = glm::cos(glm::radians(mYaw)) * glm::cos(glm::radians(mPitch));
 	front.y = glm::sin(glm::radians(mPitch));
 	front.z = glm::sin(glm::radians(mYaw)) * glm::cos(glm::radians(mPitch));
-	mFront  = glm::normalize(front);
+	mTransform->mFront  = glm::normalize(front);
 
 	// also re-calculate the Right and Up vector
-	mRight = glm::normalize(glm::cross(mFront, mWorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	mUp    = glm::normalize(glm::cross(mRight, mFront));
+	mTransform->mRight = glm::normalize(glm::cross(mTransform->mFront, mWorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	mTransform->mUp    = glm::normalize(glm::cross(mTransform->mRight, mTransform->mFront));
 }

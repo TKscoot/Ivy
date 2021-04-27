@@ -5,6 +5,7 @@ Ivy::SceneRenderPass::SceneRenderPass(Ptr<Camera> camera,
 	Ptr<Window>				window,
 	Vector<Ptr<Entity>>&	entities,
 	Ptr<ShadowRenderPass>   shadowPass,
+	Ptr<SkyModel>			skyModel,
 	DirectionalLight&		dirLight,
 	Vector<SpotLight>&		spotLights,
 	Vector<PointLight>&		pointLights)
@@ -12,6 +13,7 @@ Ivy::SceneRenderPass::SceneRenderPass(Ptr<Camera> camera,
 	, mWindow(window)
 	, mEntities(entities)
 	, mCSM(shadowPass)
+	, mSkyModel(skyModel)
 	, mDirLight(dirLight)
 	, mSpotLights(spotLights)
 	, mPointLights(pointLights)
@@ -21,7 +23,6 @@ Ivy::SceneRenderPass::SceneRenderPass(Ptr<Camera> camera,
 	SetupSkyboxShaders();
 
 	SetupFramebuffer();
-
 }
 
 void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
@@ -74,14 +75,21 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 	//Draw skybox
 	if(mShouldRenderSkybox)
 	{
-		//glDepthFunc(GL_LEQUAL);
 		glDepthMask(GL_FALSE);
+
+		mSkyModel->SetDirection(mDirLight.direction);
+		mSkyModel->Update();
+		//glDepthFunc(GL_LEQUAL);
 		mSkyboxShader->Bind();
 		mSkyboxShader->SetUniformMat4("view", glm::mat4(glm::mat3(mCamera->GetViewMatrix())));
 		mSkyboxShader->SetUniformMat4("projection", projection);
 		mSkyboxShader->SetUniformFloat3("sunPosition", mDirLight.direction);
+
+		mSkyModel->SetRenderUniforms(mSkyboxShader);
+
 		mSkyboxVertexArray->Bind();
-		mSkyboxCubeTexture->Bind(0);
+		//mSkyboxCubeTexture->Bind(0);
+		mEnvUnfiltered->Bind(0);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		mSkyboxVertexArray->Unbind();
@@ -146,7 +154,11 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 
 void Ivy::SceneRenderPass::UnloadEnvironmentMap()
 {
-	mEquirectangularConversionShader->Destroy();
+	if (mEquirectangularConversionShader)
+	{
+		mEquirectangularConversionShader->Destroy();
+	}
+
 	mEnvFilteringShader->Destroy();
 	mIrradianceShader->Destroy();
 	mEnvUnfiltered->Destroy();
@@ -179,9 +191,6 @@ void Ivy::SceneRenderPass::PushLightParams(Ptr<Shader> shader)
 	// Directional Light
 	shader->SetUniformFloat( "dirLight.intensity", mDirLight.intensity);
 	shader->SetUniformFloat3("dirLight.direction", mDirLight.direction);
-	shader->SetUniformFloat3("dirLight.ambient", mDirLight.ambient);
-	shader->SetUniformFloat3("dirLight.diffuse", mDirLight.diffuse);
-	shader->SetUniformFloat3("dirLight.specular", mDirLight.specular);
 
 	// Point Lights
 	shader->SetUniformInt("pointLightSize", mPointLights.size());
@@ -404,6 +413,8 @@ void Ivy::SceneRenderPass::SetupSkyboxShaders()
 	mSkyboxShader = CreatePtr<Shader>(vertexFilepath, fragmentFilepath);
 }
 
+
+
 void Ivy::SceneRenderPass::SetupFramebuffer()
 {
 	// Create the FBO
@@ -468,26 +479,52 @@ void Ivy::SceneRenderPass::BindFramebufferForWrite()
 void Ivy::SceneRenderPass::SetEnvironmentMap(String filepath)
 {
 	const uint32_t cubemapSize = 2048;
-	const uint32_t irradianceMapSize = 32;
 
 	mEnvUnfiltered = CreatePtr<TextureCube>(GL_RGBA16F, cubemapSize, cubemapSize);
 
-	mEquirectangularConversionShader = CreatePtr<Shader>("shaders/EquirectangularToCubeMap.comp");
 
 	mEnvEquirect = CreatePtr<TextureHDRI>(filepath);
+	
+	mEnvEquirect->ConvertToCubemap(mEnvUnfiltered);
+	
+	RenderSkyModelToCubemap();
 
-	mEquirectangularConversionShader->Bind();
-	mEnvEquirect->Bind();
-	glBindImageTexture(0, mEnvUnfiltered->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
-	glDispatchCompute(cubemapSize / 32, cubemapSize / 32, 6);
-	//glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
-	glGenerateTextureMipmap(mEnvUnfiltered->GetID());
+	ComputeEnvironmentMap();
 
-	mEnvEquirect->Destroy();
+	SetupSkybox(mEnvUnfiltered);
+
+	mUseHdri = true;
+}
+
+void Ivy::SceneRenderPass::SetEnvironmentMap(Ptr<TextureCube> cubemap)
+{
+	if (!cubemap)
+	{
+		Debug::CoreError("Invalid cubemap for environment map!");
+		return;
+	}
+
+	mEnvUnfiltered = cubemap;
+
+	ComputeEnvironmentMap();
+
+	SetupSkybox(mEnvUnfiltered);
+
+	mUseHdri = true;
+}
+
+void Ivy::SceneRenderPass::ComputeEnvironmentMap()
+{
+	if (!mEnvUnfiltered)
+	{
+		mEnvUnfiltered = CreatePtr<TextureCube>(GL_RGBA16F, 2048, 2048);
+	}
+
+	const uint32_t irradianceMapSize = 32;
 
 	mEnvFilteringShader = CreatePtr<Shader>("shaders/EnvironmentMipFilter.comp");
 
-	mEnvFiltered = CreatePtr<TextureCube>(GL_RGBA16F, cubemapSize, cubemapSize);
+	mEnvFiltered = CreatePtr<TextureCube>(GL_RGBA16F, mEnvUnfiltered->GetWidth(), mEnvUnfiltered->GetHeight());
 
 	glCopyImageSubData(mEnvUnfiltered->GetID(), GL_TEXTURE_CUBE_MAP, 0, 0, 0, 0,
 		mEnvFiltered->GetID(), GL_TEXTURE_CUBE_MAP, 0, 0, 0, 0,
@@ -497,7 +534,7 @@ void Ivy::SceneRenderPass::SetEnvironmentMap(String filepath)
 	mEnvUnfiltered->Bind();
 
 	const float deltaRoughness = 1.0f / glm::max((float)(mEnvFiltered->GetMipLevelCount() - 1.0f), 1.0f);
-	for(int level = 1, size = cubemapSize / 2; level < mEnvFiltered->GetMipLevelCount(); level++, size /= 2) // <= ?
+	for (int level = 1, size = mEnvUnfiltered->GetWidth() / 2; level < mEnvFiltered->GetMipLevelCount(); level++, size /= 2) // <= ?
 	{
 		const GLuint numGroups = glm::max(1, size / 32);
 		glBindImageTexture(0, mEnvFiltered->GetID(), level, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
@@ -512,15 +549,32 @@ void Ivy::SceneRenderPass::SetEnvironmentMap(String filepath)
 
 	glBindImageTexture(0, mIrradiance->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 	glDispatchCompute(mIrradiance->GetWidth() / 32, mIrradiance->GetHeight() / 32, 6);
-	//glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 	glGenerateTextureMipmap(mIrradiance->GetID());
 
 	mEnvFiltered->Destroy();
-
-	SetupSkybox(mEnvUnfiltered);
-
-	mUseHdri	= true;
-	mUseSkybox  = false;
 }
 
+void Ivy::SceneRenderPass::RenderSkyModelToCubemap()
+{
+	Ptr<Shader> skyToCubemapShader = CreatePtr<Shader>("shaders/HosekWilkieSkyModel.comp");
 
+	const uint32_t cubemapSize = 2048;
+
+	if (!mEnvUnfiltered)
+	{
+		mEnvUnfiltered = CreatePtr<TextureCube>(GL_RGBA16F, cubemapSize, cubemapSize);
+	}
+
+	skyToCubemapShader->Bind();
+
+	mSkyModel->Update();
+	mSkyModel->SetRenderUniforms(skyToCubemapShader);
+
+	glBindImageTexture(0, mEnvUnfiltered->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+	glDispatchCompute(mEnvUnfiltered->GetWidth() / 32, mEnvUnfiltered->GetHeight() / 32, 6);
+
+	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+	glGenerateTextureMipmap(mEnvUnfiltered->GetID());
+}

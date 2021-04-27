@@ -13,13 +13,15 @@ Ivy::Scene::Scene(String name)
 	
 	AddDirectionalLight(
 		3.0f,							 //intensity
-		Vec3(-2.0f,  4.0f,   -1.0f),	 //direction
+		//Vec3(-2.0f,  4.0f,   -1.0f),	 //direction
+		glm::vec3(0.0f, sin(35), cos(35)), 
 		Vec3( 0.05f, 0.0492f, 0.0439f),  //ambient
 		Vec3( 1.0f,  0.984f,  0.878f),	 //diffuse
 		Vec3( 0.5f,  0.492f,  0.439f));	 //specular
 
 	mCSM->SetDirLight(mDirLight);
 
+	mSkyModel = CreatePtr<HosekWilkieSkyModel>();
 }
 
 Ivy::Scene::~Scene()
@@ -130,18 +132,22 @@ void Ivy::Scene::Update(float deltaTime)
 	v[2] = mDirLight.direction.z;
 
 	static bool wireframe = false;
-	ImGui::Checkbox("Wireframe", &wireframe);
+	;
 
-	if(wireframe)
+	if (ImGui::Checkbox("Wireframe", &wireframe))
 	{
-		// Turn on wireframe mode
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if(wireframe)
+		{
+			// Turn on wireframe mode
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		else
+		{
+			// Turn off wireframe mode
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 	}
-	else
-	{
-		// Turn off wireframe mode
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+
 
 	static float dirLightIntensity = 1.0f;
 	static Vec3 dirLightDiff = Vec3(1.0f);
@@ -178,24 +184,58 @@ void Ivy::Scene::Update(float deltaTime)
 		}
 	}
 
-	if(ImGui::SliderFloat3("Sun direction", v, -6.28319f, 6.28319f))
+
+	static float sunAngle = 35.0f;
+	static float turbidity = 4.0f;
+	static bool recalculateEnvMap = false;
+	static bool animateSky = false;
+
+	static float skyTimer = 0.0f;
+	static float skyTimerMultiplier = 0.1f;
+
+	ImGui::SliderFloat("Sky timer multiplier", &skyTimerMultiplier, 0.0f, 2.0f);
+
+
+	ImGui::Checkbox("Recalculate env map", &recalculateEnvMap);
+	ImGui::Checkbox("Animate sky", &animateSky);
+
+	if (animateSky)
 	{
-		mDirLight.direction = (Vec3(v[0],v[1], v[2]));
+		skyTimer += deltaTime * skyTimerMultiplier;
+
+		if (glm::degrees(skyTimer) < 180.0f)
+		{
+			mDirLight.direction = glm::vec3(0.0f, sin(skyTimer), cos(skyTimer));
+			mScenePass->RenderSkyModelToCubemap();
+			if (recalculateEnvMap)
+			{
+				mScenePass->ComputeEnvironmentMap();
+			}
+		}
+		else if (glm::degrees(skyTimer) >= 180.0f)
+		{
+			skyTimer = 0.0f;
+		}
+	}
+
+	if(ImGui::SliderAngle("Sun direction", &sunAngle, 0.0f, 180.0f))
+	{
+		mDirLight.direction = glm::vec3(0.0f, sin(sunAngle), cos(sunAngle));
+		mScenePass->RenderSkyModelToCubemap();
+		if (recalculateEnvMap)
+		{
+			mScenePass->ComputeEnvironmentMap();
+		}
+	}
+
+	if (ImGui::SliderFloat("Turbidity", &turbidity, 0.0f, 10.0f))
+	{
+		mSkyModel->SetTurbidity(turbidity);
 	}
 
 	if(ImGui::SliderFloat("Sun intensity", &dirLightIntensity, 0.0f, 100.0f))
 	{
 		mDirLight.intensity = dirLightIntensity;
-	}
-
-
-	if(ImGui::ColorEdit3("Sun Diffuse", &dirLightDiff.x))
-	{
-		mDirLight.diffuse = dirLightDiff;
-	}
-	if(ImGui::ColorEdit3("Sun Ambient", &dirLightAmb.x))
-	{
-		mDirLight.ambient = dirLightAmb;
 	}
 
 	ImGui::Spacing();

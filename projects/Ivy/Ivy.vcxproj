@@ -100,12 +100,12 @@
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
+    <ClInclude Include="source\scene\components\AudioClip3D.h" />
+    <ClInclude Include="source\scene\renderpasses\skymodels\HosekDataRGB.h" />
+    <ClInclude Include="source\scene\renderpasses\skymodels\HosekWilkieSkyModel.h" />
+    <ClInclude Include="source\scene\renderpasses\skymodels\SkyModel.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\audio\AudioContext.h" />
-    <ClInclude Include="source\audio\AudioSource.h" />
-    <ClInclude Include="source\audio\AudioStreamSource.h" />
-    <ClInclude Include="source\audio\FModContext.h" />
-    <ClInclude Include="source\audio\OpenALHelpers.h" />
     <ClInclude Include="source\core\AsyncWorker.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\Timer.h" />
@@ -143,9 +143,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\audio\AudioContext.cpp" />
-    <ClCompile Include="source\audio\AudioSource.cpp" />
-    <ClCompile Include="source\audio\AudioStreamSource.cpp" />
-    <ClCompile Include="source\audio\FModContext.cpp" />
     <ClCompile Include="source\core\Engine.cpp" />
     <ClCompile Include="source\environment\Input.cpp" />
     <ClCompile Include="source\environment\Log.cpp" />
@@ -163,7 +160,9 @@
     <ClCompile Include="source\rendering\Texture.cpp" />
     <ClCompile Include="source\rendering\VertexArray.cpp" />
     <ClCompile Include="source\scene\Camera.cpp" />
+    <ClCompile Include="source\scene\components\AudioClip3D.cpp" />
     <ClCompile Include="source\scene\Entity.cpp" />
+    <ClCompile Include="source\scene\renderpasses\skymodels\HosekWilkieSkyModel.cpp" />
     <ClCompile Include="source\scene\Scene.cpp" />
     <ClCompile Include="source\scene\SceneManager.cpp" />
     <ClCompile Include="source\scene\components\AudioClip.cpp" />

@@ -3,6 +3,7 @@
 #include <map>
 #include "Types.h"
 #include "environment/Log.h"
+#include "rendering/Shader.h"
 
 namespace Ivy
 {
@@ -221,6 +222,8 @@ namespace Ivy
 			return levels;
 		}
 
+
+
 	private:
 		GLuint	 mID = 0;
 
@@ -259,6 +262,7 @@ namespace Ivy
 
 		GLuint GetID() { return mID; }
 
+		void ConvertToCubemap(Ptr<TextureCube> outputTexCube);
 	private:
 		GLuint	 mID = 0;
 

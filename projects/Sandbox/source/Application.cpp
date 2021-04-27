@@ -62,15 +62,17 @@ void Application::SetupEntities()
 	// Sponza scene
 	Ptr<Entity> sponzaEntity = mScene->CreateEntity();
 	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
+	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
+
+
 	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/MetalRoughSpheres.gltf"));
 	auto mat = sponzaEntity->GetFirstComponentOfType<Material>();
 	auto transform = sponzaEntity->GetFirstComponentOfType<Transform>();
 	transform->setRotationX(180);
-	transform->setPositionX(50);
+	//transform->setPositionX(50);
 	mat->UseIBL(false);
 	mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Metal.png", Material::TextureMapType::METALLIC);
 	mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Roughness.png", Material::TextureMapType::ROUGHNESS);
-	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	/*
 
 	sponzaEntity->SetActive(true);
@@ -124,9 +126,10 @@ void Application::SetupEntities()
 	//cameraTracker->AddComponent<AudioClip>(soundClip);
 	//soundClip->Play();
 
-	//Ptr<TerrainGenerator> terrain = mScene2->CreateEntity<TerrainGenerator>();
-	
-	Ptr<AudioTest> audioTest = mScene->CreateEntity<AudioTest>();
+	//Ptr<TerrainGenerator> terrain = mScene->CreateEntity<TerrainGenerator>();
+	//terrain->SetTerrainEntity(mScene->CreateEntity<Terrain>(256, 256));
+
+	//Ptr<AudioTest> audioTest = mScene->CreateEntity<AudioTest>();
 
 
 }

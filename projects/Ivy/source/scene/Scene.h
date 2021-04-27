@@ -63,10 +63,10 @@ namespace Ivy
 		{
 			Ptr<T> ent = CreatePtr<T>(std::forward<Args>(args)...);
 			ent->mIndex = mEntities.size();
+			ent->mScene = shared_from_this();
 			ent->AddComponent(CreatePtr<Transform>());
 			ent->AddComponent(CreatePtr<Material>());
 			ent->OnCreate();
-			ent->mScene = shared_from_this();
 			Debug::CoreLog("Created entity with index {}", ent->mIndex);
 
 			mEntities.push_back(ent);
@@ -243,6 +243,7 @@ namespace Ivy
 				window,
 				mEntities,
 				mCSM,
+				mSkyModel,
 				mDirLight,
 				mSpotLights,
 				mPointLights);
@@ -288,6 +289,7 @@ namespace Ivy
 		Ptr<SceneRenderPass>  mScenePass = nullptr;
 		Ptr<PostprocessingRenderPass> mPostprocessPass = nullptr;
 		Ptr<ImGuiHook>		  mImGuiHook = nullptr;
+		Ptr<SkyModel>		  mSkyModel  = nullptr;
 
 		// Lights
 		DirectionalLight	mDirLight	 = {};

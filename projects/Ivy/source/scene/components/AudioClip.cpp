@@ -1,7 +1,7 @@
 #include "ivypch.h"
 #include "AudioClip.h"
 
-Ivy::AudioClip::AudioClip(Entity * ent, String filename, bool playOnStart) : Ivy::Component::Component(ent)
+Ivy::AudioClip::AudioClip(String filename, bool playOnStart) : Ivy::Component::Component()
 {
 	mFilePath = filename;
 	mPlayOnStart = playOnStart;

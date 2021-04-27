@@ -12,26 +12,30 @@ namespace Ivy
 	class Transform : public Component
 	{
 	public:
+
+		friend class Camera;
+
+
 		Transform()
 			: mScale({ 1.0f, 1.0f, 1.0f })
 			, mRotation(Vec3())
-			, mTranslation({ 0.0f, 0.0f, 0.0f })
-			, mDirection({ 0.0f, 0.0f, 1.0f })
+			, mPosition({ 0.0f, 0.0f, 0.0f })
+			, mFront({ 0.0f, 0.0f, 1.0f })
 			, mRight({ 1.0f, 0.0f, 0.0f })
 			, mUp({ 0.0f, 1.0f, 0.0f })
 			, mComposed(Mat4(1.0f))
 		{
 		}
 
-		inline const Vec3&  getDirection() const { return mDirection; };
+		inline const Vec3&  getDirection() const { return mFront; };
 		inline const Vec3&  getUp()        const { return mUp; };
 		inline const Vec3&  getRight()     const { return mRight; };
 		inline const Vec3&  getRotation()  const { return mRotation; }
-		inline const Vec3&  getPosition()  const { return mTranslation; }
+		inline const Vec3&  getPosition()  const { return mPosition; }
 
-		inline void setPositionX(const float& x) { mTranslation.x = x; invalidate(); }
-		inline void setPositionY(const float& y) { mTranslation.y = y; invalidate(); }
-		inline void setPositionZ(const float& z) { mTranslation.z = z; invalidate(); }
+		inline void setPositionX(const float& x) { mPosition.x = x; invalidate(); }
+		inline void setPositionY(const float& y) { mPosition.y = y; invalidate(); }
+		inline void setPositionZ(const float& z) { mPosition.z = z; invalidate(); }
 		inline void setPosition(
 			const float& x,
 			const float& y,
@@ -42,7 +46,7 @@ namespace Ivy
 			setPositionZ(z);
 			invalidate();
 		}
-		inline void setPosition(const Vec3& vec) { mTranslation = vec; invalidate(); }
+		inline void setPosition(const Vec3& vec) { mPosition = vec; invalidate(); }
 
 		inline void setRotationX(const float& x) { mRotation.x = x; invalidate(); }
 		inline void setRotationY(const float& y) { mRotation.y = y; invalidate(); }
@@ -91,7 +95,7 @@ namespace Ivy
 			rot = glm::rotate(rot, glm::radians(mRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 			rot = glm::rotate(rot, glm::radians(mRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 			rot = glm::rotate(rot, glm::radians(mRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-			trans = glm::translate(trans, mTranslation);
+			trans = glm::translate(trans, mPosition);
 			scale = glm::scale(scale, mScale);
 
 			//mComposed = scale * rot * trans;
@@ -102,12 +106,12 @@ namespace Ivy
 
 
 	private:
-		Vec3  mTranslation = Vec3(0.0f, 1.0f, 0.0f);
+		Vec3  mPosition = Vec3(0.0f, 1.0f, 0.0f);
 		Vec3  mRotation	= Vec3(0.0f, 1.0f, 0.0f);
 		Vec3  mScale		= Vec3(1.0f, 1.0f, 1.0f);
 		Mat4  mRotationMat = Mat4();
 
-		Vec3  mDirection;
+		Vec3  mFront;
 		Vec3  mRight;
 		Vec3  mUp;
 

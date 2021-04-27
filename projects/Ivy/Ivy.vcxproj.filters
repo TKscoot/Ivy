@@ -30,18 +30,6 @@
     <ClInclude Include="source\audio\AudioContext.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="source\audio\AudioSource.h">
-      <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="source\audio\AudioStreamSource.h">
-      <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="source\audio\FModContext.h">
-      <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="source\audio\OpenALHelpers.h">
-      <Filter>audio</Filter>
-    </ClInclude>
     <ClInclude Include="source\core\AsyncWorker.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -142,18 +130,13 @@
     <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h">
       <Filter>scene\renderpasses</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\components\AudioClip3D.h" />
+    <ClInclude Include="source\scene\renderpasses\skymodels\SkyModel.h" />
+    <ClInclude Include="source\scene\renderpasses\skymodels\HosekWilkieSkyModel.h" />
+    <ClInclude Include="source\scene\renderpasses\skymodels\HosekDataRGB.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\audio\AudioContext.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="source\audio\AudioSource.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="source\audio\AudioStreamSource.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="source\audio\FModContext.cpp">
       <Filter>audio</Filter>
     </ClCompile>
     <ClCompile Include="source\core\Engine.cpp">
@@ -232,5 +215,7 @@
     <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp">
       <Filter>scene\renderpasses</Filter>
     </ClCompile>
+    <ClCompile Include="source\scene\components\AudioClip3D.cpp" />
+    <ClCompile Include="source\scene\renderpasses\skymodels\HosekWilkieSkyModel.cpp" />
   </ItemGroup>
 </Project>

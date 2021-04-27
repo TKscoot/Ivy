@@ -13,7 +13,9 @@ public:
 	void OnDestroy() final;
 
 private:
-	Ptr<AudioClip> mAudioClip = nullptr;
+	Ptr<AudioClip>     mAudioClip	  = nullptr;
+	Ptr<AudioClip3D>   mAudioClip3D   = nullptr;
+	Ptr<AudioListener> mAudioListener = nullptr;
 
 	Vector<String> mSoundFiles;
 };

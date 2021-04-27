@@ -1,10 +1,7 @@
 #pragma once
 #include "audio/AudioContext.h"
-#include "audio/AudioStreamSource.h"
 #include "Component.h"
 #include "scene/Entity.h"
-#include "taskflow.hpp"
-#include "core/AsyncWorker.h"
 
 
 namespace Ivy
@@ -12,13 +9,7 @@ namespace Ivy
 	class AudioClip : public Component, public ISoundStopEventReceiver
 	{
 	public:
-		enum AudioSourceType
-		{
-			EFFECT,
-			MUSIC
-		};
-
-		AudioClip(Entity* ent, String filename, bool playOnStart = false);
+		AudioClip(String filename, bool playOnStart = false);
 
 		virtual void AddSoundClip(String filename);
 		virtual void Play();
@@ -27,9 +18,6 @@ namespace Ivy
 		virtual void Stop();
 
 		void OnSoundStopped(ISound* sound, E_STOP_EVENT_CAUSE reason, void* userData) override;
-
-
-
 
 		float GetVolume();
 
@@ -62,7 +50,8 @@ namespace Ivy
 		void OnUpdate(float deltatime) override;
 
 
-	private:
+	protected:
+		AudioClip() {}
 		String mFilePath = "";
 
 		bool mPlayOnStart = false;

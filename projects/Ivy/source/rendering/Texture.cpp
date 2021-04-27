@@ -408,3 +408,17 @@ void Ivy::TextureHDRI::Bind(uint32_t slot)
 {
 	glBindTextureUnit(slot, mID);
 }
+
+ void Ivy::TextureHDRI::ConvertToCubemap(Ptr<TextureCube> outputTexCube)
+{
+	Ptr<Shader> equirectangularConversionShader = CreatePtr<Shader>("shaders/EquirectangularToCubeMap.comp");
+
+	equirectangularConversionShader->Bind();
+	Bind();
+	glBindImageTexture(0, outputTexCube->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+	glDispatchCompute(outputTexCube->GetWidth() / 32, outputTexCube->GetHeight() / 32, 6);
+	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+	glGenerateTextureMipmap(outputTexCube->GetID());
+
+	Destroy();
+}

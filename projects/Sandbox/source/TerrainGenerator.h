@@ -10,10 +10,11 @@ public:
 	TerrainGenerator();
 	void OnStart() override;
 	void OnUpdate(float deltaTime) override;
+	void SetTerrainEntity(Ptr<Terrain> terrain) { mTerrain = terrain; }
 
 private:
 	void GenerateHeightmap();
-	void Erode();
+	//void Erode();
 
 
 	Ptr<Terrain> mTerrain = nullptr;
@@ -42,7 +43,7 @@ private:
 	float mWater	= 1.0f;
 	float mSediment = 0.0f;
 
-	Ptr<Erosion<compute_mode_e::serial>> mEroder = nullptr;
+	//Ptr<Erosion<compute_mode_e::serial>> mEroder = nullptr;
 
 };
 

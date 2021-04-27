@@ -7,6 +7,7 @@
 #include "scene/components/Transform.h"
 #include "scene/renderpasses/ShadowRenderPass.h"
 #include "rendering/Line.h"
+#include "skymodels/HosekWilkieSkyModel.h"
 
 namespace Ivy
 {
@@ -37,6 +38,7 @@ namespace Ivy
 			Ptr<Window>				window,
 			Vector<Ptr<Entity>>&	entities,
 			Ptr<ShadowRenderPass>   shadowPass,
+			Ptr<SkyModel>			skyModel,
 			DirectionalLight&		dirLight,
 			Vector<SpotLight>&		spotLights,
 			Vector<PointLight>&		pointLights);
@@ -47,6 +49,7 @@ namespace Ivy
 		void SetupSkybox(Ptr<TextureCube> tex);
 
 		void SetEnvironmentMap(String filepath);
+		void SetEnvironmentMap(Ptr<TextureCube> cubemap);
 
 		GLuint GetColorTextureID()
 		{
@@ -68,18 +71,24 @@ namespace Ivy
 		void UnloadEnvironmentMap();
 		void DestroySkybox();
 
+		void SetSkyModel(Ptr<SkyModel> model) { mSkyModel = model; }
+		
+		void RenderSkyModelToCubemap();
+		void ComputeEnvironmentMap();
+
 	private:
 		void PushLightParams(Ptr<Shader> shader);
 		void SetupSkyboxShaders();
+
 
 		void SetupFramebuffer();
 
 		void BindFramebufferForWrite();
 
 
+		Ptr<SkyModel> mSkyModel = nullptr;
 
-
-
+		
 		Ptr<Camera>			  mCamera = nullptr;
 		Ptr<Window>			  mWindow = nullptr;
 		Vector<Ptr<Entity>>&  mEntities;
@@ -109,7 +118,6 @@ namespace Ivy
 		Ptr<Shader>			mSkyboxShader		= nullptr;
 		Ptr<VertexBuffer>   mSkyboxVertexBuffer = nullptr;
 		Ptr<VertexArray>    mSkyboxVertexArray	= nullptr;
-		bool mUseSkybox = false;
 		bool mUseHdri = false;
 
 
