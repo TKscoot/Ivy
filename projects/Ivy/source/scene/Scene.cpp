@@ -22,6 +22,7 @@ Ivy::Scene::Scene(String name)
 	mCSM->SetDirLight(mDirLight);
 
 	mSkyModel = CreatePtr<HosekWilkieSkyModel>();
+
 }
 
 Ivy::Scene::~Scene()
@@ -233,6 +234,16 @@ void Ivy::Scene::Update(float deltaTime)
 		mSkyModel->SetTurbidity(turbidity);
 	}
 
+	
+	if (ImGui::SliderFloat("Cloud cirrus", &mScenePass->GetCloudsData().cirrus, 0.0f, 10.0f))
+	{
+		
+	}	
+	
+	if (ImGui::SliderFloat("Cloud cumulus", &mScenePass->GetCloudsData().cumulus, 0.0f, 10.0f))
+	{
+	}
+
 	if(ImGui::SliderFloat("Sun intensity", &dirLightIntensity, 0.0f, 100.0f))
 	{
 		mDirLight.intensity = dirLightIntensity;
@@ -269,7 +280,7 @@ void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 	// Shadow Pass
 	mCSM->RenderShadows(currentWindowSize, mEntities);
 	// Scene pass
-	mScenePass->Render(currentWindowSize);
+	mScenePass->Render(deltaTime, currentWindowSize);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	mPostprocessPass->Render(currentWindowSize, deltaTime);
