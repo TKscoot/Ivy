@@ -33,6 +33,13 @@ namespace Ivy
 			float nearPlane;
 			float farPlane;
 		};
+
+		struct CloudsData 
+		{
+			float time	  = 0.0;
+			float cirrus  = 0.4;
+			float cumulus = 0.8;
+		};
 	
 		SceneRenderPass(Ptr<Camera> camera, 
 			Ptr<Window>				window,
@@ -43,7 +50,7 @@ namespace Ivy
 			Vector<SpotLight>&		spotLights,
 			Vector<PointLight>&		pointLights);
 
-		void Render(Vec2 currentWindowSize);
+		void Render(float deltaTime, Vec2 currentWindowSize);
 
 		void SetupSkybox(Vector<String> filepaths);
 		void SetupSkybox(Ptr<TextureCube> tex);
@@ -75,6 +82,8 @@ namespace Ivy
 		
 		void RenderSkyModelToCubemap();
 		void ComputeEnvironmentMap();
+
+		CloudsData& GetCloudsData() { return mCloudsData; }
 
 	private:
 		void PushLightParams(Ptr<Shader> shader);
@@ -118,7 +127,9 @@ namespace Ivy
 		Ptr<Shader>			mSkyboxShader		= nullptr;
 		Ptr<VertexBuffer>   mSkyboxVertexBuffer = nullptr;
 		Ptr<VertexArray>    mSkyboxVertexArray	= nullptr;
-		bool mUseHdri = false;
+		bool			    mUseHdri = false;
+		CloudsData			mCloudsData{};
+
 
 
 		// IBL

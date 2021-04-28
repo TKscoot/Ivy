@@ -2,16 +2,16 @@
 out vec4 FragColor;
 
 in vec3 TexCoords;
+in vec3 pos;
 
 layout(binding = 0) uniform samplerCube skybox;
 
 uniform vec3 sunPosition;
 uniform vec3 Direction;
 
-in vec3 pos;
-float time = 0.0;
-float cirrus = 0.4;
-float cumulus = 0.8;
+uniform float time    = 0.0;
+uniform float cirrus  = 0.4;
+uniform float cumulus = 0.8;
 
 const float Br = 0.0025;
 const float Bm = 0.0003;
@@ -169,14 +169,17 @@ void main()
     vec3 extinction = mix(day_extinction, night_extinction, -sunPosition.y * 0.2 + 0.5);
 	vec3 color = texture(skybox, TexCoords).rgb;
 
+	float cirrusTimeMul = 0.001;
+	float cumulusTimeMul = 0.01;
+
 	// Cirrus Clouds
-    float density = smoothstep(1.0 - cirrus, 1.0, fbm(pos.xyz / pos.y * 2.0 + time * 0.05)) * 0.3;
+    float density = smoothstep(1.0 - cirrus, 1.0, fbm(pos.xyz / pos.y * 2.0 + time * cirrusTimeMul)) * 0.3;
     color.rgb = mix(color.rgb, extinction * 4.0, density * max(pos.y, 0.0));
 
     // Cumulus Clouds
     for (int i = 0; i < 3; i++)
     {
-      float density = smoothstep(1.0 - cumulus, 1.0, fbm((0.7 + float(i) * 0.01) * pos.xyz / pos.y + time * 0.3));
+      float density = smoothstep(1.0 - cumulus, 1.0, fbm((0.7 + float(i) * 0.01) * pos.xyz / pos.y + time * cumulusTimeMul));
       color.rgb = mix(color.rgb, extinction * density * 5.0, min(density, 1.0) * max(pos.y, 0.0));
     }
 

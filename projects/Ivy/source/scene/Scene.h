@@ -291,6 +291,7 @@ namespace Ivy
 		Ptr<ImGuiHook>		  mImGuiHook = nullptr;
 		Ptr<SkyModel>		  mSkyModel  = nullptr;
 
+
 		// Lights
 		DirectionalLight	mDirLight	 = {};
 		Vector<SpotLight>	mSpotLights  = {};

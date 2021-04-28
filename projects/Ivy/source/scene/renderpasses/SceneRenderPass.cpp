@@ -25,7 +25,7 @@ Ivy::SceneRenderPass::SceneRenderPass(Ptr<Camera> camera,
 	SetupFramebuffer();
 }
 
-void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
+void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize)
 {
 	BindFramebufferForWrite();
 
@@ -75,6 +75,8 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 	//Draw skybox
 	if(mShouldRenderSkybox)
 	{
+		mCloudsData.time += deltaTime;
+
 		glDepthMask(GL_FALSE);
 
 		mSkyModel->SetDirection(mDirLight.direction);
@@ -84,6 +86,9 @@ void Ivy::SceneRenderPass::Render(Vec2 currentWindowSize)
 		mSkyboxShader->SetUniformMat4("view", glm::mat4(glm::mat3(mCamera->GetViewMatrix())));
 		mSkyboxShader->SetUniformMat4("projection", projection);
 		mSkyboxShader->SetUniformFloat3("sunPosition", mDirLight.direction);
+		mSkyboxShader->SetUniformFloat("time", mCloudsData.time);
+		mSkyboxShader->SetUniformFloat("cirrus", mCloudsData.cirrus);
+		mSkyboxShader->SetUniformFloat("cumulus", mCloudsData.cumulus);
 
 		mSkyModel->SetRenderUniforms(mSkyboxShader);
 
