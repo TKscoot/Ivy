@@ -117,3 +117,4 @@ void Ivy::Input::SetMousePositon(Vec2 mousePos)
 {
 	glfwSetCursorPos(mGlfwWnd, mousePos.x, mousePos.y);
 }
+

@@ -22,6 +22,9 @@
     <Filter Include="scene\renderpasses">
       <UniqueIdentifier>{115E2D3A-FD41-EE8F-66A2-E8E252A5D811}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scene\renderpasses\skymodels">
+      <UniqueIdentifier>{7B7F18B6-673A-0862-10F2-80ACFC8B52F2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
@@ -103,6 +106,9 @@
     <ClInclude Include="source\scene\components\AudioClip.h">
       <Filter>scene\components</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\components\AudioClip3D.h">
+      <Filter>scene\components</Filter>
+    </ClInclude>
     <ClInclude Include="source\scene\components\AudioListener.h">
       <Filter>scene\components</Filter>
     </ClInclude>
@@ -130,10 +136,15 @@
     <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h">
       <Filter>scene\renderpasses</Filter>
     </ClInclude>
-    <ClInclude Include="source\scene\components\AudioClip3D.h" />
-    <ClInclude Include="source\scene\renderpasses\skymodels\SkyModel.h" />
-    <ClInclude Include="source\scene\renderpasses\skymodels\HosekWilkieSkyModel.h" />
-    <ClInclude Include="source\scene\renderpasses\skymodels\HosekDataRGB.h" />
+    <ClInclude Include="source\scene\renderpasses\skymodels\HosekDataRGB.h">
+      <Filter>scene\renderpasses\skymodels</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\renderpasses\skymodels\HosekWilkieSkyModel.h">
+      <Filter>scene\renderpasses\skymodels</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\renderpasses\skymodels\SkyModel.h">
+      <Filter>scene\renderpasses\skymodels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\audio\AudioContext.cpp">
@@ -194,6 +205,9 @@
     <ClCompile Include="source\scene\components\AudioClip.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
+    <ClCompile Include="source\scene\components\AudioClip3D.cpp">
+      <Filter>scene\components</Filter>
+    </ClCompile>
     <ClCompile Include="source\scene\components\AudioListener.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
@@ -215,7 +229,8 @@
     <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp">
       <Filter>scene\renderpasses</Filter>
     </ClCompile>
-    <ClCompile Include="source\scene\components\AudioClip3D.cpp" />
-    <ClCompile Include="source\scene\renderpasses\skymodels\HosekWilkieSkyModel.cpp" />
+    <ClCompile Include="source\scene\renderpasses\skymodels\HosekWilkieSkyModel.cpp">
+      <Filter>scene\renderpasses\skymodels</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

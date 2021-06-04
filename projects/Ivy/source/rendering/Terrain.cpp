@@ -89,6 +89,69 @@ float Ivy::Terrain::GetHeight(int x, int z)
 	return mHeights[z * mWidth + x];
 }
 
+float Ivy::Terrain::GetHeightFromWorldPos(float xPos, float zPos)
+{
+	auto transform = GetFirstComponentOfType<Transform>();
+
+
+	float height = std::numeric_limits<float>().min();
+	// Check if the terrain dimensions are valid
+	if (mWidth < 2 || mHeight < 2) return height;
+
+	// Width and height of the terrain in world units
+	float terrainWidth  = (mWidth - 1)  * mPointWidth;
+	float terrainHeight = (mHeight - 1) * mPointWidth;
+	float halfWidth  = terrainWidth  * 0.5f;
+	float halfHeight = terrainHeight * 0.5f;
+
+	// Multiple the position by the inverse of the terrain matrix 
+	// to get the position in terrain local space
+	glm::vec3 terrainPos = glm::vec3(/*glm::inverse(transform->getComposed()) **/ glm::vec4(xPos, 0.0f, zPos, 1.0f));
+	glm::vec3 invBlockScale(1.0f / mPointWidth, 0.0f, 1.0f / mPointWidth);
+
+	// Calculate an offset and scale to get the vertex indices
+	glm::vec3 offset(halfWidth, 0.0f, halfHeight);
+
+	// Get the 4 vertices that make up the triangle we're over
+	glm::vec3 vertexIndices = (terrainPos + offset) * invBlockScale;
+
+	int u0 = (int)floorf(vertexIndices.x);
+	int u1 = u0 + 1;
+	int v0 = (int)floorf(vertexIndices.z);
+	int v1 = v0 + 1;
+
+	if (u0 >= 0 && u1 < mWidth && v0 >= 0 && v1 < mHeight)
+	{
+		glm::vec3 p00 = mVertices[(v0 * mWidth) + u0].position;    // Top-left vertex
+		glm::vec3 p10 = mVertices[(v0 * mWidth) + u1].position;    // Top-right vertex
+		glm::vec3 p01 = mVertices[(v1 * mWidth) + u0].position;    // Bottom-left vertex
+		glm::vec3 p11 = mVertices[(v1 * mWidth) + u1].position;    // Bottom-right vertex
+
+		// Which triangle are we over?
+		float percentU = vertexIndices.x - u0;
+		float percentV = vertexIndices.z - v0;
+
+		glm::vec3 dU, dV;
+		if (percentU > percentV)
+		{   // Top triangle
+			dU = p10 - p00;
+			dV = p11 - p10;
+		}
+		else
+		{   // Bottom triangle
+			dU = p11 - p01;
+			dV = p01 - p00;
+		}
+
+		glm::vec3 heightPos = p00 + (dU * percentU) + (dV * percentV);
+		// Convert back to world-space by multiplying by the terrain's world matrix
+		heightPos = glm::vec3(/*transform->getComposed() **/ glm::vec4(heightPos, 1));
+		height = heightPos.y;
+	}
+
+	return height;
+}
+
 void Ivy::Terrain::SetHeights(float* heights)
 {
 	if(sizeof(heights)/sizeof(heights[0]) != mWidth * mHeight)

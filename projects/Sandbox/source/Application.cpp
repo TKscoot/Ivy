@@ -18,7 +18,7 @@ Application::Application()
 
 void Application::SetupScene()
 {
-	/*
+	
 	// Setting up skybox with 6 textures for the cubetexture
 	Vector<String> skyboxTextures =
 	{
@@ -29,12 +29,16 @@ void Application::SetupScene()
 		"assets/textures/skybox/front.jpg",
 		"assets/textures/skybox/back.jpg"
 	};
-	mScene->SetSkybox(skyboxTextures);
-	mScene2->SetSkybox(skyboxTextures);
-	*/
+	//mScene->SetSkybox(skyboxTextures);
+	//mScene2->SetSkybox(skyboxTextures);
 	
-	mScene->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
-	mScene2->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
+	
+	//mScene->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
+	//mScene2->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
+	//mScene->UseHosekWilkieSkymodel();
+	mScene->SetHosekWilkieSkyModel();
+
+
 
 }
 
@@ -47,7 +51,7 @@ void Application::SetupEntities()
 	Vector<Ptr<Material>> pilotMaterials = pilotEntity->GetComponentsOfType<Material>();
 	for(auto& pilotMat : pilotMaterials)
 	{
-		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::DIFFUSE);
+		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::ALBEDO);
 		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Normal_OpenGL.png", Material::TextureMapType::NORMAL);
 		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
 		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
@@ -64,6 +68,18 @@ void Application::SetupEntities()
 	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
 	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 
+	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/DamagedHelmet.gltf"));
+	auto mat = sponzaEntity->GetFirstComponentOfType<Material>();
+	auto transform = sponzaEntity->GetFirstComponentOfType<Transform>();
+	transform->setRotationX(90);
+	//transform->setPositionX(50);
+	//mat->UseIBL(false);
+	mat->LoadTexture("assets/textures/DamagedHelmet/Default_albedo.jpg", Material::TextureMapType::ALBEDO);
+	mat->LoadTexture("assets/textures/DamagedHelmet/Default_metalRoughness.jpg", Material::TextureMapType::METALLIC);
+	mat->LoadTexture("assets/textures/DamagedHelmet/Default_metalRoughness.jpg", Material::TextureMapType::ROUGHNESS);
+	mat->LoadTexture("assets/textures/DamagedHelmet/Default_normal.jpg", Material::TextureMapType::NORMAL);
+
+	/*
 
 	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/MetalRoughSpheres.gltf"));
 	auto mat = sponzaEntity->GetFirstComponentOfType<Material>();
@@ -73,7 +89,6 @@ void Application::SetupEntities()
 	mat->UseIBL(false);
 	mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Metal.png", Material::TextureMapType::METALLIC);
 	mat->LoadTexture("assets/textures/MetalRoughSpheres/Spheres_Roughness.png", Material::TextureMapType::ROUGHNESS);
-	/*
 
 	sponzaEntity->SetActive(true);
 
@@ -126,11 +141,10 @@ void Application::SetupEntities()
 	//cameraTracker->AddComponent<AudioClip>(soundClip);
 	//soundClip->Play();
 
-	//Ptr<TerrainGenerator> terrain = mScene->CreateEntity<TerrainGenerator>();
-	//terrain->SetTerrainEntity(mScene->CreateEntity<Terrain>(256, 256));
+	Ptr<TerrainGenerator> terrain = mScene->CreateEntity<TerrainGenerator>();
+	terrain->SetTerrainEntity(mScene->CreateEntity<Terrain>(256, 256));
 
 	//Ptr<AudioTest> audioTest = mScene->CreateEntity<AudioTest>();
-
 
 }
 
@@ -192,7 +206,7 @@ void Application::Run()
 			Ptr<Entity> towerEntity = mScene->CreateEntity();
 			towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
 			Ptr<Material> towerMat = towerEntity->GetFirstComponentOfType<Material>();
-			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_A.tga", Material::TextureMapType::DIFFUSE);
+			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_A.tga", Material::TextureMapType::ALBEDO);
 			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);
 			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
 			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_R.tga", Material::TextureMapType::ROUGHNESS);
@@ -204,6 +218,31 @@ void Application::Run()
 			towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
 		}
 
+		if (Input::IsKeyDown(T))
+		{
+			// Set up defaults
+			time_t unixTime;
+			::time(&unixTime);
+
+			struct tm* theTime = localtime(&unixTime);
+
+			int julianDay = theTime->tm_yday;
+
+			float localTime = theTime->tm_hour + theTime->tm_min / 60.0f + theTime->tm_sec / 3600.0f;
+			bool dst = (theTime->tm_isdst != 0);
+
+
+			const Vec2 kLondon(+51.5f, 0.0f);
+			const Vec2 kAuckland(-37.0f, 174.8f);
+			const Vec2 kPittsburgh(40.5f, -80.22f);
+			const Vec2 kOakland(37.8f, -122.2f);
+			const Vec2 kSanFrancisco(37.8f, -122.4f);
+			const Vec2 kJakarta(-6.21f, 106.85f);
+			Vec2 latLong = kLondon;
+			float timeZone = rintf(latLong[1] / 15.0f);    // estimate for now
+
+			mScene->SetSunTime(localTime, timeZone, julianDay, latLong[0], latLong[1]);
+		}
 
 		// Begin new frame
 		mEngine->NewFrame();

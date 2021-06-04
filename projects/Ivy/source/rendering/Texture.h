@@ -134,7 +134,7 @@ namespace Ivy
 		 *
 		 * \param filenames Vector of files to use as Cube texture
 		 */
-		TextureCube(Vector<String> filenames);
+		TextureCube(Vector<String> filenames, GLenum format = GL_RGBA16F);
 		~TextureCube();
 
 		/*!
@@ -144,6 +144,8 @@ namespace Ivy
 		 * \param filenames Vector of files to use as Cube texture
 		 */
 		TextureCube(GLenum format, uint32_t width, uint32_t height);
+
+		TextureCube(GLenum format, uint32_t width, uint32_t height, void * data);
 		
 		/*!
 		 * TextureCube constructor
@@ -222,6 +224,8 @@ namespace Ivy
 			return levels;
 		}
 
+		GLenum GetFormat() { return mFormat; }
+
 
 
 	private:
@@ -229,6 +233,8 @@ namespace Ivy
 
 		uint32_t mWidth  = 0;
 		uint32_t mHeight = 0;
+
+		GLenum mFormat = GL_RGBA16F;
 
 	};
 

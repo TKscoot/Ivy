@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;..\Ivy\dependencies\FMOD\inc;..\Ivy\dependencies\irrKlang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;..\Ivy\dependencies\FMOD\inc;..\Ivy\dependencies\irrKlang\include;..\Ivy\dependencies\MagicEnum;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -81,7 +81,7 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;..\Ivy\dependencies\FMOD\inc;..\Ivy\dependencies\irrKlang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;..\Ivy\dependencies\FMOD\inc;..\Ivy\dependencies\irrKlang\include;..\Ivy\dependencies\MagicEnum;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

@@ -41,7 +41,8 @@ namespace Ivy
 			float cumulus = 0.8;
 		};
 	
-		SceneRenderPass(Ptr<Camera> camera, 
+		SceneRenderPass(
+			Ptr<Camera>				camera, 
 			Ptr<Window>				window,
 			Vector<Ptr<Entity>>&	entities,
 			Ptr<ShadowRenderPass>   shadowPass,
@@ -50,13 +51,15 @@ namespace Ivy
 			Vector<SpotLight>&		spotLights,
 			Vector<PointLight>&		pointLights);
 
-		void Render(float deltaTime, Vec2 currentWindowSize);
+		void Render(float deltaTime, Vec2 currentWindowSize, bool renderHosekSky);
 
 		void SetupSkybox(Vector<String> filepaths);
 		void SetupSkybox(Ptr<TextureCube> tex);
 
 		void SetEnvironmentMap(String filepath);
 		void SetEnvironmentMap(Ptr<TextureCube> cubemap);
+
+		void SetupSkyModel();
 
 		GLuint GetColorTextureID()
 		{
@@ -93,6 +96,7 @@ namespace Ivy
 		void SetupFramebuffer();
 
 		void BindFramebufferForWrite();
+
 
 
 		Ptr<SkyModel> mSkyModel = nullptr;

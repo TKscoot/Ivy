@@ -32,6 +32,8 @@ namespace Ivy
 		void SetHeight(int x, int z, float height);
 		float GetHeight(int x, int z);
 
+		float GetHeightFromWorldPos(float xPos, float zPos);
+
 		// heights array has to be of size width * height of terrain
 		void SetHeights(float* heights);
 

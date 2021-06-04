@@ -72,7 +72,6 @@ namespace Ivy
 		*/
 		static void SetMousePositon(Vec2 mousePos);
 
-
 	private:
 		static void Initialize(Ptr<Window> mWnd);
 

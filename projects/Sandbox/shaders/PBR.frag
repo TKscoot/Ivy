@@ -20,8 +20,8 @@ layout(binding = 0) uniform sampler2D   diffuseMap;
 layout(binding = 1) uniform sampler2D   normalMap;
 layout(binding = 2) uniform sampler2D   roughnessMap;
 layout(binding = 3) uniform sampler2D   metallicMap;
-layout(binding = 4) uniform sampler2D   brdfLutTexture;
 layout(binding = 5) uniform sampler2D   aoMap;
+layout(binding = 4) uniform sampler2D   brdfLutTexture;
 layout(binding = 6) uniform samplerCube radianceMap;
 layout(binding = 7) uniform samplerCube irradianceMap;
 layout(binding = 8) uniform sampler2D   shadowMap0[4];
@@ -126,12 +126,12 @@ void main()
 
 	if(useMetallicMap)
 	{
-		metallic = texture(metallicMap, uv).r;
+		metallic = texture(metallicMap, uv).b;
 	}
 
 	if(useRoughnessMap)
 	{
-		roughness = texture(roughnessMap, uv).r;
+		roughness = texture(roughnessMap, uv).g;
 	}
 
 	vec3 V = normalize(viewPos - FragPos);

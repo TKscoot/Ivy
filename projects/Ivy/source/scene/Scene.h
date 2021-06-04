@@ -37,6 +37,16 @@ namespace Ivy
 			glm::mat4 View;
 			float SplitDepth;
 		};
+
+		enum SkyboxType
+		{
+			NONE = 0,
+			CUBEMAP,
+			HOSEK_WILKIE_SKY,
+			HDRI_MAP
+		};
+
+
 		
 		/*!
 		 * Constructor
@@ -99,6 +109,8 @@ namespace Ivy
 			String front);
 
 		void SetHdriEnvironment(String path);
+
+		void SetHosekWilkieSkyModel(float turbidity = 4.0f);
 
 		/*!
 		 * Updates the scene data
@@ -203,7 +215,26 @@ namespace Ivy
 		{
 			mDirLight.direction = direction;
 			mCSM->SetDirLight(mDirLight);
+
+			if (mSkyboxType == HOSEK_WILKIE_SKY)
+			{
+				mSkyModel->SetDirection(direction);
+
+				mScenePass->RenderSkyModelToCubemap();
+				if (mRecalculateEnvMap)
+				{
+					mScenePass->ComputeEnvironmentMap();
+				}
+			}
 		}
+
+		void SetSunTime(
+			float       timeOfDay,         // 24-hour, decimal: 0.0-23.99
+			float       timeZone,          // relative to UTC: west -ve, east +ve
+			int         julianDay,         // day of year: 1-365
+			float       latitude,          // Degrees: north is positive
+			float       longitude          // Degrees: east is positive
+		);
 
 		/*!
 		 * Internal!
@@ -264,9 +295,21 @@ namespace Ivy
 
 		bool IsActiveScene() { return mIsActiveScene; }
 
+		SkyboxType GetSkyboxType() { return mSkyboxType; }
+
+		void UseHosekWilkieSkymodel() 
+		{ 
+			mSkyboxType = HOSEK_WILKIE_SKY; 
+			mScenePass->SetupSkyModel();
+			mScenePass->RenderSkyModelToCubemap();
+		}
+
 	private:
 		void Load();
 		void Unload();
+
+		void DrawSceneSettingsGUI(float deltaTime);
+		void DrawHosekWilkieSkyboxGUI(float deltaTime);
 
 		String mName = "";
 		bool mIsActiveScene = false;
@@ -275,6 +318,7 @@ namespace Ivy
 		String mEnvMapPath = "";
 		bool mUseSkybox = false;
 		bool mUseEnvMap = false;
+		SkyboxType mSkyboxType = NONE;
 
 		bool mFirstUpdate = true;
 
@@ -298,5 +342,6 @@ namespace Ivy
 		Vector<PointLight>	mPointLights = {};
 
 		bool mRenderGui = true;
+		bool mRecalculateEnvMap = false;
 	};
 }

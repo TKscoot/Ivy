@@ -11,6 +11,19 @@ void TerrainGenerator::OnStart()
 	GenerateHeightmap();
 	//mTerrain->GetFirstComponentOfType<Transform>()->setScale(Vec3(50.0f));
 
+	for (int i = 0; i < 30; i++)
+	{
+		auto ent = mScene->CreateEntity();
+		auto mesh = ent->AddComponent<Mesh>(CreatePtr<Mesh>(ent.get(), "assets/models/Oak_Tree.obj"));
+		auto t = ent->GetFirstComponentOfType<Transform>();
+		
+		float h = mTerrain->GetHeightFromWorldPos(i * 5, 0);
+		Debug::Log("Height: {}", h);
+		
+		t->setPosition(Vec3(i *5, h, 0));
+	}
+
+
 }
 
 void TerrainGenerator::OnUpdate(float deltaTime)

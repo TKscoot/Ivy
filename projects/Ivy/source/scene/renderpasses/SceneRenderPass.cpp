@@ -1,7 +1,8 @@
 #include "ivypch.h"
 #include "SceneRenderPass.h"
 
-Ivy::SceneRenderPass::SceneRenderPass(Ptr<Camera> camera, 
+Ivy::SceneRenderPass::SceneRenderPass(
+	Ptr<Camera> camera, 
 	Ptr<Window>				window,
 	Vector<Ptr<Entity>>&	entities,
 	Ptr<ShadowRenderPass>   shadowPass,
@@ -19,13 +20,26 @@ Ivy::SceneRenderPass::SceneRenderPass(Ptr<Camera> camera,
 	, mPointLights(pointLights)
 {
 	mWindowSize = mWindow->GetWindowSize();
-	
-	SetupSkyboxShaders();
+
+	//GLubyte* pixelData = new GLubyte[2 * 2];
+
+	//std::array<GLubyte, 4> pixelData;
+
+
+	Vector<String> filepaths;
+	for(int i = 0; i < 6; i++)
+	{
+		filepaths.push_back("assets/textures/Misc/Grey.png");
+	}
+
+	mEnvUnfiltered = CreatePtr<TextureCube>(filepaths);
+
+	SetupSkybox(mEnvUnfiltered);
 
 	SetupFramebuffer();
 }
 
-void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize)
+void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize, bool renderHosekSky)
 {
 	BindFramebufferForWrite();
 
@@ -75,30 +89,40 @@ void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize)
 	//Draw skybox
 	if(mShouldRenderSkybox)
 	{
-		mCloudsData.time += deltaTime;
 
 		glDepthMask(GL_FALSE);
 
-		mSkyModel->SetDirection(mDirLight.direction);
-		mSkyModel->Update();
-		//glDepthFunc(GL_LEQUAL);
+
+
 		mSkyboxShader->Bind();
 		mSkyboxShader->SetUniformMat4("view", glm::mat4(glm::mat3(mCamera->GetViewMatrix())));
 		mSkyboxShader->SetUniformMat4("projection", projection);
 		mSkyboxShader->SetUniformFloat3("sunPosition", mDirLight.direction);
-		mSkyboxShader->SetUniformFloat("time", mCloudsData.time);
-		mSkyboxShader->SetUniformFloat("cirrus", mCloudsData.cirrus);
-		mSkyboxShader->SetUniformFloat("cumulus", mCloudsData.cumulus);
+
+		if (renderHosekSky)
+		{
+			mCloudsData.time += deltaTime;
+			
+			mSkyModel->SetDirection(mDirLight.direction);
+			mSkyModel->Update();
+			mSkyboxShader->SetUniformInt("calculateClouds", 1);
+			mSkyboxShader->SetUniformFloat("time", mCloudsData.time);
+			mSkyboxShader->SetUniformFloat("cirrus", mCloudsData.cirrus);
+			mSkyboxShader->SetUniformFloat("cumulus", mCloudsData.cumulus);
+		}
+		else
+		{
+			mSkyboxShader->SetUniformInt("calculateClouds", 0);
+		}
 
 		mSkyModel->SetRenderUniforms(mSkyboxShader);
 
 		mSkyboxVertexArray->Bind();
-		//mSkyboxCubeTexture->Bind(0);
+
 		mEnvUnfiltered->Bind(0);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		mSkyboxVertexArray->Unbind();
-		//glDepthFunc(GL_LESS); // set depth function back to default
 
 		glDepthMask(GL_TRUE);
 	}
@@ -134,9 +158,9 @@ void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize)
 
 		shader->SetUniformFloat3("viewPos", mCamera->GetPosition());
 
-		if(mSkyboxCubeTexture)
+		if(mEnvUnfiltered)
 		{
-			mSkyboxCubeTexture->Bind(6);
+			mEnvUnfiltered->Bind(6);
 			if(mUseHdri)
 			{
 				mIrradiance->Bind(7);
@@ -149,6 +173,10 @@ void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize)
 		for(int j = 0; j < meshes.size(); j++)
 		{
 			meshes[j]->Draw();
+			if (meshes[j]->mDrawBoundingBox)
+			{
+				meshes[j]->DrawBoundingBox(projection, view);
+			}
 		}
 
 	}
@@ -164,12 +192,35 @@ void Ivy::SceneRenderPass::UnloadEnvironmentMap()
 		mEquirectangularConversionShader->Destroy();
 	}
 
-	mEnvFilteringShader->Destroy();
-	mIrradianceShader->Destroy();
-	mEnvUnfiltered->Destroy();
-	mEnvEquirect->Destroy();
-	mEnvFiltered->Destroy();
-	mIrradiance->Destroy();
+	if (mEnvFilteringShader)
+	{
+		mEnvFilteringShader->Destroy();
+	}
+	
+	if (mIrradianceShader)
+	{
+		mIrradianceShader->Destroy();
+	}
+
+	if (mEnvUnfiltered)
+	{
+		mEnvUnfiltered->Destroy();
+	}
+
+	if (mEnvEquirect)
+	{
+		mEnvEquirect->Destroy();
+	}
+	
+	if (mEnvFiltered)
+	{
+		mEnvFiltered->Destroy();
+	}
+
+	if (mIrradiance)
+	{
+		mIrradiance->Destroy();
+	}
 }
 
 void Ivy::SceneRenderPass::DestroySkybox()
@@ -220,11 +271,11 @@ void Ivy::SceneRenderPass::PushLightParams(Ptr<Shader> shader)
 		shader->SetUniformFloat3("spotLights[" + index + "].ambient", mSpotLights[i].ambient);
 		shader->SetUniformFloat3("spotLights[" + index + "].diffuse", mSpotLights[i].diffuse);
 		shader->SetUniformFloat3("spotLights[" + index + "].specular", mSpotLights[i].specular);
-		shader->SetUniformFloat("spotLights[" + index + "].constant", mSpotLights[i].constant);
-		shader->SetUniformFloat("spotLights[" + index + "].linear", mSpotLights[i].linear);
-		shader->SetUniformFloat("spotLights[" + index + "].quadratic", mSpotLights[i].quadratic);
-		shader->SetUniformFloat("spotLights[" + index + "].cutOff", glm::cos(glm::radians(mSpotLights[i].cutOff)));
-		shader->SetUniformFloat("spotLights[" + index + "].outerCutOff", glm::cos(glm::radians(mSpotLights[i].outerCutOff)));
+		shader->SetUniformFloat( "spotLights[" + index + "].constant", mSpotLights[i].constant);
+		shader->SetUniformFloat( "spotLights[" + index + "].linear", mSpotLights[i].linear);
+		shader->SetUniformFloat( "spotLights[" + index + "].quadratic", mSpotLights[i].quadratic);
+		shader->SetUniformFloat( "spotLights[" + index + "].cutOff", glm::cos(glm::radians(mSpotLights[i].cutOff)));
+		shader->SetUniformFloat( "spotLights[" + index + "].outerCutOff", glm::cos(glm::radians(mSpotLights[i].outerCutOff)));
 	}
 }
 
@@ -238,7 +289,7 @@ void Ivy::SceneRenderPass::SetupSkybox(Vector<String> filepaths)
 		mShouldRenderSkybox = false;
 		return;
 	}
-	mSkyboxCubeTexture = CreatePtr<TextureCube>(mSkyboxFilepaths);
+	mEnvUnfiltered = CreatePtr<TextureCube>(mSkyboxFilepaths);
 
 	float skyboxVertices[] = {
 		// positions          
@@ -304,7 +355,7 @@ void Ivy::SceneRenderPass::SetupSkybox(Vector<String> filepaths)
 
 void Ivy::SceneRenderPass::SetupSkybox(Ptr<TextureCube> tex)
 {
-	mSkyboxCubeTexture = tex;
+	mEnvUnfiltered = tex;
 
 	float skyboxVertices[] = {
 		// positions          
@@ -492,8 +543,6 @@ void Ivy::SceneRenderPass::SetEnvironmentMap(String filepath)
 	
 	mEnvEquirect->ConvertToCubemap(mEnvUnfiltered);
 	
-	RenderSkyModelToCubemap();
-
 	ComputeEnvironmentMap();
 
 	SetupSkybox(mEnvUnfiltered);
@@ -518,9 +567,20 @@ void Ivy::SceneRenderPass::SetEnvironmentMap(Ptr<TextureCube> cubemap)
 	mUseHdri = true;
 }
 
+void Ivy::SceneRenderPass::SetupSkyModel()
+{
+	RenderSkyModelToCubemap();
+
+	ComputeEnvironmentMap();
+
+	SetupSkybox(mEnvUnfiltered);
+
+	mUseHdri = true;
+}
+
 void Ivy::SceneRenderPass::ComputeEnvironmentMap()
 {
-	if (!mEnvUnfiltered)
+	if (!mEnvUnfiltered || mEnvUnfiltered->GetFormat() != GL_RGBA16F)
 	{
 		mEnvUnfiltered = CreatePtr<TextureCube>(GL_RGBA16F, 2048, 2048);
 	}
@@ -545,6 +605,7 @@ void Ivy::SceneRenderPass::ComputeEnvironmentMap()
 		glBindImageTexture(0, mEnvFiltered->GetID(), level, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 		glProgramUniform1f(mEnvFilteringShader->GetRendererID(), 0, level * deltaRoughness);
 		glDispatchCompute(numGroups, numGroups, 6);
+		glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT | GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 	}
 
 	mIrradianceShader = CreatePtr<Shader>("shaders/EnvironmentIrradiance.comp");
@@ -554,7 +615,7 @@ void Ivy::SceneRenderPass::ComputeEnvironmentMap()
 
 	glBindImageTexture(0, mIrradiance->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 	glDispatchCompute(mIrradiance->GetWidth() / 32, mIrradiance->GetHeight() / 32, 6);
-	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+	glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT | GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 	glGenerateTextureMipmap(mIrradiance->GetID());
 
 	mEnvFiltered->Destroy();
@@ -579,7 +640,8 @@ void Ivy::SceneRenderPass::RenderSkyModelToCubemap()
 	glBindImageTexture(0, mEnvUnfiltered->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 	glDispatchCompute(mEnvUnfiltered->GetWidth() / 32, mEnvUnfiltered->GetHeight() / 32, 6);
 
-	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+	//glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+	glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT | GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
 	glGenerateTextureMipmap(mEnvUnfiltered->GetID());
 }

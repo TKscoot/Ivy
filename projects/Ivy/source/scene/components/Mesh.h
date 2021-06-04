@@ -138,7 +138,9 @@ namespace Ivy
 		void setBoneTransformations(GLuint shaderProgram, GLfloat currentTime);
 		void TraverseNodes(aiNode* node, const glm::mat4& parentTransform = Mat4(1.0f), uint32_t level = 0);
 
+		void SetDrawBoundingBox(bool draw) { mDrawBoundingBox = draw; }
 
+		bool GetDrawBoundingBox() { return mDrawBoundingBox; }
 
     protected:
 
@@ -178,6 +180,18 @@ namespace Ivy
 
 
 		double animDuration = 0;
+
+
+		Ptr<Shader> mAABBShader = nullptr;
+		Vector<GLuint> mAabbVertexArrays;
+		Vector<GLuint> mAabbVertexBuffers;
+
+		bool mNeedsAABBSetup = true;
+
+
+		void DrawBoundingBox(Mat4 proj, Mat4 view);
+		void SetupBoundingBox();
+
 
 
 
@@ -264,6 +278,8 @@ namespace Ivy
 
 		unsigned int mCurrentAnimation = 0;
 
+
+		bool mDrawBoundingBox = false;
 
 		Ptr<Line>  mLine = nullptr;
 

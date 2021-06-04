@@ -256,8 +256,10 @@ void Ivy::Texture2D::Destroy()
 	glDeleteTextures(1, &mID);
 }
 
-Ivy::TextureCube::TextureCube(Vector<String> filenames)
+Ivy::TextureCube::TextureCube(Vector<String> filenames, GLenum format)
 {
+	mFormat = format;
+
 	glGenTextures(1, &mID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, mID);
 
@@ -282,6 +284,7 @@ Ivy::TextureCube::TextureCube(GLenum format, uint32_t width, uint32_t height)
 {
 	mWidth = width;
 	mHeight = height;
+	mFormat = format;
 
 	uint32_t levels = CalculateMipMapCount(width, height);
 
@@ -294,9 +297,28 @@ Ivy::TextureCube::TextureCube(GLenum format, uint32_t width, uint32_t height)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-Ivy::TextureCube::TextureCube(String right, String left, String top, String bottom, String back, String front)
+Ivy::TextureCube::TextureCube(GLenum format, uint32_t width, uint32_t height, void * data)
 {
 
+	mWidth = width;
+	mHeight = height;
+	mFormat = format;
+
+	uint32_t levels = CalculateMipMapCount(width, height);
+
+	glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &mID);
+	glTextureStorage2D(mID, levels, format, width, height);
+	glTextureParameteri(mID, GL_TEXTURE_MIN_FILTER, levels > 1 ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+	glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+}
+
+Ivy::TextureCube::TextureCube(String right, String left, String top, String bottom, String back, String front)
+{
+	mFormat = GL_RGBA16F;
 
 	glGenTextures(1, &mID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, mID);
@@ -314,10 +336,10 @@ void Ivy::TextureCube::Load(Vector<String> filenames)
 	int width, height, nrChannels;
 	for (unsigned int i = 0; i < filenames.size(); i++)
 	{
-		unsigned char *data = stbi_load(filenames[i].c_str(), &width, &height, &nrChannels, 0);
+		unsigned char *data = stbi_load(filenames[i].c_str(), &width, &height, &nrChannels, STBI_rgb_alpha);
 		if (data)
 		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, mFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 			stbi_image_free(data);
 		}
 		else
@@ -417,7 +439,7 @@ void Ivy::TextureHDRI::Bind(uint32_t slot)
 	Bind();
 	glBindImageTexture(0, outputTexCube->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 	glDispatchCompute(outputTexCube->GetWidth() / 32, outputTexCube->GetHeight() / 32, 6);
-	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+	glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT | GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 	glGenerateTextureMipmap(outputTexCube->GetID());
 
 	Destroy();

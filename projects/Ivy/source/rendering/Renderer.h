@@ -91,5 +91,7 @@ namespace Ivy
 
 		Ptr<ImGuiHook>	  mImGuiHook = nullptr;
 
+		GLuint mQueryID = 0;
+
 	};
 }
