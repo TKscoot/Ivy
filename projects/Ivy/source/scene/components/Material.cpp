@@ -39,7 +39,7 @@ Ivy::Material::Material()
 		pixelData[i * 4 + 2] = 255;
 		pixelData[i * 4 + 3] = 255;
 	}
-	mTextures[TextureMapType::DIFFUSE]   = CreatePtr<Texture2D>(2, 2, pixelData);
+	mTextures[TextureMapType::ALBEDO]   = CreatePtr<Texture2D>(2, 2, pixelData);
 	
 	// Set all pixels white & full opacity
 	std::memset(pixelData, 255, arraySize);
@@ -93,8 +93,8 @@ Ivy::Ptr<Ivy::Texture2D> Ivy::Material::LoadTexture(String texturePath, TextureM
 
 		switch (type)
 		{
-		case Material::TextureMapType::DIFFUSE:
-			mUsedTextureTypes[(size_t)Material::TextureMapType::DIFFUSE] = true;
+		case Material::TextureMapType::ALBEDO:
+			mUsedTextureTypes[(size_t)Material::TextureMapType::ALBEDO] = true;
 			break;
 		case Material::TextureMapType::NORMAL:
 			mUsedTextureTypes[(size_t)Material::TextureMapType::NORMAL] = true;

@@ -7,6 +7,7 @@ Ivy::ImGuiHook::ImGuiHook(Ptr<Window> window)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO &io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 
 	// Setup Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(window->GetHandle(), true);

@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C0FF640D-2C14-8DBE-F595-301E616989EF}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ImGui</RootNamespace>
+    <LatestTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</LatestTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>Lib\</OutDir>
+    <IntDir>Lib\Debug\</IntDir>
+    <TargetName>ImGui</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>Lib\</OutDir>
+    <IntDir>Lib\Release\</IntDir>
+    <TargetName>ImGui</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>.;..\GLFW\Include;..\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>GLFW3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\GLFW\Lib;..\GLAD\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>.;..\GLFW\Include;..\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>GLFW3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\GLFW\Lib;..\GLAD\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="backends\imgui_impl_glfw.h" />
+    <ClInclude Include="backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="imconfig.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imgui_themes.h" />
+    <ClInclude Include="imstb_rectpack.h" />
+    <ClInclude Include="imstb_textedit.h" />
+    <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="misc\single_file\imgui_single_file.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="imgui_demo.cpp" />
+    <ClCompile Include="imgui_draw.cpp" />
+    <ClCompile Include="imgui_tables.cpp" />
+    <ClCompile Include="imgui_themes.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="misc\cpp\imgui_stdlib.cpp" />
+    <ClCompile Include="misc\fonts\binary_to_compressed_c.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="ImGui.vcxproj" />
+    <None Include="ImGui.vcxproj.filters" />
+    <None Include="ImGui.vcxproj.user" />
+    <None Include="LICENSE.txt" />
+    <None Include="Lib\Debug\ImGui.Build.CppClean.log" />
+    <None Include="Lib\Debug\ImGui.idb" />
+    <None Include="Lib\Debug\ImGui.log" />
+    <None Include="Lib\Debug\ImGui.pdb" />
+    <None Include="Lib\Debug\ImGui.tlog\CL.269808.write.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\CL.read.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\ImGui.lastbuildstate" />
+    <None Include="Lib\Debug\ImGui.tlog\Lib-link.read.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\Lib-link.write.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\Lib.command.1.tlog" />
+    <None Include="Lib\Debug\binary_to_compressed_c.obj" />
+    <None Include="Lib\Debug\imgui.obj" />
+    <None Include="Lib\Debug\imgui_demo.obj" />
+    <None Include="Lib\Debug\imgui_draw.obj" />
+    <None Include="Lib\Debug\imgui_impl_glfw.obj" />
+    <None Include="Lib\Debug\imgui_impl_opengl3.obj" />
+    <None Include="Lib\Debug\imgui_stdlib.obj" />
+    <None Include="Lib\Debug\imgui_tables.obj" />
+    <None Include="Lib\Debug\imgui_themes.obj" />
+    <None Include="Lib\Debug\imgui_widgets.obj" />
+    <None Include="Lib\ImGui.lib" />
+    <None Include="Lib\ImGui.pdb" />
+    <None Include="Lib\Release\ImGui.Build.CppClean.log" />
+    <None Include="Lib\Release\ImGui.log" />
+    <None Include="Lib\Release\ImGui.pdb" />
+    <None Include="Lib\Release\ImGui.tlog\CL.193200.write.1.tlog" />
+    <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog" />
+    <None Include="Lib\Release\ImGui.tlog\CL.read.1.tlog" />
+    <None Include="Lib\Release\ImGui.tlog\ImGui.lastbuildstate" />
+    <None Include="Lib\Release\ImGui.tlog\Lib-link.read.1.tlog" />
+    <None Include="Lib\Release\ImGui.tlog\Lib-link.write.1.tlog" />
+    <None Include="Lib\Release\ImGui.tlog\Lib.command.1.tlog" />
+    <None Include="Lib\Release\binary_to_compressed_c.obj" />
+    <None Include="Lib\Release\imgui.obj" />
+    <None Include="Lib\Release\imgui_demo.obj" />
+    <None Include="Lib\Release\imgui_draw.obj" />
+    <None Include="Lib\Release\imgui_impl_glfw.obj" />
+    <None Include="Lib\Release\imgui_impl_opengl3.obj" />
+    <None Include="Lib\Release\imgui_stdlib.obj" />
+    <None Include="Lib\Release\imgui_tables.obj" />
+    <None Include="Lib\Release\imgui_themes.obj" />
+    <None Include="Lib\Release\imgui_widgets.obj" />
+    <None Include="Makefile" />
+    <None Include="docs\BACKENDS.md" />
+    <None Include="docs\CHANGELOG.txt" />
+    <None Include="docs\EXAMPLES.md" />
+    <None Include="docs\FAQ.md" />
+    <None Include="docs\FONTS.md" />
+    <None Include="docs\README.md" />
+    <None Include="docs\TODO.txt" />
+    <None Include="misc\README.txt" />
+    <None Include="misc\cpp\README.txt" />
+    <None Include="misc\fonts\Cousine-Regular.ttf" />
+    <None Include="misc\fonts\DroidSans.ttf" />
+    <None Include="misc\fonts\Karla-Regular.ttf" />
+    <None Include="misc\fonts\ProggyClean.ttf" />
+    <None Include="misc\fonts\ProggyTiny.ttf" />
+    <None Include="misc\fonts\Roboto-Medium.ttf" />
+    <None Include="misc\natvis\README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="misc\natvis\imgui.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GLAD\GLAD.vcxproj">
+      <Project>{5D4A857C-4981-860D-F26D-6C10DE83020F}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

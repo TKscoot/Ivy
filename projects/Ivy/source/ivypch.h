@@ -11,6 +11,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include <magic_enum.hpp>
+
 #include <iostream>
 #include <memory>
 #include <string>

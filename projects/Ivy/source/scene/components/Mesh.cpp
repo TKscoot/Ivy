@@ -23,6 +23,7 @@ Ivy::Mesh::Mesh(Entity* ent) : Ivy::Component::Component(ent)
 {
 
 	mCamera = ent->GetSceneCamera();
+	SetupBoundingBox();
 }
 
 Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Component::Component(ent)
@@ -35,11 +36,14 @@ Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Comp
 	{
 		Load();
 	}
+	SetupBoundingBox();
 }
 
 Ivy::Mesh::Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices) : Ivy::Component::Component(ent)
 {
 	mCamera = ent->GetSceneCamera();
+	SetupBoundingBox();
+
 }
 
 void Ivy::Mesh::OnUpdate(float deltaTime)
@@ -356,7 +360,7 @@ void Ivy::Mesh::Load()
 
 				if(diff.length > 0)
 				{
-					materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::DIFFUSE);
+					materials[mesh->mMaterialIndex]->LoadTexture(ss.str(), Material::TextureMapType::ALBEDO);
 				}
 			}
 			{
@@ -654,6 +658,130 @@ void Ivy::Mesh::LoadBones(unsigned int MeshIndex, const aiMesh* pMesh, std::vect
 			mBoneData[VertexID].AddBoneData(BoneIndex, Weight);
 		}
 	}
+}
+
+void Ivy::Mesh::DrawBoundingBox(Mat4 proj, Mat4 view)
+{
+	if (mNeedsAABBSetup)
+	{
+		SetupBoundingBox();
+	}
+
+	auto& transform = mEntity->GetFirstComponentOfType<Transform>();
+
+
+	for (int i = 0; i < mSubmeshes.size(); i++)
+	{
+		AABB& box = mSubmeshes[i].boundingBox;
+
+		/* Generate the box lines */
+		GLfloat boxFaces[] = {
+			/* First face */
+			box.Min.x, box.Min.y, box.Min.z, box.Max.x, box.Min.y, box.Min.z, box.Min.x, box.Min.y,
+			box.Min.z, box.Min.x, box.Max.y, box.Min.z, box.Min.x, box.Min.y, box.Min.z, box.Min.x,
+			box.Min.y, box.Max.z,
+
+			box.Max.x, box.Max.y, box.Max.z, box.Min.x, box.Max.y, box.Max.z, box.Max.x, box.Max.y,
+			box.Max.z, box.Max.x, box.Min.y, box.Max.z, box.Max.x, box.Max.y, box.Max.z, box.Max.x,
+			box.Max.y, box.Min.z,
+
+			box.Min.x, box.Max.y, box.Max.z, box.Min.x, box.Max.y, box.Min.z, box.Min.x, box.Max.y,
+			box.Max.z, box.Min.x, box.Min.y, box.Max.z,
+
+			box.Max.x, box.Min.y, box.Max.z, box.Max.x, box.Min.y, box.Min.z, box.Max.x, box.Min.y,
+			box.Max.z, box.Min.x, box.Min.y, box.Max.z,
+
+			box.Max.x, box.Max.y, box.Min.z, box.Min.x, box.Max.y, box.Min.z, box.Max.x, box.Max.y,
+			box.Min.z, box.Max.x, box.Min.y, box.Min.z,
+		};
+
+		/* Calculate MVP matrix, bounding box coordinates are already in world coordinates */
+		glm::mat4 MVP = proj * view * transform->getComposed();
+
+		glEnable(GL_DEPTH_TEST);
+
+
+		/* Bind program to upload the uniform */
+		mAABBShader->Bind();
+
+		/* Send our transformation to the currently bound _renderBoundingBox, in the "MVP" uniform */
+		mAABBShader->SetUniformMat4("MVP", MVP);
+		mAABBShader->SetUniformFloat3("BoxColor", glm::vec3(1.0f, 0.0f, 0.0f));
+
+		
+		glBindVertexArray(mAabbVertexArrays[i]);
+		glBindBuffer(GL_ARRAY_BUFFER, mAabbVertexBuffers[i]);
+
+
+		glDrawArrays(GL_LINES, 0, sizeof(boxFaces) / (2 * sizeof(*boxFaces)));
+
+		glBindVertexArray(0);
+	}
+	
+}
+
+void Ivy::Mesh::SetupBoundingBox()
+{
+
+	if (mSubmeshes.size() == 0)
+	{
+		mNeedsAABBSetup = true;
+		return;
+	}
+
+	mAABBShader = CreatePtr<Shader>("shaders/AABB.vert", "shaders/AABB.frag");
+
+	for (int i = 0; i < mSubmeshes.size(); i++)
+	{
+		GLuint boxPosVAO = 0, boxPosVBO = 0;
+
+		glGenVertexArrays(1, &boxPosVAO);
+		glBindVertexArray(boxPosVAO);
+
+		glGenBuffers(1, &boxPosVBO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, boxPosVBO);
+
+
+		AABB& box = mSubmeshes[i].boundingBox;
+
+		/* Generate the box lines */
+		GLfloat boxFaces[] = {
+			/* First face */
+			box.Min.x, box.Min.y, box.Min.z, box.Max.x, box.Min.y, box.Min.z, box.Min.x, box.Min.y,
+			box.Min.z, box.Min.x, box.Max.y, box.Min.z, box.Min.x, box.Min.y, box.Min.z, box.Min.x,
+			box.Min.y, box.Max.z,
+
+			box.Max.x, box.Max.y, box.Max.z, box.Min.x, box.Max.y, box.Max.z, box.Max.x, box.Max.y,
+			box.Max.z, box.Max.x, box.Min.y, box.Max.z, box.Max.x, box.Max.y, box.Max.z, box.Max.x,
+			box.Max.y, box.Min.z,
+
+			box.Min.x, box.Max.y, box.Max.z, box.Min.x, box.Max.y, box.Min.z, box.Min.x, box.Max.y,
+			box.Max.z, box.Min.x, box.Min.y, box.Max.z,
+
+			box.Max.x, box.Min.y, box.Max.z, box.Max.x, box.Min.y, box.Min.z, box.Max.x, box.Min.y,
+			box.Max.z, box.Min.x, box.Min.y, box.Max.z,
+
+			box.Max.x, box.Max.y, box.Min.z, box.Min.x, box.Max.y, box.Min.z, box.Max.x, box.Max.y,
+			box.Min.z, box.Max.x, box.Min.y, box.Min.z,
+		};
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof boxFaces, boxFaces, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0,         // attribute. No particular reason for 0, but must match the layout in the shader.
+			3,         // size
+			GL_FLOAT,  // type
+			GL_FALSE,  // normalized?
+			0,         // stride
+			(void *)0  // array buffer offset
+		);
+
+		mAabbVertexArrays.push_back(boxPosVAO);
+		mAabbVertexBuffers.push_back(boxPosVBO);
+	
+	}
+	mNeedsAABBSetup = false;
 }
 
 unsigned int Ivy::Mesh::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)

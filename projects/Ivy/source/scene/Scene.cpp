@@ -50,12 +50,15 @@ Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
 
 void Ivy::Scene::SetSkybox(Vector<String> filepaths)
 {
-	//mSkyboxFilepaths = filepaths;
-	mScenePass->SetupSkybox(filepaths);
+	mSkyboxPaths = filepaths;
+	mSkyboxType = CUBEMAP;
+	mScenePass->SetEnvironmentMap(CreatePtr<TextureCube>(mSkyboxPaths));
 }
 
 void Ivy::Scene::SetSkybox(String right, String left, String top, String bottom, String back, String front)
 {
+	mSkyboxType = CUBEMAP;
+
 	mSkyboxPaths.push_back(right);
 	mSkyboxPaths.push_back(left);
 	mSkyboxPaths.push_back(top);
@@ -63,7 +66,6 @@ void Ivy::Scene::SetSkybox(String right, String left, String top, String bottom,
 	mSkyboxPaths.push_back(back);
 	mSkyboxPaths.push_back(front);
 
-	mUseEnvMap = false;
 	mUseSkybox = true;
 
 	SetSkybox(mSkyboxPaths);
@@ -71,22 +73,52 @@ void Ivy::Scene::SetSkybox(String right, String left, String top, String bottom,
 
 void Ivy::Scene::SetHdriEnvironment(String path)
 {
+	mSkyboxType = HDRI_MAP;
+
 	mEnvMapPath = path;
-	mUseEnvMap = true;
 	mUseSkybox = false;
 	mScenePass->SetEnvironmentMap(mEnvMapPath);
+}
+
+void Ivy::Scene::SetHosekWilkieSkyModel(float turbidity)
+{
+	mSkyboxType = HOSEK_WILKIE_SKY;
+
+	mSkyModel->SetTurbidity(turbidity);
+
+	mScenePass->SetupSkyModel();
+}
+
+void Ivy::Scene::SetSunTime(float timeOfDay, float timeZone, int julianDay, float latitude, float longitude)
+{
+	float solarTime = timeOfDay
+		+ (0.170f * glm::sin(4 * glm::pi<float>() * (julianDay - 80) / 373)
+			- 0.129f * glm::sin(2 * glm::pi<float>() * (julianDay - 8) / 355))
+		+ (longitude / 15 - timeZone);
+
+	float solarDeclination = (0.4093f * glm::sin(2 * glm::pi<float>() * (julianDay - 81) / 368));
+
+	float latRads = glm::radians(latitude);
+
+	float sx = glm::cos(solarDeclination)                 * glm::sin(glm::pi<float>() * solarTime / 12);
+	float sy = glm::cos(latRads) * glm::sin(solarDeclination)
+		+ glm::sin(latRads) * glm::cos(solarDeclination) * glm::cos(glm::pi<float>() * solarTime / 12);
+	float sz = glm::sin(latRads) * glm::sin(solarDeclination)
+		- glm::cos(latRads) * glm::cos(solarDeclination) * glm::cos(glm::pi<float>() * solarTime / 12);
+
+	SetDirectionalLightDirection(Vec3(sx, sy, sz));
 }
 
 void Ivy::Scene::Update(float deltaTime)
 {
 	if(mFirstUpdate)
 	{
-		for(auto& e : mEntities)
+		for(int i = 0; i < mEntities.size(); i++)
 		{
-			if(e->IsActive())
+			if(mEntities[i]->IsActive())
 			{
-				e->OnStart();
-				e->StartComponents();
+				mEntities[i]->OnStart();
+				mEntities[i]->StartComponents();
 			}
 		}
 
@@ -107,14 +139,7 @@ void Ivy::Scene::Update(float deltaTime)
 	}
 
 	mCSM->Update();
-	static float timer = 0;
-	static float fps = 0;
-	timer += deltaTime;
-	if(timer >= 1.0f)
-	{
-		fps = 1 / deltaTime;
-		timer = 0;
-	}
+
 
 	ImGui::Begin("Controls");
 	ImGui::Text("Show/Hide mouse cursor = M");
@@ -124,165 +149,21 @@ void Ivy::Scene::Update(float deltaTime)
 	ImGui::Text("Exit Program           = ESC");
 	ImGui::End();
 
-
-	ImGui::Begin("Scene Settings!");
-	ImGui::Text("FPS: %f", fps);
-	float v[3];
-	v[0] = mDirLight.direction.x;
-	v[1] = mDirLight.direction.y;
-	v[2] = mDirLight.direction.z;
-
-	static bool wireframe = false;
-	;
-
-	if (ImGui::Checkbox("Wireframe", &wireframe))
-	{
-		if(wireframe)
-		{
-			// Turn on wireframe mode
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		else
-		{
-			// Turn off wireframe mode
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
-	}
-
-
-	static float dirLightIntensity = 1.0f;
-	static Vec3 dirLightDiff = Vec3(1.0f);
-	static Vec3 dirLightAmb  = Vec3(1.0f);
-
-	static float fov = 60.0f;
-	String fovLabel = "FOV";
-	if(fov >= 100)
-	{
-		fovLabel = "FOV: Quake Pro";
-	}
-
-
-	if(ImGui::SliderFloat(fovLabel.c_str(), &fov, 30.0f, 120.0f))
-	{
-		mCamera->SetFOV(fov);
-	}
-
-	ImGui::Text("Lighting settings");
-	static bool useIBL = true;
-	static float iblStrength = 0.2f;
-	if(ImGui::Checkbox("Use IBL", &useIBL) || ImGui::SliderFloat("IBL Strength", &iblStrength, 0, 1))
-	{
-		for(auto& e : mEntities)
-		{
-			for(auto& c : e->GetComponentsOfType<Material>())
-			{
-				if(c != nullptr)
-				{
-					c->UseIBL(useIBL);
-					c->SetIblStrength(iblStrength);
-				}
-			}
-		}
-	}
-
-
-	static float sunAngle = 35.0f;
-	static float turbidity = 4.0f;
-	static bool recalculateEnvMap = false;
-	static bool animateSky = false;
-
-	static float skyTimer = 0.0f;
-	static float skyTimerMultiplier = 0.1f;
-
-	ImGui::SliderFloat("Sky timer multiplier", &skyTimerMultiplier, 0.0f, 2.0f);
-
-
-	ImGui::Checkbox("Recalculate env map", &recalculateEnvMap);
-	ImGui::Checkbox("Animate sky", &animateSky);
-
-	if (animateSky)
-	{
-		skyTimer += deltaTime * skyTimerMultiplier;
-
-		if (glm::degrees(skyTimer) < 180.0f)
-		{
-			mDirLight.direction = glm::vec3(0.0f, sin(skyTimer), cos(skyTimer));
-			mScenePass->RenderSkyModelToCubemap();
-			if (recalculateEnvMap)
-			{
-				mScenePass->ComputeEnvironmentMap();
-			}
-		}
-		else if (glm::degrees(skyTimer) >= 180.0f)
-		{
-			skyTimer = 0.0f;
-		}
-	}
-
-	if(ImGui::SliderAngle("Sun direction", &sunAngle, 0.0f, 180.0f))
-	{
-		mDirLight.direction = glm::vec3(0.0f, sin(sunAngle), cos(sunAngle));
-		mScenePass->RenderSkyModelToCubemap();
-		if (recalculateEnvMap)
-		{
-			mScenePass->ComputeEnvironmentMap();
-		}
-	}
-
-	if (ImGui::SliderFloat("Turbidity", &turbidity, 0.0f, 10.0f))
-	{
-		mSkyModel->SetTurbidity(turbidity);
-	}
-
+	DrawSceneSettingsGUI(deltaTime);
 	
-	if (ImGui::SliderFloat("Cloud cirrus", &mScenePass->GetCloudsData().cirrus, 0.0f, 10.0f))
-	{
-		
-	}	
-	
-	if (ImGui::SliderFloat("Cloud cumulus", &mScenePass->GetCloudsData().cumulus, 0.0f, 10.0f))
-	{
-	}
-
-	if(ImGui::SliderFloat("Sun intensity", &dirLightIntensity, 0.0f, 100.0f))
-	{
-		mDirLight.intensity = dirLightIntensity;
-	}
-
-	ImGui::Spacing();
-
-	static float lightIntensity = 1.0f;
-	ImGui::SliderFloat("Light intensity", &lightIntensity, 0.0f, 100.0f);
-	static Vec3 diff = Vec3(1.0f);
-	static Vec3 spec = Vec3(1.0f);
-	ImGui::ColorEdit3("Diffuse", &diff.x);
-	ImGui::ColorEdit3("Specular", &spec.x);
-
-	if(ImGui::Button("Add pointlight"))
-	{
-		PointLight& pl = AddPointLight(
-			mCamera->GetPosition(),
-			lightIntensity,
-			0.09f,
-			0.032,
-			Vec3(0.05f, 0.05f, 0.05f),
-			diff,
-			spec);
-	}
-
-	ImGui::End();
 }
 
 void Ivy::Scene::Render(float deltaTime, Vec2 currentWindowSize)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Shadow Pass
+	// Shadow pass
 	mCSM->RenderShadows(currentWindowSize, mEntities);
-	// Scene pass
-	mScenePass->Render(deltaTime, currentWindowSize);
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	// Scene pass
+	mScenePass->Render(deltaTime, currentWindowSize, mSkyboxType == HOSEK_WILKIE_SKY);
+
+	// Postprocess pass
 	mPostprocessPass->Render(currentWindowSize, deltaTime);
 
 }
@@ -366,13 +247,25 @@ Ivy::SpotLight& Ivy::Scene::AddSpotLight(
 
 void Ivy::Scene::Load()
 {
-	if(!mEnvMapPath.empty() && mUseEnvMap && !mUseSkybox)
+	switch (mSkyboxType)
 	{
-		mScenePass->SetEnvironmentMap(mEnvMapPath);
-	}
-	else if(!mSkyboxPaths.empty() && mUseSkybox && !mUseEnvMap)
-	{
-		mScenePass->SetupSkybox(mSkyboxPaths);
+	case Ivy::Scene::CUBEMAP:
+		if (!mSkyboxPaths.empty())
+		{
+			mScenePass->SetEnvironmentMap(CreatePtr<TextureCube>(mSkyboxPaths));
+		}
+		break;
+	case Ivy::Scene::HOSEK_WILKIE_SKY:
+		mScenePass->SetupSkyModel();
+		break;
+	case Ivy::Scene::HDRI_MAP:
+		if (!mEnvMapPath.empty())
+		{
+			mScenePass->SetEnvironmentMap(mEnvMapPath);
+		}
+		break;
+	default:
+		break;
 	}
 
 
@@ -415,4 +308,184 @@ void Ivy::Scene::Unload()
 	mScenePass->UnloadEnvironmentMap();
 	mScenePass->DestroySkybox();
 
+}
+
+void Ivy::Scene::DrawSceneSettingsGUI(float deltaTime)
+{
+	static float timer = 0;
+	static float fps = 0;
+	timer += deltaTime;
+	if (timer >= 1.0f)
+	{
+		fps = 1 / deltaTime;
+		timer = 0;
+	}
+
+	ImGui::Begin("Scene Settings!");
+	ImGui::Text("FPS: %f", fps);
+	float v[3];
+	v[0] = mDirLight.direction.x;
+	v[1] = mDirLight.direction.y;
+	v[2] = mDirLight.direction.z;
+
+	static bool wireframe = false;
+	;
+
+	if (ImGui::Checkbox("Wireframe", &wireframe))
+	{
+		if (wireframe)
+		{
+			// Turn on wireframe mode
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		else
+		{
+			// Turn off wireframe mode
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+	}
+
+
+	static float dirLightIntensity = 1.0f;
+	static Vec3 dirLightDiff = Vec3(1.0f);
+	static Vec3 dirLightAmb = Vec3(1.0f);
+
+	static float fov = 60.0f;
+	String fovLabel = "FOV";
+	if (fov >= 100)
+	{
+		fovLabel = "FOV: Quake Pro";
+	}
+
+
+	if (ImGui::SliderFloat(fovLabel.c_str(), &fov, 30.0f, 120.0f))
+	{
+		mCamera->SetFOV(fov);
+	}
+
+	ImGui::Text("Lighting settings");
+	static bool useIBL = true;
+	static float iblStrength = 0.2f;
+	if (ImGui::Checkbox("Use IBL", &useIBL) || ImGui::SliderFloat("IBL Strength", &iblStrength, 0, 1))
+	{
+		for (auto& e : mEntities)
+		{
+			for (auto& c : e->GetComponentsOfType<Material>())
+			{
+				if (c != nullptr)
+				{
+					c->UseIBL(useIBL);
+					c->SetIblStrength(iblStrength);
+				}
+			}
+		}
+	}
+
+	static float sunAngle = glm::radians(35.0f);
+
+	if (ImGui::SliderAngle("Sun direction", &sunAngle, 0.0f, 180.0f))
+	{
+		mDirLight.direction = glm::vec3(0.0f, sin(sunAngle), cos(sunAngle));
+
+		if (mSkyboxType == HOSEK_WILKIE_SKY)
+		{
+			mScenePass->RenderSkyModelToCubemap();
+			if (mRecalculateEnvMap)
+			{
+				mScenePass->ComputeEnvironmentMap();
+			}
+		}
+	}
+
+	if (ImGui::SliderFloat("Sun intensity", &dirLightIntensity, 0.0f, 100.0f))
+	{
+		mDirLight.intensity = dirLightIntensity;
+	}
+
+	ImGui::Spacing();
+	auto skyTypeName = magic_enum::enum_name(mSkyboxType);
+	ImGui::Text("Sky type: %s", skyTypeName.data());
+
+
+	switch (mSkyboxType)
+	{
+	case Ivy::Scene::NONE:
+		break;
+	case Ivy::Scene::CUBEMAP:
+		break;
+	case Ivy::Scene::HOSEK_WILKIE_SKY:
+		DrawHosekWilkieSkyboxGUI(deltaTime);
+		break;
+	case Ivy::Scene::HDRI_MAP:
+		break;
+	default:
+		break;
+	}
+
+	ImGui::Spacing();
+
+	static float lightIntensity = 1.0f;
+	ImGui::SliderFloat("Light intensity", &lightIntensity, 0.0f, 100.0f);
+	static Vec3 diff = Vec3(1.0f);
+	static Vec3 spec = Vec3(1.0f);
+	ImGui::ColorEdit3("Diffuse", &diff.x);
+	ImGui::ColorEdit3("Specular", &spec.x);
+
+	if (ImGui::Button("Add pointlight"))
+	{
+		PointLight& pl = AddPointLight(
+			mCamera->GetPosition(),
+			lightIntensity,
+			0.09f,
+			0.032,
+			Vec3(0.05f, 0.05f, 0.05f),
+			diff,
+			spec);
+	}
+
+	ImGui::End();
+}
+
+void Ivy::Scene::DrawHosekWilkieSkyboxGUI(float deltaTime)
+{
+	static float turbidity = 4.0f;
+	static bool animateSky = false;
+
+	static float skyTimer = 0.0f;
+	static float skyTimerMultiplier = 0.1f;
+
+	ImGui::SliderFloat("Sky timer multiplier", &skyTimerMultiplier, 0.0f, 2.0f);
+
+
+	ImGui::Checkbox("Recalculate env map", &mRecalculateEnvMap);
+	ImGui::Checkbox("Animate sky", &animateSky);
+
+	if (animateSky)
+	{
+		skyTimer += deltaTime * skyTimerMultiplier;
+
+		if (glm::degrees(skyTimer) < 180.0f)
+		{
+			mDirLight.direction = glm::vec3(0.0f, sin(skyTimer), cos(skyTimer));
+			mScenePass->RenderSkyModelToCubemap();
+			if (mRecalculateEnvMap)
+			{
+				mScenePass->ComputeEnvironmentMap();
+			}
+		}
+		else if (glm::degrees(skyTimer) >= 180.0f)
+		{
+			skyTimer = 0.0f;
+		}
+	}
+
+
+
+	if (ImGui::SliderFloat("Turbidity", &turbidity, 0.0f, 10.0f))
+	{
+		mSkyModel->SetTurbidity(turbidity);
+	}
+
+	ImGui::SliderFloat("Cloud cirrus", &mScenePass->GetCloudsData().cirrus, 0.0f, 10.0f);
+	ImGui::SliderFloat("Cloud cumulus", &mScenePass->GetCloudsData().cumulus, 0.0f, 10.0f);
 }

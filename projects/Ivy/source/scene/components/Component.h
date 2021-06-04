@@ -46,7 +46,11 @@ namespace Ivy
 		 * Gets called when component is being created
 		 * 
 		 */
-		virtual void OnCreate() {};
+		virtual void OnCreate() 
+		{
+			//Debug::CoreWarning("Entity: {}", mEntity);
+			std::cout << "Entity: " << mEntity << std::endl;
+		};
 
 		/*!
 		 * Gets called once the application starts and the scene has been loaded
@@ -121,6 +125,12 @@ namespace Ivy
 		Entity* mEntity = nullptr;
 
 	private:
+		friend class Entity;
+
+		void OnCreate(Ptr<Entity> entity)
+		{
+			mEntity = entity.get();
+		}
 		bool mActive = true;
 		uint32_t mEntityIndex = 0;
 	};

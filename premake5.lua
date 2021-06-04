@@ -151,7 +151,8 @@ project "Ivy"
 		"projects/Ivy/dependencies/libsndfile/include",
 		"projects/Ivy/dependencies/effolkronium",
 		"projects/Ivy/dependencies/FMOD/inc",
-		"projects/Ivy/dependencies/irrKlang/include"
+		"projects/Ivy/dependencies/irrKlang/include",
+		"projects/Ivy/dependencies/MagicEnum"
 	}
 	
 	libdirs
@@ -229,7 +230,8 @@ project "Sandbox"
 		"projects/Ivy/dependencies/libsndfile/include",
 		"projects/Ivy/dependencies/effolkronium",
 		"projects/Ivy/dependencies/FMOD/inc",
-		"projects/Ivy/dependencies/irrKlang/include"
+		"projects/Ivy/dependencies/irrKlang/include",
+		"projects/Ivy/dependencies/MagicEnum"
 	}
 	
 

@@ -14,7 +14,6 @@ void Ivy::Renderer::Initialize()
     glEnable(GL_CULL_FACE);
 	glShadeModel(GL_SMOOTH);
 
-
 	//glEnable(GL_MULTISAMPLE);
 
 	int texture_units;
@@ -46,9 +45,8 @@ void Ivy::Renderer::Initialize()
 
 void Ivy::Renderer::Render(float deltaTime)
 {
-
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	mScene->Render(deltaTime, mWindow->GetWindowSize());
 

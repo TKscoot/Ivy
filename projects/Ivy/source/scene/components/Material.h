@@ -22,7 +22,7 @@ namespace Ivy
 		 */
 		enum class TextureMapType
 		{
-			DIFFUSE = 0,
+			ALBEDO = 0,
 			NORMAL = 1,
 			ROUGHNESS = 2,
 			METALLIC = 3,

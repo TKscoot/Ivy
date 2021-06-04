@@ -95,6 +95,41 @@ void CameraTracker::OnUpdate(float deltaTime)
 		}
 	}
 
+
+	static std::array<const char*, 4> skyTypeNames = { "None", "Cubemap", "Hosek Wilkie sky model", "HDRI Map" };
+
+	int skyTypeIndex = (int)mScene->GetSkyboxType();
+
+	static Vector<String> skyboxTextures =
+	{
+		"assets/textures/skybox/right.jpg",
+		"assets/textures/skybox/left.jpg",
+		"assets/textures/skybox/top.jpg",
+		"assets/textures/skybox/bottom.jpg",
+		"assets/textures/skybox/front.jpg",
+		"assets/textures/skybox/back.jpg"
+	};
+
+	if (ImGui::Combo("Sky type", &skyTypeIndex, skyTypeNames.data(), skyTypeNames.size()))
+	{
+		switch ((Scene::SkyboxType)skyTypeIndex)
+		{
+		case Ivy::Scene::NONE:
+			break;
+		case Ivy::Scene::CUBEMAP:
+			mScene->SetSkybox(skyboxTextures);
+			break;
+		case Ivy::Scene::HOSEK_WILKIE_SKY:
+			mScene->SetHosekWilkieSkyModel();
+			break;
+		case Ivy::Scene::HDRI_MAP:
+			mScene->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
+			break;
+		default:
+			break;
+		}
+	}
+
 }
 
 void CameraTracker::OnDestroy()

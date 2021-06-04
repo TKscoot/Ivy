@@ -68,6 +68,8 @@ namespace Ivy
 			mComponents[index].push_back(component);
 			component->SetEntityIndex(mIndex);
 			component->SetEntity(this);
+			component->OnCreate(shared_from_this());
+			component->OnCreate();
 
 			return component;
 		}
