@@ -4,6 +4,12 @@
     <Filter Include="Lib">
       <UniqueIdentifier>{1C04880B-880D-887C-1189-9E7C7D91937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Debug">
+      <UniqueIdentifier>{92B38358-FE1D-38CF-475C-E974B3051624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Debug\ImGui.tlog">
+      <UniqueIdentifier>{0031CD1E-ECBF-56E8-95DE-6AE3814C678E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Lib\Release">
       <UniqueIdentifier>{4C579ABE-B80C-13B4-4101-0D8BADB509B8}</UniqueIdentifier>
     </Filter>
@@ -40,6 +46,7 @@
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="imgui_themes.h" />
+    <ClInclude Include="imguial_sparkline.h" />
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
@@ -76,23 +83,102 @@
     <None Include=".gitignore" />
     <None Include="ImGui.vcxproj" />
     <None Include="ImGui.vcxproj.filters" />
+    <None Include="ImGui.vcxproj.user" />
     <None Include="LICENSE.txt" />
+    <None Include="Lib\Debug\ImGui.idb">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.lib.recipe">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.log">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.pdb">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\CL.14268.write.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\CL.read.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\ImGui.lastbuildstate">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\Lib-link.read.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\Lib-link.write.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\ImGui.tlog\Lib.command.1.tlog">
+      <Filter>Lib\Debug\ImGui.tlog</Filter>
+    </None>
+    <None Include="Lib\Debug\binary_to_compressed_c.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_demo.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_draw.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_glfw.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_impl_opengl3.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_stdlib.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_tables.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_themes.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\Debug\imgui_widgets.obj">
+      <Filter>Lib\Debug</Filter>
+    </None>
+    <None Include="Lib\ImGui.idb">
+      <Filter>Lib</Filter>
+    </None>
     <None Include="Lib\ImGui.lib">
       <Filter>Lib</Filter>
+    </None>
+    <None Include="Lib\ImGui.lib.lastcodeanalysissucceeded">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="Lib\ImGui.pdb">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="Lib\Release\CodeAnalysisResultManifest.txt">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.Build.CppClean.log">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\ImGui.lib.recipe">
+      <Filter>Lib\Release</Filter>
     </None>
     <None Include="Lib\Release\ImGui.log">
       <Filter>Lib\Release</Filter>
     </None>
-    <None Include="Lib\Release\ImGui.pdb">
-      <Filter>Lib\Release</Filter>
+    <None Include="Lib\Release\ImGui.tlog\CL.1008.write.1.tlog">
+      <Filter>Lib\Release\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog">
       <Filter>Lib\Release\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Release\ImGui.tlog\CL.read.1.tlog">
-      <Filter>Lib\Release\ImGui.tlog</Filter>
-    </None>
-    <None Include="Lib\Release\ImGui.tlog\CL.write.1.tlog">
       <Filter>Lib\Release\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Release\ImGui.tlog\ImGui.lastbuildstate">
@@ -107,34 +193,103 @@
     <None Include="Lib\Release\ImGui.tlog\Lib.command.1.tlog">
       <Filter>Lib\Release\ImGui.tlog</Filter>
     </None>
+    <None Include="Lib\Release\ImGui.vcxproj.FileListAbsolute.txt">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\NativeCodeAnalysis.read.1.tlog">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\binary_to_compressed_c.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\binary_to_compressed_c.nativecodeanalysis.xml">
+      <Filter>Lib\Release</Filter>
+    </None>
     <None Include="Lib\Release\binary_to_compressed_c.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui.nativecodeanalysis.xml">
       <Filter>Lib\Release</Filter>
     </None>
     <None Include="Lib\Release\imgui.obj">
       <Filter>Lib\Release</Filter>
     </None>
+    <None Include="Lib\Release\imgui_demo.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_demo.nativecodeanalysis.xml">
+      <Filter>Lib\Release</Filter>
+    </None>
     <None Include="Lib\Release\imgui_demo.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_draw.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_draw.nativecodeanalysis.xml">
       <Filter>Lib\Release</Filter>
     </None>
     <None Include="Lib\Release\imgui_draw.obj">
       <Filter>Lib\Release</Filter>
     </None>
+    <None Include="Lib\Release\imgui_impl_glfw.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_impl_glfw.nativecodeanalysis.xml">
+      <Filter>Lib\Release</Filter>
+    </None>
     <None Include="Lib\Release\imgui_impl_glfw.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_impl_opengl3.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_impl_opengl3.nativecodeanalysis.xml">
       <Filter>Lib\Release</Filter>
     </None>
     <None Include="Lib\Release\imgui_impl_opengl3.obj">
       <Filter>Lib\Release</Filter>
     </None>
+    <None Include="Lib\Release\imgui_stdlib.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_stdlib.nativecodeanalysis.xml">
+      <Filter>Lib\Release</Filter>
+    </None>
     <None Include="Lib\Release\imgui_stdlib.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_tables.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_tables.nativecodeanalysis.xml">
       <Filter>Lib\Release</Filter>
     </None>
     <None Include="Lib\Release\imgui_tables.obj">
       <Filter>Lib\Release</Filter>
     </None>
+    <None Include="Lib\Release\imgui_themes.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_themes.nativecodeanalysis.xml">
+      <Filter>Lib\Release</Filter>
+    </None>
     <None Include="Lib\Release\imgui_themes.obj">
       <Filter>Lib\Release</Filter>
     </None>
+    <None Include="Lib\Release\imgui_widgets.nativecodeanalysis.sarif">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\imgui_widgets.nativecodeanalysis.xml">
+      <Filter>Lib\Release</Filter>
+    </None>
     <None Include="Lib\Release\imgui_widgets.obj">
+      <Filter>Lib\Release</Filter>
+    </None>
+    <None Include="Lib\Release\vc.nativecodeanalysis.all.xml">
       <Filter>Lib\Release</Filter>
     </None>
     <None Include="misc\README.txt">

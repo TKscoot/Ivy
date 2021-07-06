@@ -29,16 +29,14 @@ void Application::SetupScene()
 		"assets/textures/skybox/front.jpg",
 		"assets/textures/skybox/back.jpg"
 	};
-	//mScene->SetSkybox(skyboxTextures);
+	mScene->SetSkybox(skyboxTextures);
 	//mScene2->SetSkybox(skyboxTextures);
 	
 	
 	//mScene->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
 	//mScene2->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
 	//mScene->UseHosekWilkieSkymodel();
-	mScene->SetHosekWilkieSkyModel();
-
-
+	//mScene->SetHosekWilkieSkyModel();
 
 }
 
@@ -46,7 +44,7 @@ void Application::SetupEntities()
 {
 	// Animated Pilot
 	Ptr<Entity> pilotEntity = mScene2->CreateEntity();
-	pilotEntity->AddComponent(CreatePtr<Mesh>(pilotEntity.get(), "assets/models/Pilot_LP_Animated.fbx"));
+	pilotEntity->AddComponent<Mesh>("assets/models/Pilot_LP_Animated.fbx");
 	pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
 	Vector<Ptr<Material>> pilotMaterials = pilotEntity->GetComponentsOfType<Material>();
 	for(auto& pilotMat : pilotMaterials)
@@ -64,14 +62,16 @@ void Application::SetupEntities()
 	*/
 
 	// Sponza scene
-	Ptr<Entity> sponzaEntity = mScene->CreateEntity();
+	sponzaEntity = mScene->CreateEntity();
 	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
 	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 
-	sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/DamagedHelmet.gltf"));
+	//sponzaEntity->AddComponent<Mesh>("assets/models/DamagedHelmet.gltf");
+	sponzaEntity->AddComponent<Mesh>("assets/models/piper_pa18.obj");
 	auto mat = sponzaEntity->GetFirstComponentOfType<Material>();
-	auto transform = sponzaEntity->GetFirstComponentOfType<Transform>();
-	transform->setRotationX(90);
+	sponzaTransform = sponzaEntity->GetFirstComponentOfType<Transform>();
+	//transform->setRotationX(90);
+	sponzaTransform->setPositionY(15.0f);
 	//transform->setPositionX(50);
 	//mat->UseIBL(false);
 	mat->LoadTexture("assets/textures/DamagedHelmet/Default_albedo.jpg", Material::TextureMapType::ALBEDO);
@@ -142,9 +142,14 @@ void Application::SetupEntities()
 	//soundClip->Play();
 
 	Ptr<TerrainGenerator> terrain = mScene->CreateEntity<TerrainGenerator>();
-	terrain->SetTerrainEntity(mScene->CreateEntity<Terrain>(256, 256));
+	//terrain->SetTerrainEntity(mScene->CreateEntity<Terrain>(256, 256));
 
 	//Ptr<AudioTest> audioTest = mScene->CreateEntity<AudioTest>();
+
+
+	//mScene->GetCamera()->GetTransform()->SetParent(sponzaTransform.get());
+	//Vec3 camOffset = Vec3(0.0f, 4.0f, -10.0f);
+	//SceneManager::GetInstance()->GetActiveScene()->GetCamera()->SetPosition(camOffset);
 
 }
 
@@ -157,9 +162,48 @@ void Application::Run()
 
 	bool setFullscreen = !mEngine->GetWindow()->IsFullscreen();
 
+	float timer = 0.0f;
+
 	// Beginning the game loop
 	while(!mEngine->ShouldTerminate())
 	{
+
+		// Plane anim
+		float dt = mEngine->GetDeltaTime();
+		timer += dt * 0.001f;
+
+		float speed = 5.0f;
+
+		const Mat4 inverted = glm::inverse(sponzaTransform->getComposed());
+		const Vec3 forward = normalize(glm::vec3(inverted[2]));
+
+		sponzaTransform->setPosition((sponzaTransform->getPosition()) + (dt * sponzaTransform->getDirection() * speed));
+
+
+		//SceneManager::GetInstance()->GetActiveScene()->GetCamera()->LookAt(sponzaTransform->getPosition() + Vec3(0.0f, 0.0f, 5.0f));
+		//SceneManager::GetInstance()->GetActiveScene()->GetCamera()->SetFront(sponzaTransform->getDirection());
+
+
+		if (Input::IsKeyBeingPressed(A)) 
+		{
+			sponzaTransform->setRotationY(sponzaTransform->getRotation().y + (timer * 10.0f));
+		}
+		if (Input::IsKeyBeingPressed(D))
+		{
+			sponzaTransform->setRotationY(sponzaTransform->getRotation().y - (timer * 10.0f));
+		}
+
+		if (Input::IsKeyBeingPressed(W))
+		{
+			sponzaTransform->setRotationX(sponzaTransform->getRotation().x + (timer * 10.0f));
+		}
+		if (Input::IsKeyBeingPressed(S))
+		{
+			sponzaTransform->setRotationX(sponzaTransform->getRotation().x - (timer * 10.0f));
+		}
+
+
+
 
 		if(Input::IsMouseButtonDown(MouseCode::Button1))
 		{
@@ -204,7 +248,7 @@ void Application::Run()
 		if(Input::IsKeyDown(C))
 		{
 			Ptr<Entity> towerEntity = mScene->CreateEntity();
-			towerEntity->AddComponent(CreatePtr<Mesh>(towerEntity.get(), "assets/models/Cerberus.FBX"));
+			towerEntity->AddComponent<Mesh>("assets/models/Cerberus.FBX");
 			Ptr<Material> towerMat = towerEntity->GetFirstComponentOfType<Material>();
 			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_A.tga", Material::TextureMapType::ALBEDO);
 			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);

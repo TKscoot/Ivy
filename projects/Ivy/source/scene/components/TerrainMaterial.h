@@ -2,6 +2,8 @@
 #include "Types.h"
 #include <variant>
 #include "Component.h"
+#include "scene/Entity.h"
+#include "scene/Scene.h"
 #include "rendering/Shader.h"
 #include "rendering/Texture.h"
 #include "core/Timer.h"
@@ -26,10 +28,10 @@ namespace Ivy
 		{
 			String name;
 			UniformType type;
-			std::variant<int, float, Vec2, Vec3, Vec4, Mat3, Mat4> value;
+			std::variant<int*, float*, Vec2*, Vec3*, Vec4*, Mat3*, Mat4*> value;
 		};
 
-		TerrainMaterial();
+		TerrainMaterial(Ptr<Entity> entity);
 		~TerrainMaterial();
 
 		void AddTexture(int slot, Ptr<Texture2D> tex);
@@ -38,39 +40,39 @@ namespace Ivy
 		Ptr<Shader> GetShader() { return mShader; }
 
 		template <typename T>
-		void AddUniform(String name, T value)
+		void AddUniform(String name, T* value)
 		{
-			std::type_index const index = std::type_index(typeid(T));
+			std::type_index const index = std::type_index(typeid(T*));
 
 			UniformInfo ui = {};
-			ui.name = name;
+			ui.name = name; 
 			ui.value = value;
 			
-			if(index == std::type_index(typeid(int)))
+			if(index == std::type_index(typeid(int*)))
 			{
 				ui.type = INT;		
 			}
-			else if(index == std::type_index(typeid(float)))
+			else if(index == std::type_index(typeid(float*)))
 			{
 				ui.type = FLOAT;
 			}
-			else if(index == std::type_index(typeid(Vec2)))
+			else if(index == std::type_index(typeid(Vec2*)))
 			{
 				ui.type = VEC2;
 			}
-			else if(index == std::type_index(typeid(Vec3)))
+			else if(index == std::type_index(typeid(Vec3*)))
 			{
 				ui.type = VEC3;
 			}
-			else if(index == std::type_index(typeid(Vec4)))
+			else if(index == std::type_index(typeid(Vec4*)))
 			{
 				ui.type = VEC4;
 			}
-			else if(index == std::type_index(typeid(Mat3)))
+			else if(index == std::type_index(typeid(Mat3*)))
 			{
 				ui.type = MAT3;
 			}
-			else if(index == std::type_index(typeid(Mat4)))
+			else if(index == std::type_index(typeid(Mat4*)))
 			{
 				ui.type = MAT4;
 			}

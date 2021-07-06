@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/norm.hpp>
 
 #include "scene/components/Component.h"
@@ -16,18 +17,32 @@ namespace Ivy
 		friend class Camera;
 
 
-		Transform()
-			: mScale({ 1.0f, 1.0f, 1.0f })
+		Transform(Ptr<Entity> entity, Transform* parent = nullptr)
+			: Component::Component(entity)
+			, mScale({ 1.0f, 1.0f, 1.0f })
 			, mRotation(Vec3())
 			, mPosition({ 0.0f, 0.0f, 0.0f })
 			, mFront({ 0.0f, 0.0f, 1.0f })
 			, mRight({ 1.0f, 0.0f, 0.0f })
 			, mUp({ 0.0f, 1.0f, 0.0f })
 			, mComposed(Mat4(1.0f))
+			, mParent(parent)
 		{
 		}
 
-		inline const Vec3&  getDirection() const { return mFront; };
+		void SetParent(Transform* parent) {
+			mParent = parent;
+		}
+
+		inline const Vec3&  getDirection() 
+		{
+			Vec3 radRot = glm::radians(mRotation);
+			mFront.x = glm::sin(radRot.y) * glm::cos(radRot.x);
+			mFront.y = glm::sin(-radRot.x) * glm::cos(radRot.x);
+			mFront.z = glm::cos(radRot.x) * glm::cos(radRot.y);
+			return mFront; 
+		};
+
 		inline const Vec3&  getUp()        const { return mUp; };
 		inline const Vec3&  getRight()     const { return mRight; };
 		inline const Vec3&  getRotation()  const { return mRotation; }
@@ -99,16 +114,26 @@ namespace Ivy
 			scale = glm::scale(scale, mScale);
 
 			//mComposed = scale * rot * trans;
-			mComposed = trans * scale * rot;
+			if (mParent) 
+			{
+				mComposed = trans * scale * rot;
+				mComposed = mParent->getComposed() * mComposed;
+			}
+			else 
+			{
+				mComposed = trans * scale * rot;
+			}
 
 		}
 
 
 
 	private:
-		Vec3  mPosition = Vec3(0.0f, 1.0f, 0.0f);
-		Vec3  mRotation	= Vec3(0.0f, 1.0f, 0.0f);
-		Vec3  mScale		= Vec3(1.0f, 1.0f, 1.0f);
+		Transform* mParent = nullptr;
+
+		Vec3  mPosition    = Vec3(0.0f, 1.0f, 0.0f);
+		Vec3  mRotation	   = Vec3(0.0f, 1.0f, 0.0f);
+		Vec3  mScale	   = Vec3(1.0f, 1.0f, 1.0f);
 		Mat4  mRotationMat = Mat4();
 
 		Vec3  mFront;

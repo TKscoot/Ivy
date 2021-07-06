@@ -66,7 +66,23 @@ Ivy::Mat4& Ivy::Camera::GetViewMatrix()
 	{
 		mLookPos = mTransform->mPosition + mTransform->mFront;
 	}
+
+	//const Mat4 transformation = mTransform->getComposed();
+	//glm::vec3 scale;
+	//glm::quat rotation;
+	//glm::vec3 translation;
+	//glm::vec3 skew;
+	//glm::vec4 perspective;
+	//glm::decompose(transformation, scale, rotation, translation, skew, perspective);
+	//
+	//const Mat4 inverted = glm::inverse(transformation);
+	//Vec3 forward = normalize(glm::vec3(inverted[2]));
+	//forward.x *= -1.0f;
+	//forward.y *= -1.0f;
+	//mLookPos = translation + forward;
+
 	mView = glm::lookAt(mTransform->mPosition, mLookPos, mTransform->mUp);
+
 	return mView;
 }
 

@@ -1,7 +1,8 @@
 #include "ivypch.h"
 #include "AudioClip3D.h"
 
-Ivy::AudioClip3D::AudioClip3D(Ptr<Transform> transform, String filename, bool playOnStart)
+Ivy::AudioClip3D::AudioClip3D(Ptr<Entity> entity, Ptr<Transform> transform, String filename, bool playOnStart)
+	: AudioClip::AudioClip(entity)
 {
 	mTransform = transform;
 	mFilePath = filename;

@@ -22,5 +22,9 @@ private:
 	Ptr<Scene>  mScene2 = nullptr;
 
 	Ptr<Entity> mBouncingEntity = nullptr;
+
+	Ptr<Entity> sponzaEntity = nullptr;
+	Ptr<Transform> sponzaTransform = nullptr;
+	
 	Vector<Ptr<Material>> sceneBaseMaterials;
 };

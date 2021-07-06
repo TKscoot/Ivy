@@ -164,12 +164,10 @@ void main()
 	//color += snow;
 
 	// gamma correct
-	color = pow(color, vec3(1.0/2.2)); 
+	//color = pow(color, vec3(1.0/2.2)); 
 
 	// tonemapping
 	vec3 mappedColor = tonemapAuto(color) ;
-
-
 
 	// Final color output!
 	FragColor = vec4(mappedColor, texture2D(sceneColorMap, TexCoords).a);

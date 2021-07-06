@@ -1,0 +1,187 @@
+#version 430 core
+
+const float PI = 3.141592;
+
+layout(local_size_x = 32) in;
+
+layout(std430, binding=0) coherent buffer height_data
+{
+    float map[];
+};
+
+
+// Variables
+uniform int HeightMapResolution;
+uniform int ErosionParticleCount;
+uniform int ErosionMaxLifeTime;
+uniform float ErosionInertia;
+uniform float ErosionParticleStartSpeed;
+uniform float ErosionParticleStartWater;
+uniform float ErosionSedimentCapacityFactor;
+uniform float ErosionMinSedimentCapacity;
+uniform float ErosionSpeed;
+uniform float ErosionEvaporateSpeed;
+uniform float ErosionGravity;
+uniform float ErosionDepositSpeed;
+
+ void AddToBuffer(int index, int resolution, vec2 cellOffset, float value){
+    map[index] += value * (1 - cellOffset.x) * (1 - cellOffset.y);
+    map[index + 1] += value * cellOffset.x * (1 - cellOffset.y);
+    map[index + resolution] += value * (1 - cellOffset.x) * cellOffset.y;
+    map[index + resolution + 1] += value * cellOffset.x * cellOffset.y;
+}
+ 
+
+uint Hash(uint s)
+{
+    s ^= 2747636419u;
+    s *= 2654435769u;
+    s ^= s >> 16;
+    s *= 2654435769u;
+    s ^= s >> 16;
+    s *= 2654435769u;
+    return s;
+}
+
+float Random(uint seed)
+{
+    return float(Hash(seed)) / 4294967295.0; // 2^32-1
+}
+
+int PosToIndex(ivec2 pos, int width){
+    return pos.x + (pos.y * width);
+}
+
+vec3 CalculateGradientAndHeight (vec2 pos, int resolution) {
+    // Calculate coords
+    ivec2 coord = ivec2(
+        int(pos.x),
+        int(pos.y)
+    );
+
+    // Calculate index
+    int index = PosToIndex(coord, resolution);
+
+    // Calculate droplet's offset inside the cell (0,0) = at NW node, (1,1) = at SE node
+    float x = pos.x - float(coord.x);
+    float y = pos.y - float(coord.y);
+
+    // Calculate heights of the four nodes of the droplet's cell
+    float heightNW = map[index];
+    float heightNE = map[index + 1];
+    float heightSW = map[index + HeightMapResolution];
+    float heightSE = map[index + HeightMapResolution + 1];
+    
+    // Calculate droplet's direction of flow with bilinear interpolation of height difference along the edges
+    float gradientX = (heightNE - heightNW) * (1 - y) + (heightSE - heightSW) * y;
+    float gradientY = (heightSW - heightNW) * (1 - x) + (heightSE - heightNE) * x;
+
+    // Calculate height with bilinear interpolation of the heights of the nodes of the cell
+    float height = heightNW * (1 - x) * (1 - y) + heightNE * x * (1 - y) + heightSW * (1 - x) * y + heightSE * x * y;
+    
+    return vec3(gradientX,gradientY,height);
+}
+
+float Magnitude2D(vec2 dir){
+    return max(0.01,sqrt(dir.x * dir.x + dir.y * dir.y));
+}
+
+
+vec2 Normalize2D(vec2 dir){
+    float magnitude = Magnitude2D(dir);
+    dir.x /= magnitude;
+    dir.y /= magnitude;
+    return dir;
+}
+
+// Kernel
+void main()
+{
+    if(gl_GlobalInvocationID.x < ErosionParticleCount) // Keep in bounds
+    { 
+        float randomNormalizedX = Random(uint(gl_GlobalInvocationID.x));
+        float randomNormalizedY = Random(uint(gl_GlobalInvocationID.x + HeightMapResolution * randomNormalizedX));
+        
+        vec2 pos = vec2(
+            randomNormalizedX * HeightMapResolution,
+            randomNormalizedY * HeightMapResolution
+        );
+        
+        // Particle values
+        vec2 dir = vec2(0,0);
+        float speed = ErosionParticleStartSpeed;
+        float water = ErosionParticleStartWater;
+        float sediment = 0;
+    
+        for(uint lifeTime = 0; lifeTime < ErosionMaxLifeTime; lifeTime++)
+        {
+            // Calculate texture coords
+            ivec2 coord = ivec2(
+                uint(pos.x),
+                uint(pos.y)
+            );
+            
+            int index = PosToIndex(coord, HeightMapResolution);
+            
+            // Calculate cell offset
+            vec2 cellOffset = vec2(
+                pos.x - float(coord.x),
+                pos.y - float(coord.y)
+            );
+            
+            // Calculate interpolated gradient and height
+            vec3 heightAndGradient = CalculateGradientAndHeight(pos, HeightMapResolution);
+            
+            // Update the droplet's direction and position (move position 1 unit regardless of speed)
+            dir.x = (dir.x * ErosionInertia - heightAndGradient.x * (1 - ErosionInertia));
+            dir.y = (dir.y * ErosionInertia - heightAndGradient.y * (1 - ErosionInertia));
+                 
+            // Normalize dir
+            dir = Normalize2D(dir);
+            
+            // Add to position
+            pos += dir;
+            
+            // Header guard to check wheter particle is still inside texture and moving
+            if((dir.x == 0 && dir.y == 0) || pos.x <= 0 || pos.y <= 0 || pos.x >= float(HeightMapResolution - 2) || pos.y >= float(HeightMapResolution - 2)){ break; }
+            
+            // Calculate new height and deltaHeight
+            float height = CalculateGradientAndHeight(pos, HeightMapResolution).z;
+            float deltaHeight = height - heightAndGradient.z;
+            
+            // Calculate the droplet's sediment capacity (higher when moving fast down a slope and contains lots of water)
+            float sedimentCapacity = max(-deltaHeight, ErosionMinSedimentCapacity) * speed * water * ErosionSedimentCapacityFactor;
+            
+            // If carrying more sediment than capacity, or if flowing uphill:
+            if (sediment > sedimentCapacity || deltaHeight > 0) 
+            {
+                // If moving uphill (deltaHeight > 0) try fill up to the current height, otherwise deposit a fraction of the excess sediment
+                float amountToDeposit = (deltaHeight > 0) ? 
+                    min(deltaHeight, sediment) :
+                    (sediment - sedimentCapacity) * ErosionDepositSpeed;
+                
+                // Remove deposited sediment
+                sediment -= amountToDeposit;
+                
+                // Add the sediment to the four nodes of the current cell using bilinear interpolation
+                 AddToBuffer(index, HeightMapResolution, cellOffset, amountToDeposit);
+            }
+            else 
+            {
+                // Erode a fraction of the droplet's current carry capacity.
+                // Clamp the erosion to the change in height so that it doesn't dig a hole in the terrain behind the droplet
+                float amountToErode = min((sedimentCapacity - sediment) * ErosionSpeed, -deltaHeight);
+                
+                // Remove erosion amount from heightmap
+                AddToBuffer(index, HeightMapResolution, cellOffset, -amountToErode);
+                
+                // Add eroded amount to sediment currently carried
+                sediment += amountToErode;
+            }
+    
+            // Update droplet's speed and water content
+            speed = sqrt (max(0,speed * speed + deltaHeight * ErosionGravity));
+            water *= (1 - ErosionEvaporateSpeed);
+        }
+    }
+}

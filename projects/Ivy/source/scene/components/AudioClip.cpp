@@ -1,7 +1,7 @@
 #include "ivypch.h"
 #include "AudioClip.h"
 
-Ivy::AudioClip::AudioClip(String filename, bool playOnStart) : Ivy::Component::Component()
+Ivy::AudioClip::AudioClip(Ptr<Entity> entity, String filename, bool playOnStart) : Ivy::Component::Component(entity)
 {
 	mFilePath = filename;
 	mPlayOnStart = playOnStart;
@@ -138,6 +138,7 @@ void Ivy::AudioClip::OnStart()
 	{
 		Play();
 	}
+
 }
 
 void Ivy::AudioClip::OnUpdate(float deltatime)

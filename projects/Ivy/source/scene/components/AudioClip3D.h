@@ -6,7 +6,7 @@ namespace Ivy
 	class AudioClip3D : public AudioClip
 	{
 	public:
-		AudioClip3D(Ptr<Transform> transform, String filename, bool playOnStart = false);
+		AudioClip3D(Ptr<Entity> entity, Ptr<Transform> transform, String filename, bool playOnStart = false);
 
 		virtual void AddSoundClip(String filename);
 

@@ -9,7 +9,7 @@ namespace Ivy
 	class AudioClip : public Component, public ISoundStopEventReceiver
 	{
 	public:
-		AudioClip(String filename, bool playOnStart = false);
+		AudioClip(Ptr<Entity> entity, String filename, bool playOnStart = false);
 
 		virtual void AddSoundClip(String filename);
 		virtual void Play();
@@ -51,7 +51,7 @@ namespace Ivy
 
 
 	protected:
-		AudioClip() {}
+		AudioClip(Ptr<Entity> entity) : Component::Component(entity) {}
 		String mFilePath = "";
 
 		bool mPlayOnStart = false;

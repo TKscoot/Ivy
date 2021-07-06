@@ -139,6 +139,11 @@ void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize, bool 
 		mEntities[i]->OnDraw(mCamera, currentWindowSize);
 
 		Vector<Ptr<Material>> materials = mEntities[i]->GetComponentsOfType<Material>();
+		if (materials.empty())
+		{
+			continue;
+		}
+
 		Ptr<Shader> shader;
 		for(int j = 0; j < materials.size(); j++)
 		{
@@ -253,13 +258,13 @@ void Ivy::SceneRenderPass::PushLightParams(Ptr<Shader> shader)
 	for(int i = 0; i < mPointLights.size(); i++)
 	{
 		String index = std::to_string(i);
-		shader->SetUniformFloat3("pointLights[" + index + "].position", mPointLights[i].position);
-		shader->SetUniformFloat3("pointLights[" + index + "].ambient", mPointLights[i].ambient);
-		shader->SetUniformFloat3("pointLights[" + index + "].diffuse", mPointLights[i].diffuse);
-		shader->SetUniformFloat3("pointLights[" + index + "].specular", mPointLights[i].specular);
-		shader->SetUniformFloat("pointLights[" + index + "].constant", mPointLights[i].constant);
-		shader->SetUniformFloat("pointLights[" + index + "].linear", mPointLights[i].linear);
-		shader->SetUniformFloat("pointLights[" + index + "].quadratic", mPointLights[i].quadratic);
+		shader->SetUniformFloat3("pointLights[" + index + "].position",  mPointLights[i].position);
+		shader->SetUniformFloat3("pointLights[" + index + "].ambient",	 mPointLights[i].ambient);
+		shader->SetUniformFloat3("pointLights[" + index + "].diffuse",	 mPointLights[i].diffuse);
+		shader->SetUniformFloat3("pointLights[" + index + "].specular",  mPointLights[i].specular);
+		shader->SetUniformFloat( "pointLights[" + index + "].constant",  mPointLights[i].constant);
+		shader->SetUniformFloat( "pointLights[" + index + "].linear",	 mPointLights[i].linear);
+		shader->SetUniformFloat( "pointLights[" + index + "].quadratic", mPointLights[i].quadratic);
 	}
 
 	// Spot Lights

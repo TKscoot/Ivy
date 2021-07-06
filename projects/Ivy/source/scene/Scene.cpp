@@ -35,8 +35,8 @@ Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
 	Ptr<Entity> ent = CreatePtr<Entity>();
 	ent->mIndex = mEntities.size();
 	ent->mCamera = mCamera;
-	ent->AddComponent(CreatePtr<Transform>());
-	ent->AddComponent(CreatePtr<Material>());
+	ent->AddComponent<Transform>();
+	ent->AddComponent<Material>();
 	ent->OnCreate();
 	ent->mScene = shared_from_this();
 	ent->mAttachedSceneIsActive = mIsActiveScene;
@@ -83,6 +83,7 @@ void Ivy::Scene::SetHdriEnvironment(String path)
 void Ivy::Scene::SetHosekWilkieSkyModel(float turbidity)
 {
 	mSkyboxType = HOSEK_WILKIE_SKY;
+	mUseSkybox = false;
 
 	mSkyModel->SetTurbidity(turbidity);
 
@@ -314,6 +315,8 @@ void Ivy::Scene::DrawSceneSettingsGUI(float deltaTime)
 {
 	static float timer = 0;
 	static float fps = 0;
+	float frametime = deltaTime * 1000;
+
 	timer += deltaTime;
 	if (timer >= 1.0f)
 	{
@@ -322,7 +325,9 @@ void Ivy::Scene::DrawSceneSettingsGUI(float deltaTime)
 	}
 
 	ImGui::Begin("Scene Settings!");
-	ImGui::Text("FPS: %f", fps);
+	ImGui::Text("FPS: %.2f Frametime: %.2fms", fps, frametime);
+
+
 	float v[3];
 	v[0] = mDirLight.direction.x;
 	v[1] = mDirLight.direction.y;

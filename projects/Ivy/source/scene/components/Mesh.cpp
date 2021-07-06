@@ -19,14 +19,14 @@ Ivy::Mat4 Mat4FromAssimpMat4(const aiMatrix4x4& matrix)
 	return result;
 }
 
-Ivy::Mesh::Mesh(Entity* ent) : Ivy::Component::Component(ent)
+Ivy::Mesh::Mesh(Ptr<Entity> entity) : Ivy::Component::Component(entity)
 {
 
-	mCamera = ent->GetSceneCamera();
+	mCamera = entity->GetSceneCamera();
 	SetupBoundingBox();
 }
 
-Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Component::Component(ent)
+Ivy::Mesh::Mesh(Ptr<Entity> entity, String filepath, bool useMtlIfProvided) : Ivy::Component::Component(entity)
 {
 
 	mFilePath = filepath;
@@ -39,9 +39,9 @@ Ivy::Mesh::Mesh(Entity* ent, String filepath, bool useMtlIfProvided) : Ivy::Comp
 	SetupBoundingBox();
 }
 
-Ivy::Mesh::Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices) : Ivy::Component::Component(ent)
+Ivy::Mesh::Mesh(Ptr<Entity> entity, Vector<Vertex> vertices, Vector<uint32_t> indices) : Ivy::Component::Component(entity)
 {
-	mCamera = ent->GetSceneCamera();
+	mCamera = entity->GetSceneCamera();
 	SetupBoundingBox();
 
 }
@@ -260,7 +260,7 @@ void Ivy::Mesh::Load()
 			for(int i = 1; i < mAssimpScene->mNumMaterials; i++)
 			{
 
-				materials.push_back(mEntity->AddComponent(CreatePtr<Material>()));
+				materials.push_back(mEntity->AddComponent<Material>());
 			}
 
 
@@ -729,7 +729,7 @@ void Ivy::Mesh::SetupBoundingBox()
 		return;
 	}
 
-	mAABBShader = CreatePtr<Shader>("shaders/AABB.vert", "shaders/AABB.frag");
+	mAABBShader = CreatePtr<Shader>("shaders/debug/AABB.vert", "shaders/debug/AABB.frag");
 
 	for (int i = 0; i < mSubmeshes.size(); i++)
 	{
@@ -970,7 +970,7 @@ const aiNodeAnim* Ivy::Mesh::FindNodeAnim(const aiAnimation* pAnimation, const s
 	{
 		const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
 
-		if(std::string(pNodeAnim->mNodeName.data) == NodeName)
+		if(String(pNodeAnim->mNodeName.data) == NodeName)
 		{
 			return pNodeAnim;
 		}

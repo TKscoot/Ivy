@@ -35,7 +35,7 @@ namespace Ivy
 		 * Default constructor
 		 * 
 		 */
-		Material();
+		Material(Ptr<Entity> entity);
 
 		/*!
 		 * Sets a texture object as specified texture type

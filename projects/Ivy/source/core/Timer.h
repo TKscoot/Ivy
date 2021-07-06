@@ -44,7 +44,7 @@ namespace Ivy
 				endTime = mEndTime;
 			}
 
-			return std::chrono::duration_cast<std::chrono::milliseconds>(endTime - mStartTime).count();
+			return std::chrono::duration<double>(endTime - mStartTime).count() * 1000;
 		}
 
 		/*!
@@ -54,7 +54,7 @@ namespace Ivy
 		 */
 		double ElapsedSeconds()
 		{
-			return ElapsedMilliseconds() / 1000.0;
+			return std::chrono::duration<double>(mEndTime - mStartTime).count();
 		}
 
 	private:

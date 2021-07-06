@@ -11,7 +11,12 @@ void Ivy::Renderer::Initialize()
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-    glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
+
+	//TODO TEST!!
+	glDisable(GL_FRAMEBUFFER_SRGB);
+
+
 	glShadeModel(GL_SMOOTH);
 
 	//glEnable(GL_MULTISAMPLE);
@@ -54,31 +59,31 @@ void Ivy::Renderer::Render(float deltaTime)
 }
 
 void Ivy::Renderer::GLLogCallback(unsigned source, unsigned type, unsigned id, unsigned severity, int length, const char* message,
-                                  const void* userParam)
+								  const void* userParam)
 {
-    switch (severity)
-    {
-    case GL_DEBUG_SEVERITY_HIGH:
-        Debug::CoreCritical(message);
-        return;
-    case GL_DEBUG_SEVERITY_MEDIUM:
-        Debug::CoreWarning(message);
-        return;
-    case GL_DEBUG_SEVERITY_LOW:
-        Debug::CoreWarning(message);
-        return;
-    case GL_DEBUG_SEVERITY_NOTIFICATION:
-        Debug::CoreLog(message);
-        return;
-    }
+	switch (severity)
+	{
+	case GL_DEBUG_SEVERITY_HIGH:
+		Debug::CoreCritical(message);
+		return;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		Debug::CoreWarning(message);
+		return;
+	case GL_DEBUG_SEVERITY_LOW:
+		Debug::CoreWarning(message);
+		return;
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		Debug::CoreLog(message);
+		return;
+	}
 }
 
 void Ivy::Renderer::EnableDebugMessages()
 {
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(GLLogCallback, nullptr);
-    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	glDebugMessageCallback(GLLogCallback, nullptr);
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 }
 
 void Ivy::Renderer::InitLoadingScreen()
@@ -124,7 +129,7 @@ void Ivy::Renderer::InitLoadingScreen()
 
 }
 
-bool endsWith(std::string const &fullString, std::string const &ending)
+bool endsWith(Ivy::String const &fullString, std::string const &ending)
 {
 	if(fullString.length() >= ending.length())
 	{
@@ -136,7 +141,7 @@ bool endsWith(std::string const &fullString, std::string const &ending)
 	}
 }
 
-void getFilenameFromPath(std::string& str)
+void getFilenameFromPath(Ivy::String& str)
 {
 	std::size_t found = str.find_last_of("/\\");
 	str = str.substr(found + 1);

@@ -8,7 +8,7 @@ namespace Ivy
 	class AudioListener : public Component
 	{
 	public:
-		AudioListener(Ptr<Camera> camera);
+		AudioListener(Ptr<Entity> entity, Ptr<Camera> camera);
 
 		void OnStart() override;
 		void OnUpdate(float deltaTime) override;

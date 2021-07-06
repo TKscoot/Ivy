@@ -10,6 +10,7 @@
 #include "renderpasses/SceneRenderPass.h"
 #include "renderpasses/PostprocessingRenderPass.h"
 #include "rendering/ImGuiHook.h"
+#include "imguial_sparkline.h"
 
 
 namespace Ivy
@@ -74,8 +75,8 @@ namespace Ivy
 			Ptr<T> ent = CreatePtr<T>(std::forward<Args>(args)...);
 			ent->mIndex = mEntities.size();
 			ent->mScene = shared_from_this();
-			ent->AddComponent(CreatePtr<Transform>());
-			ent->AddComponent(CreatePtr<Material>());
+			ent->AddComponent<Transform>();
+			ent->AddComponent<Material>();
 			ent->OnCreate();
 			Debug::CoreLog("Created entity with index {}", ent->mIndex);
 
@@ -205,6 +206,8 @@ namespace Ivy
 							    Vec3 ambient,
 							    Vec3 diffuse,
 							    Vec3 specular);
+
+		DirectionalLight& GetDirLight() { return mDirLight; }
 
 		/*!
 		 * Sets the direction of the light

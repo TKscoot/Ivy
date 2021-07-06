@@ -4,12 +4,16 @@
 out vec4 FragColor;
 
 layout(binding = 0) uniform sampler2D diffuseMap;
+layout(binding = 1) uniform sampler2D redMap;
 
 in vec3 FragPos;
 in vec3 ViewPosition;
 in vec2 TexCoords;
 in vec3 Normal;
 in vec3 Halfway;
+
+uniform vec3 dirLightDirection;
+uniform float steepnessCutoff;
 
 
 const vec3 Ca = vec3(  0.00005, 0.0000492, 0.0000439);
@@ -23,16 +27,24 @@ const vec3 light = normalize (vec3 (2, 1, 3));
 void main()
 {        
 
-	vec3 diffTex = texture(diffuseMap, TexCoords).rgb;
+	vec3 diffTex = texture(diffuseMap, TexCoords * 5.0).rgb;
+	vec3 redTex = texture(redMap, TexCoords * 5.0).rgb;
 
+    vec3 norm = normalize(Normal);
 
-		// ambient
-    float ambientStrength = 0.4;
+    // Blending between textures based on steepness
+    float slope = 1 - norm.y;
+    float grassBlendHeight = steepnessCutoff * (1 - 0.5);
+    float grassWeight = 1 - clamp((slope-grassBlendHeight)/(steepnessCutoff-grassBlendHeight), 0.0, 1.0);
+
+    vec3 color = diffTex * grassWeight + redTex * (1-grassWeight);
+
+	// ambient
+    float ambientStrength = 0.2;
     vec3 ambient = ambientStrength * Cd.xyz;
   	
     // diffuse 
-    vec3 norm = normalize(Normal);
-    vec3 lightDir = light;
+    vec3 lightDir = normalize(dirLightDirection);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * Cd.xyz;
     
@@ -43,7 +55,7 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = specularStrength * spec * Cd.xyz;  
         
-    vec3 result = (ambient + diffuse + specular) * diffTex;
+    vec3 result = (ambient + diffuse + specular) * color;
 
     FragColor = vec4(vec3(result), 1.0);
 }

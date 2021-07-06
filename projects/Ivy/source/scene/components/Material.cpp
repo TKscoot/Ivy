@@ -4,12 +4,13 @@
 Ivy::UnorderedMap<Ivy::String, Ivy::Ptr<Ivy::Texture2D>> Ivy::Material::mLoadedTextures = {};
 Ivy::Vector<std::future<Ivy::Texture2DData>> Ivy::Material::mFutures = {};
 
-Ivy::Material::Material()
+Ivy::Material::Material(Ptr<Entity> entity)
 	: mAmbient(Vec3(0.5f, 0.5f, 0.5f))
 	, mDiffuse(Vec3(1.0f, 1.0f, 1.0f))
 	, mSpecular(Vec3(0.5f, 0.5f, 0.5f))
 	//, mMetallic(0.0f)
 	//, mRoughness(0.5f)
+	, Component::Component(entity)
 {
 	// Set default shader
 	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Default.vert", "shaders/PBR.frag"); // TODO: Check if animated

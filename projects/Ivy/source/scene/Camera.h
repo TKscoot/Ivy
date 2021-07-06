@@ -19,7 +19,7 @@ namespace Ivy
 		 */
 		Camera(Vec3 position)
 		{
-			mTransform = CreatePtr<Transform>();
+			mTransform = CreatePtr<Transform>(nullptr);
 			mTransform->mPosition = position;
 			mView = glm::lookAt(mTransform->mPosition, mTransform->mPosition + mTransform->mFront, mTransform->mUp);
 			UpdateCameraVectors();
@@ -80,6 +80,10 @@ namespace Ivy
 		{
 			mTransform->mFront.x = glm::cos(glm::radians(rotation)) * glm::cos(glm::radians(rotation));
 			mTransform->mFront = glm::normalize(mTransform->mFront);
+		}
+
+		void SetFront(Vec3 front) {
+			mTransform->mFront = front;
 		}
 
 		/*!

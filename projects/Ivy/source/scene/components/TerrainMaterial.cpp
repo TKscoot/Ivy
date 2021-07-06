@@ -1,7 +1,7 @@
 #include "ivypch.h"
 #include "TerrainMaterial.h"
 
-Ivy::TerrainMaterial::TerrainMaterial()
+Ivy::TerrainMaterial::TerrainMaterial(Ptr<Entity> entity) : Component::Component(entity)
 {
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &mMaxTextures);
 
@@ -26,7 +26,7 @@ void Ivy::TerrainMaterial::AddTexture(int slot, Ptr<Texture2D> tex)
 		Debug::CoreError("Exceeded max texture units! (max: {})", mMaxTextures);
 		return;
 	}
-	else
+	else 
 	{
 		if(mTextures[slot] != nullptr)
 		{
@@ -156,24 +156,26 @@ void Ivy::TerrainMaterial::UploadUniforms()
 	for(auto& ui : mUniforms)
 	{
 		if(ui.type == INT)
-			mShader->SetUniformInt(ui.name, std::get<int>(ui.value));
+			mShader->SetUniformInt(ui.name, *std::get<int*>(ui.value));
 
 		if(ui.type == FLOAT)
-			mShader->SetUniformFloat(ui.name, std::get<float>(ui.value));
+			mShader->SetUniformFloat(ui.name, *std::get<float*>(ui.value));
 
 		if(ui.type == VEC2)
-			mShader->SetUniformFloat2(ui.name, std::get<Vec2>(ui.value));
+			mShader->SetUniformFloat2(ui.name, *std::get<Vec2*>(ui.value));
 
 		if(ui.type == VEC3)
-			mShader->SetUniformFloat3(ui.name, std::get<Vec3>(ui.value));
+			mShader->SetUniformFloat3(ui.name, *std::get<Vec3*>(ui.value));
 
 		if(ui.type == VEC4)
-			mShader->SetUniformFloat4(ui.name, std::get<Vec4>(ui.value));
+			mShader->SetUniformFloat4(ui.name, *std::get<Vec4*>(ui.value));
 
 		if(ui.type == MAT3)
-			mShader->SetUniformMat3(ui.name, std::get<Mat3>(ui.value));
+			mShader->SetUniformMat3(ui.name, *std::get<Mat3*>(ui.value));
 
 		if(ui.type == MAT4)
-			mShader->SetUniformMat4(ui.name, std::get<Mat4>(ui.value));
+			mShader->SetUniformMat4(ui.name, *std::get<Mat4*>(ui.value));
 	}
+
+	mShader->SetUniformFloat3("dirLightDirection", mEntity->GetAttachedScene()->GetDirLight().direction);
 }

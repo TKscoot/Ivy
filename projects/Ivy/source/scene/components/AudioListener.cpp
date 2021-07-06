@@ -1,7 +1,7 @@
 #include "ivypch.h"
 #include "AudioListener.h"
 
-Ivy::AudioListener::AudioListener(Ptr<Camera> camera)
+Ivy::AudioListener::AudioListener(Ptr<Entity> entity, Ptr<Camera> camera) : Component::Component(entity)
 {
 	mCamera = camera;
 

@@ -10,13 +10,12 @@ AudioTest::AudioTest()
 
 void AudioTest::OnCreate()
 {
-	mAudioClip = CreatePtr<AudioClip>("assets/sounds/ophelia.mp3");
-	AddComponent<AudioClip>(mAudioClip);
-	mAudioClip3D = CreatePtr<AudioClip3D>(GetFirstComponentOfType<Transform>(), "assets/sounds/ophelia.mp3");
+	mAudioClip = AddComponent<AudioClip>("assets/sounds/ophelia.mp3");
+
+	mAudioClip3D = AddComponent<AudioClip3D>(GetFirstComponentOfType<Transform>(), "assets/sounds/ophelia.mp3");
 	mAudioClip3D->ShouldLoop(true);
-	AddComponent<AudioClip3D>(mAudioClip3D);
-	mAudioListener = CreatePtr<AudioListener>(mScene->GetCamera());
-	AddComponent<AudioListener>(mAudioListener);
+	
+	mAudioListener = AddComponent<AudioListener>(mScene->GetCamera());
 }
 
 void AudioTest::OnUpdate(float deltaTime)

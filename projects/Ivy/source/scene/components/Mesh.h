@@ -91,7 +91,7 @@ namespace Ivy
 		 * 
 		 * \param ent The entity of this attached mesh component
 		 */
-        Mesh(Entity* ent);
+        Mesh(Ptr<Entity> entity);
 
 		/*!
 		 * Loads a mesh from file
@@ -100,7 +100,7 @@ namespace Ivy
 		 * \param filepath The path to the mesh file
 		 * \param useMtlIfProvided Bool to determine if MTL Materials should be used. Default = true
 		 */
-        Mesh(Entity* ent, String filepath, bool useMtlIfProvided = true);
+        Mesh(Ptr<Entity> entity, String filepath, bool useMtlIfProvided = true);
 		
 		/*!
 		 * Creates a mesh from vertices and indices
@@ -109,7 +109,7 @@ namespace Ivy
 		 * \param vertices The vertex data of the mesh
 		 * \param indices The index data of the mesh
 		 */
-        Mesh(Entity* ent, Vector<Vertex> vertices, Vector<uint32_t> indices);
+        Mesh(Ptr<Entity> entity, Vector<Vertex> vertices, Vector<uint32_t> indices);
 
 		/*!
 		 * OnUpdate Callback override

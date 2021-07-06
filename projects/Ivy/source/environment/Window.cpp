@@ -81,12 +81,12 @@ namespace Ivy
 		return mWnd;
 	}
 	
-	void Window::SetTitle(std::string title)
+	void Window::SetTitle(String title)
 	{
 		glfwSetWindowTitle(mWnd, title.c_str());
 	}
 
-	void Window::SetWindowIcon(std::string path)
+	void Window::SetWindowIcon(String path)
 	{
 		int x, y, comp;
 		GLFWimage icon[1];

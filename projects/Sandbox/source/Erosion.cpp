@@ -1,5 +1,5 @@
 #include "Erosion.h"
-#include <cmath>
+/*#include <cmath>
 #include <iostream>
 #include <omp.h>
 
@@ -192,3 +192,4 @@ void Erosion<COMPUTE_MODE>::initializeBrushIndices()
 // Guarantees that all class templates are compiled
 template class Erosion<compute_mode_e::serial>;
 template class Erosion<compute_mode_e::parallel>;
+*/

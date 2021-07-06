@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -15,20 +15,19 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ImGui</RootNamespace>
-    <LatestTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</LatestTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -104,6 +103,7 @@
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="imgui_themes.h" />
+    <ClInclude Include="imguial_sparkline.h" />
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
@@ -128,27 +128,77 @@
     <None Include=".gitignore" />
     <None Include="ImGui.vcxproj" />
     <None Include="ImGui.vcxproj.filters" />
+    <None Include="ImGui.vcxproj.user" />
     <None Include="LICENSE.txt" />
+    <None Include="Lib\Debug\ImGui.idb" />
+    <None Include="Lib\Debug\ImGui.lib.recipe" />
+    <None Include="Lib\Debug\ImGui.log" />
+    <None Include="Lib\Debug\ImGui.pdb" />
+    <None Include="Lib\Debug\ImGui.tlog\CL.14268.write.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\CL.command.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\CL.read.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\ImGui.lastbuildstate" />
+    <None Include="Lib\Debug\ImGui.tlog\Lib-link.read.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\Lib-link.write.1.tlog" />
+    <None Include="Lib\Debug\ImGui.tlog\Lib.command.1.tlog" />
+    <None Include="Lib\Debug\binary_to_compressed_c.obj" />
+    <None Include="Lib\Debug\imgui.obj" />
+    <None Include="Lib\Debug\imgui_demo.obj" />
+    <None Include="Lib\Debug\imgui_draw.obj" />
+    <None Include="Lib\Debug\imgui_impl_glfw.obj" />
+    <None Include="Lib\Debug\imgui_impl_opengl3.obj" />
+    <None Include="Lib\Debug\imgui_stdlib.obj" />
+    <None Include="Lib\Debug\imgui_tables.obj" />
+    <None Include="Lib\Debug\imgui_themes.obj" />
+    <None Include="Lib\Debug\imgui_widgets.obj" />
+    <None Include="Lib\ImGui.idb" />
     <None Include="Lib\ImGui.lib" />
+    <None Include="Lib\ImGui.lib.lastcodeanalysissucceeded" />
+    <None Include="Lib\ImGui.pdb" />
+    <None Include="Lib\Release\CodeAnalysisResultManifest.txt" />
+    <None Include="Lib\Release\ImGui.Build.CppClean.log" />
+    <None Include="Lib\Release\ImGui.lib.recipe" />
     <None Include="Lib\Release\ImGui.log" />
-    <None Include="Lib\Release\ImGui.pdb" />
+    <None Include="Lib\Release\ImGui.tlog\CL.1008.write.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\CL.command.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\CL.read.1.tlog" />
-    <None Include="Lib\Release\ImGui.tlog\CL.write.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\ImGui.lastbuildstate" />
     <None Include="Lib\Release\ImGui.tlog\Lib-link.read.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\Lib-link.write.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\Lib.command.1.tlog" />
+    <None Include="Lib\Release\ImGui.vcxproj.FileListAbsolute.txt" />
+    <None Include="Lib\Release\NativeCodeAnalysis.read.1.tlog" />
+    <None Include="Lib\Release\binary_to_compressed_c.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\binary_to_compressed_c.nativecodeanalysis.xml" />
     <None Include="Lib\Release\binary_to_compressed_c.obj" />
+    <None Include="Lib\Release\imgui.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\imgui.nativecodeanalysis.xml" />
     <None Include="Lib\Release\imgui.obj" />
+    <None Include="Lib\Release\imgui_demo.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\imgui_demo.nativecodeanalysis.xml" />
     <None Include="Lib\Release\imgui_demo.obj" />
+    <None Include="Lib\Release\imgui_draw.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\imgui_draw.nativecodeanalysis.xml" />
     <None Include="Lib\Release\imgui_draw.obj" />
+    <None Include="Lib\Release\imgui_impl_glfw.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\imgui_impl_glfw.nativecodeanalysis.xml" />
     <None Include="Lib\Release\imgui_impl_glfw.obj" />
+    <None Include="Lib\Release\imgui_impl_opengl3.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\imgui_impl_opengl3.nativecodeanalysis.xml" />
     <None Include="Lib\Release\imgui_impl_opengl3.obj" />
+    <None Include="Lib\Release\imgui_stdlib.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\imgui_stdlib.nativecodeanalysis.xml" />
     <None Include="Lib\Release\imgui_stdlib.obj" />
+    <None Include="Lib\Release\imgui_tables.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\imgui_tables.nativecodeanalysis.xml" />
     <None Include="Lib\Release\imgui_tables.obj" />
+    <None Include="Lib\Release\imgui_themes.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\imgui_themes.nativecodeanalysis.xml" />
     <None Include="Lib\Release\imgui_themes.obj" />
+    <None Include="Lib\Release\imgui_widgets.nativecodeanalysis.sarif" />
+    <None Include="Lib\Release\imgui_widgets.nativecodeanalysis.xml" />
     <None Include="Lib\Release\imgui_widgets.obj" />
+    <None Include="Lib\Release\vc.nativecodeanalysis.all.xml" />
     <None Include="misc\README.txt" />
     <None Include="misc\cpp\README.txt" />
     <None Include="misc\debuggers\README.txt" />

@@ -16,16 +16,16 @@ namespace Ivy
 		 * Default constructor
 		 * 
 		 */
-		Component() {}
+		//Component() {}
 
 		/*!
 		 * Constructor
 		 * 
 		 * \param ent Entity wich uses this component
 		 */
-		Component(Entity* ent)
+		Component(Ptr<Entity> ent)
+			: mEntity(ent)
 		{
-			mEntity = ent;
 		}
 
 		/*!
@@ -49,7 +49,6 @@ namespace Ivy
 		virtual void OnCreate() 
 		{
 			//Debug::CoreWarning("Entity: {}", mEntity);
-			std::cout << "Entity: " << mEntity << std::endl;
 		};
 
 		/*!
@@ -113,7 +112,7 @@ namespace Ivy
 		 * 
 		 * \param ent The entity with this component attached
 		 */
-		void SetEntity(Entity* ent) { mEntity = ent; }
+		void SetEntity(Ptr<Entity> ent) { mEntity = ent; }
 
 		/*!
 		 * Destructor
@@ -122,14 +121,14 @@ namespace Ivy
 		virtual ~Component() = default;
 
 	protected:
-		Entity* mEntity = nullptr;
+		Ptr<Entity> mEntity = nullptr;
 
 	private:
 		friend class Entity;
 
 		void OnCreate(Ptr<Entity> entity)
 		{
-			mEntity = entity.get();
+			mEntity = entity;
 		}
 		bool mActive = true;
 		uint32_t mEntityIndex = 0;

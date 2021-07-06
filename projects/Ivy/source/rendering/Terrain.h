@@ -40,11 +40,14 @@ namespace Ivy
 		
 		VecI2 GetTerrainDimensions() { return VecI2(mWidth, mHeight); }
 
+		void OnCreate() override;
 		void OnUpdate(float deltaTime) override;
 		void OnDraw(Ptr<Camera> camera, Vec2& currentWindowSize) override;
 
 		void CreateResources();
 		void CalculateNormals(int x, int z);
+
+		Ptr<TerrainMaterial> GetMaterial() { return mMaterial; }
 	private:
 
 		int				  mWidth  = 512;

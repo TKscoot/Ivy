@@ -56,6 +56,7 @@ namespace Ivy
 		 * \param component Pointer to the Component
 		 * \return Returns a Pointer to the Component
 		 */
+		 /*
 		template <typename T>
 		Ptr<T> AddComponent(Ptr<T> component)
 		{
@@ -69,6 +70,30 @@ namespace Ivy
 			component->SetEntityIndex(mIndex);
 			component->SetEntity(this);
 			component->OnCreate(shared_from_this());
+			component->OnCreate();
+
+			return component;
+		}
+		 */
+
+		template <typename T, typename... Args>
+		Ptr<T> AddComponent(Args&&... args)
+		{
+			std::type_index const index = std::type_index(typeid(T));
+			if (mComponents.end() == mComponents.find(index))
+			{
+				mComponents[index] = {};
+			}
+
+			Entity* e = this;
+			Ptr<Entity> thisEnt = shared_from_this();
+
+			Ptr<T> component = CreatePtr<T>(thisEnt, std::forward<Args>(args)...);
+
+			mComponents[index].push_back(component);
+			component->SetEntityIndex(mIndex);
+			//component->SetEntity(this);
+			//component->OnCreate(shared_from_this());
 			component->OnCreate();
 
 			return component;
@@ -88,6 +113,7 @@ namespace Ivy
 			}
 
 			mComponents[index].clear();
+			mComponents.erase(index);
 		}
 
 		/*!

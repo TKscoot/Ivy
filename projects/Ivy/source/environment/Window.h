@@ -63,13 +63,13 @@ namespace Ivy
 		/// Sets the title of the window
 		/// @param title window title string
 		///
-		void SetTitle(std::string title);
+		void SetTitle(String title);
 
 		///
 		/// Sets the icon of the window
 		/// @param path The path to the icon
 		///
-		void SetWindowIcon(std::string path);
+		void SetWindowIcon(String path);
 
 		///
 		/// Enables/Disables vsync
