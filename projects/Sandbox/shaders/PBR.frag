@@ -98,7 +98,6 @@ float GetShadowBias(vec3 normal);
 vec2 searchRegionRadiusUV(float zWorld);
 
 
-
 //MAIN
 void main()
 {
@@ -155,6 +154,24 @@ void main()
 	{
 		shadow = CalcShadowsCherno(N);
 	}
+
+
+
+
+	uint cascadeIndex = 0;
+
+	const uint SHADOW_MAP_CASCADE_COUNT = 4;
+	for (uint i = 0; i < SHADOW_MAP_CASCADE_COUNT - 1; i++)
+	{
+		if (ViewPosition.z < csm.cascadeSplits[i])
+			cascadeIndex = i + 1;
+	}
+
+	
+
+
+
+
 
 
 	vec3 Lo = vec3(0.0);
@@ -337,7 +354,6 @@ vec3 RotateVectorAboutY(float angle, vec3 vec)
                             vec3(-sin(angle),0.0,cos(angle))};
     return rotationMatrix * vec;
 }
-
 vec3 IBL(vec3 F0, vec3 Lr, vec3 normal, float roughness, float metallic, vec3 albedo, float NdotV, vec3 view)
 {
 	vec3 irradiance = texture(irradianceMap, normal).rgb;
@@ -356,6 +372,7 @@ vec3 IBL(vec3 F0, vec3 Lr, vec3 normal, float roughness, float metallic, vec3 al
 
 	return kd * diffuseIBL + specularIBL;
 }
+
 
 
 
@@ -418,7 +435,8 @@ float HardShadows_DirectionalLight(sampler2D shadowMap, vec3 shadowCoords, vec3 
     }
     shadow /= 9.0;
 
-	return 1.0 - shadow/*1.0 - step(z + bias, shadowCoords.z)  * ShadowFade*/;
+	return 1.0 - shadow/*1.0 - step(z + bias, shadowCoords.z)  * ShadowFade */;
+
 }
 
 float PCF_DirectionalLight(sampler2D shadowMap, vec3 shadowCoords, float uvRadius, vec3 normal)

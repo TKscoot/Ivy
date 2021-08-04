@@ -795,13 +795,13 @@ unsigned int Ivy::Mesh::FindPosition(float AnimationTime, const aiNodeAnim* pNod
 		}
 	}
 
-	assert(0);
+	//assert(0);
 	return 0;
 }
 
 unsigned int Ivy::Mesh::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
-	assert(pNodeAnim->mNumRotationKeys > 0);
+	//assert(pNodeAnim->mNumRotationKeys > 0);
 
 	for(unsigned int i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++)
 	{
@@ -811,13 +811,13 @@ unsigned int Ivy::Mesh::FindRotation(float AnimationTime, const aiNodeAnim* pNod
 		}
 	}
 
-	assert(0);
+	//assert(0);
 	return 0;
 }
 
 unsigned int Ivy::Mesh::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
-	assert(pNodeAnim->mNumScalingKeys > 0);
+	//assert(pNodeAnim->mNumScalingKeys > 0);
 
 	for(unsigned int i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++)
 	{
@@ -827,7 +827,7 @@ unsigned int Ivy::Mesh::FindScaling(float AnimationTime, const aiNodeAnim* pNode
 		}
 	}
 
-	assert(0);
+	//assert(0);
 	return 0;
 }
 
@@ -841,10 +841,10 @@ void Ivy::Mesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, c
 
 	unsigned int PositionIndex = FindPosition(AnimationTime, pNodeAnim);
 	unsigned int NextPositionIndex = (PositionIndex + 1);
-	assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
+	//assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
 	float DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
 	float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
-	assert(Factor >= 0.0f && Factor <= 1.0f);
+	//assert(Factor >= 0.0f && Factor <= 1.0f);
 	const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
 	const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
 	aiVector3D Delta = End - Start;
@@ -862,10 +862,10 @@ void Ivy::Mesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime,
 
 	unsigned int RotationIndex = FindRotation(AnimationTime, pNodeAnim);
 	unsigned int NextRotationIndex = (RotationIndex + 1);
-	assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
+	//assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
 	float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
 	float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-	assert(Factor >= 0.0f && Factor <= 1.0f);
+	//assert(Factor >= 0.0f && Factor <= 1.0f);
 	const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
 	const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
 	aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
@@ -882,10 +882,10 @@ void Ivy::Mesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, co
 
 	unsigned int ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
 	unsigned int NextScalingIndex = (ScalingIndex + 1);
-	assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
+	//assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
 	float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
 	float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
-	assert(Factor >= 0.0f && Factor <= 1.0f);
+	//assert(Factor >= 0.0f && Factor <= 1.0f);
 	const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
 	const aiVector3D& End = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
 	aiVector3D Delta = End - Start;

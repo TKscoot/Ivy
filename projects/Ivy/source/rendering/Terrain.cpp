@@ -12,6 +12,7 @@ void Ivy::Terrain::GenerateMesh()
 {
 
 	// Vertices
+	mVertices.clear();
 	mVertices.resize(mWidth * mHeight);
 	int idx = 0;
 	mIndices.clear();
@@ -46,15 +47,6 @@ void Ivy::Terrain::GenerateMesh()
 			uint64_t i1 = ((y + 0) * mWidth) + (x + 1);
 			uint64_t i2 = ((y + 1) * mWidth) + (x + 0);
 			uint64_t i3 = ((y + 1) * mWidth) + (x + 1);
-	
-			Vec3 p0 = mVertices[i0].position;
-			Vec3 p1 = mVertices[i1].position;
-			Vec3 p2 = mVertices[i2].position;
-
-			Vec3 v1 = p1 - p0;
-			Vec3 v2 = p2 - p0;
-
-			Vec3 dot = glm::cross(v1, v2);
 
 			// Add these indices to a list.
 			mIndices.push_back(i2);
@@ -81,37 +73,7 @@ float Ivy::Terrain::GetHeight(int x, int z)
 
 float Ivy::Terrain::GetHeightFromWorldPos(float xPos, float zPos)
 {
-	// Transform from terrain local space to "cell" space.
-	auto transform = GetFirstComponentOfType<Transform>();
-
-	Vec3 worldPos = Vec3(xPos, 0.0f, zPos) - transform->getPosition();
-
-
-
-	Vec3 twd;
-	twd.x = (mWidth - 1) * mPointWidth;
-	twd.y = 0.0f;
-	twd.z = (mHeight - 1) * mPointWidth;
-	
-	Vec3 pos;
-	pos.x = ((worldPos.x - transform->getPosition().x) / twd.x);// * mWidth;
-	pos.z = ((worldPos.z - transform->getPosition().z) / twd.z);// * mHeight;
-
-	Vec3 terPos;
-	terPos.x = mWidth * pos.x;
-	terPos.z = mHeight * pos.z;
-
-	terPos.x = (xPos + 0.5f * ((mWidth - 1) * mPointWidth)) / mPointWidth;
-	terPos.z = (zPos - 0.5f * ((mHeight - 1) * mPointWidth)) / -mPointWidth;
-
-	int x = glm::floor(terPos.x);
-	int z = glm::floor(terPos.z);
-
-
-	Debug::CoreLog("x: {} y: {}", terPos.x, terPos.z);
-
-	
-	return mHeights[x * mWidth + z];
+	return mVertices[zPos * mWidth + xPos].position.y;
 }
 
 void Ivy::Terrain::SetHeights(float* heights)
@@ -171,6 +133,10 @@ void Ivy::Terrain::OnDraw(Ptr<Camera> camera, Vec2& currentWindowSize)
 
 void Ivy::Terrain::CreateResources()
 {
+	if (mVertexBuffer) mVertexBuffer->Destroy();
+	if (mIndexBuffer) mIndexBuffer->Destroy();
+	if (mVertexArray) mVertexArray->Destroy();
+
 	mVertexBuffer = CreatePtr<VertexBuffer>();
 	mIndexBuffer = CreatePtr<IndexBuffer>();
 
@@ -203,7 +169,7 @@ void Ivy::Terrain::CreateResources()
 
 }
 
-void Ivy::Terrain::CalculateNormals(int x, int z)
+void Ivy::Terrain::CalculateNormals()
 {
 
 	for(int i = 0; i < mIndices.size(); i += 3)
@@ -220,10 +186,4 @@ void Ivy::Terrain::CalculateNormals(int x, int z)
 		mVertices[mIndices[(size_t)i + 1]].normal += faceNormal;
 		mVertices[mIndices[(size_t)i + 2]].normal += faceNormal;
 	}
-	
-	// Normalize vertex normal
-	//for(int i = 0; i < mVertices.size(); i++)
-	//{
-	//	mVertices[i].normal = glm::normalize(mVertices[i].normal);
-	//}
 }

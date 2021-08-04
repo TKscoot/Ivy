@@ -94,11 +94,11 @@ namespace Ivy
 		Vector<Ptr<Texture2D>> mTextures;
 		Vector<UniformInfo> mUniforms;
 
-		int			   mMaxTextures = 0;
+		int			mMaxTextures = 0;
 
-		Ptr<Shader>			   mShader = nullptr;
+		Ptr<Shader>	mShader = nullptr;
 
-		Vec2				   mTextureTiling = Vec2(32.0f);
+		Vec2	    mTextureTiling = Vec2(32.0f);
 
 
 	};

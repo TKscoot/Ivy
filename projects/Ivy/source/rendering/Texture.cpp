@@ -125,6 +125,7 @@ void Ivy::Texture2D::Load(String filepath)
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(data);
 
@@ -168,6 +169,7 @@ void Ivy::Texture2D::Load(String filepath, GLenum internalFormat, GLenum dataFor
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(data);
 }
@@ -183,7 +185,7 @@ void Ivy::Texture2D::SetData(void * data, uint32_t size)
 	glTextureParameteri(mID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
-	//glGenerateMipmap(GL_TEXTURE_2D);
+	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 void Ivy::Texture2D::Bind(uint32_t slot)

@@ -108,6 +108,11 @@ bool Ivy::Input::GetMouseCursorVisible()
 void Ivy::Input::Initialize(Ptr<Window> wnd)
 {
 	mGlfwWnd = wnd->GetHandle();
+
+	// enabling raw input
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(mGlfwWnd, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+
 	lastX = wnd->GetWindowSize().x;
 	lastY = wnd->GetWindowSize().y;
 }

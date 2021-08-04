@@ -2,6 +2,7 @@
 #include <thread>
 #include <condition_variable>
 #include <list>
+#include <functional>
 
 class Worker
 {

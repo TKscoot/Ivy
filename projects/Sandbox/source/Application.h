@@ -23,8 +23,8 @@ private:
 
 	Ptr<Entity> mBouncingEntity = nullptr;
 
-	Ptr<Entity> sponzaEntity = nullptr;
-	Ptr<Transform> sponzaTransform = nullptr;
+	Ptr<Entity> planeEntity = nullptr;
+	Ptr<Transform> planeTransform = nullptr;
 	
 	Vector<Ptr<Material>> sceneBaseMaterials;
 };

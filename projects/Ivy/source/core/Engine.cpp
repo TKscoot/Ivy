@@ -44,6 +44,8 @@ void Ivy::Engine::Initialize(int windowWidth, int  windowHeight, const std::stri
 	}
 
 
+
+
 	CheckGLVersion(4, 0);
 
 	Input::Initialize(mWnd);
@@ -119,20 +121,6 @@ void Ivy::Engine::NewFrame()
 	std::chrono::duration<float> delta = newtime - lastTime;
 	mDeltaTime = delta.count();
 
-	static float timer = 0;
-	timer += mDeltaTime;
-
-	if (timer >= 1.0f)
-	{
-		std::ostringstream ss;
-		ss << "Ivy Sandbox v0.0.1 | frame time: ";
-		ss << delta.count() * 1000;
-		ss << " | FPS: ";
-		ss << (1 / delta.count());
-		mWnd->SetTitle(ss.str());
-		
-		timer = 0.0f;
-	}
 
 	newtime = lastTime;
 }

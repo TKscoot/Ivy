@@ -26,9 +26,6 @@ void main()
     TexCoords = aTexCoord;
 	ViewPosition = vec3(view * vec4(FragPos, 1.0));
 
-	mat3 modelVector = transpose(inverse(mat3(model)));
-    
-	//Normal = normalize(modelVector * aNormal);
 	Normal = mat3(model) * aNormal;
 	Halfway = normalize(ViewPosition + light);
 

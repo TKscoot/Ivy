@@ -54,7 +54,6 @@ namespace Ivy
 			glm::mat4 transform;
 
 			AABB boundingBox;
-			//std::array<Line, 12> mBoundingBoxLines;
 
 			std::string nodeName, meshName;
 
@@ -78,6 +77,7 @@ namespace Ivy
 				return (struct1.materialIndex < struct2.materialIndex);
 			}
 		};
+
 		struct alpha_sort_key
 		{
 			inline bool operator() (Submesh submesh1, Submesh submesh2)
@@ -146,7 +146,6 @@ namespace Ivy
 
 		struct VertexBoneData
 		{
-			/* de pastrat numarul de elemente al IDs & Weights */
 			unsigned int IDs[4];
 			float Weights[4];
 
@@ -188,12 +187,8 @@ namespace Ivy
 
 		bool mNeedsAABBSetup = true;
 
-
 		void DrawBoundingBox(Mat4 proj, Mat4 view);
 		void SetupBoundingBox();
-
-
-
 
 		struct LogStream : public Assimp::LogStream
 		{
@@ -217,7 +212,7 @@ namespace Ivy
 		void Draw(bool bindTextures = true);
 		void Draw(Ptr<Shader> shader, bool bindTextures = true);
 
-		static float GetCameraDistance(Submesh& sm, Vec3 camPos)
+		static inline float GetCameraDistance(Submesh& sm, Vec3 camPos)
 		{
 
 			glm::vec3 scale;
@@ -271,7 +266,7 @@ namespace Ivy
 		Vector<VertexBoneData> mBoneData;
 
 		/* duration of the animation, can be changed if frames are not present in all interval */
-		bool mAnimationPlaying = true;
+		bool  mAnimationPlaying = true;
 		float mAnimationTime = 0.0f;
 		float mWorldTime = 0.0f;
 		float mTimeMultiplier = 1.0f;

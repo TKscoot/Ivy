@@ -57,8 +57,9 @@ void TerrainGenerator::OnStart()
 		int z = glm::floor(terPos.z);
 		
 		float h = mTerrain->GetHeightFromWorldPos(i * 5, 0);
+		h = (Vec3(i*5, h, 0) * Mat3(mTerrain->GetFirstComponentOfType<Transform>()->getComposed())).y;
 
-		h = mHeightmap[x * mDimensions.x + z];
+		//h = mHeightmap[x * mDimensions.x + z];
 		Debug::Log("Height: {}", h);
 		
 		t->setPosition(Vec3(i *5, h, 0));
@@ -125,6 +126,7 @@ void TerrainGenerator::GenerateHeightmap()
 	Timer t;
 	t.Start();
 
+	mHeightmap.clear();
 	mHeightmap.resize(mDimensions.x * mDimensions.y);
 
 	srand(time(NULL));
@@ -178,10 +180,10 @@ void TerrainGenerator::GenerateHeightmap()
 	}
 
 
-	mTerrain->CalculateNormals(0, 0);
-	//t.Stop();
-	//Debug::Info("Normals took {0:.8f}ms to calculate!", t.ElapsedMilliseconds());
-	//t.Start();
+	mTerrain->CalculateNormals();
+	t.Stop();
+	Debug::Info("Normals took {0:.8f}ms to calculate!", t.ElapsedMilliseconds());
+	t.Start();
 	mTerrain->CreateResources();
 	t.Stop();
 	Debug::Info("GenerateHeightmap() took: {}ms to calculate!", t.ElapsedMilliseconds());
@@ -305,10 +307,8 @@ void TerrainGenerator::Erode()
 	}
 
 
-	mTerrain->CalculateNormals(0, 0);
-	//t.Stop();
-	//Debug::Info("Normals took {0:.8f}ms to calculate!", t.ElapsedMilliseconds());
-	//t.Start();
+	mTerrain->CalculateNormals();
+
 	mTerrain->CreateResources();
 }
 

@@ -34,7 +34,7 @@ void Application::SetupScene()
 	
 	
 	//mScene->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
-	//mScene2->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
+	mScene2->SetHdriEnvironment("assets/env/HDR_041_Path.hdr");
 	//mScene->UseHosekWilkieSkymodel();
 	//mScene->SetHosekWilkieSkyModel();
 
@@ -43,41 +43,46 @@ void Application::SetupScene()
 void Application::SetupEntities()
 {
 	// Animated Pilot
-	Ptr<Entity> pilotEntity = mScene2->CreateEntity();
-	pilotEntity->AddComponent<Mesh>("assets/models/Pilot_LP_Animated.fbx");
-	pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
-	Vector<Ptr<Material>> pilotMaterials = pilotEntity->GetComponentsOfType<Material>();
-	for(auto& pilotMat : pilotMaterials)
-	{
-		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::ALBEDO);
-		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Normal_OpenGL.png", Material::TextureMapType::NORMAL);
-		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
-		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
-		//shadowTestMaterial->SetMetallic(0.1f);
-		//shadowTestMaterial->SetRoughness(0.9f);
-		pilotMat->UseIBL(false);
-	}
-	pilotEntity->SetActive(true);
+	//Ptr<Entity> pilotEntity = mScene2->CreateEntity();
+	//pilotEntity->AddComponent<Mesh>("assets/models/Pilot_LP_Animated.fbx");
+	//pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
+	//Vector<Ptr<Material>> pilotMaterials = pilotEntity->GetComponentsOfType<Material>();
+	//for(auto& pilotMat : pilotMaterials)
+	//{
+	//	pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::ALBEDO);
+	//	pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Normal_OpenGL.png", Material::TextureMapType::NORMAL);
+	//	pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
+	//	pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
+	//	//shadowTestMaterial->SetMetallic(0.1f);
+	//	//shadowTestMaterial->SetRoughness(0.9f);
+	//	pilotMat->UseIBL(false);
+	//}
+	//pilotEntity->SetActive(true);
+
+	// Sponza scene
+	Ptr<Entity> sponzaEntity = mScene2->CreateEntity();
+	sponzaEntity->AddComponent<Mesh>("assets/models/sponza_pbr.obj");
+	sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
+
+
 	/*
 	*/
 
-	// Sponza scene
-	sponzaEntity = mScene->CreateEntity();
-	//sponzaEntity->AddComponent(CreatePtr<Mesh>(sponzaEntity.get(), "assets/models/sponza_pbr.obj"));
-	//sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
+	planeEntity = mScene->CreateEntity();
 
-	//sponzaEntity->AddComponent<Mesh>("assets/models/DamagedHelmet.gltf");
-	sponzaEntity->AddComponent<Mesh>("assets/models/piper_pa18.obj");
-	auto mat = sponzaEntity->GetFirstComponentOfType<Material>();
-	sponzaTransform = sponzaEntity->GetFirstComponentOfType<Transform>();
+	planeEntity->AddComponent<Mesh>("assets/models/piper_pa18.obj");
+	auto mat = planeEntity->GetFirstComponentOfType<Material>();
+	planeTransform = planeEntity->GetFirstComponentOfType<Transform>();
 	//transform->setRotationX(90);
-	sponzaTransform->setPositionY(15.0f);
+	planeTransform->setPositionY(15.0f);
 	//transform->setPositionX(50);
 	//mat->UseIBL(false);
 	mat->LoadTexture("assets/textures/DamagedHelmet/Default_albedo.jpg", Material::TextureMapType::ALBEDO);
 	mat->LoadTexture("assets/textures/DamagedHelmet/Default_metalRoughness.jpg", Material::TextureMapType::METALLIC);
 	mat->LoadTexture("assets/textures/DamagedHelmet/Default_metalRoughness.jpg", Material::TextureMapType::ROUGHNESS);
 	mat->LoadTexture("assets/textures/DamagedHelmet/Default_normal.jpg", Material::TextureMapType::NORMAL);
+
+	planeEntity->SetActive(false);
 
 	/*
 
@@ -142,7 +147,7 @@ void Application::SetupEntities()
 	//soundClip->Play();
 
 	Ptr<TerrainGenerator> terrain = mScene->CreateEntity<TerrainGenerator>();
-	//terrain->SetTerrainEntity(mScene->CreateEntity<Terrain>(256, 256));
+	//terrain->SetTerrainEntity(mScene->CreateEntity<Terrain>(1024, 1024));
 
 	//Ptr<AudioTest> audioTest = mScene->CreateEntity<AudioTest>();
 
@@ -167,17 +172,17 @@ void Application::Run()
 	// Beginning the game loop
 	while(!mEngine->ShouldTerminate())
 	{
+		float dt = mEngine->GetDeltaTime();
 
 		// Plane anim
-		float dt = mEngine->GetDeltaTime();
 		timer += dt * 0.001f;
 
 		float speed = 5.0f;
 
-		const Mat4 inverted = glm::inverse(sponzaTransform->getComposed());
+		const Mat4 inverted = glm::inverse(planeTransform->getComposed());
 		const Vec3 forward = normalize(glm::vec3(inverted[2]));
 
-		sponzaTransform->setPosition((sponzaTransform->getPosition()) + (dt * sponzaTransform->getDirection() * speed));
+		planeTransform->setPosition((planeTransform->getPosition()) + (dt * planeTransform->getDirection() * speed));
 
 
 		//SceneManager::GetInstance()->GetActiveScene()->GetCamera()->LookAt(sponzaTransform->getPosition() + Vec3(0.0f, 0.0f, 5.0f));
@@ -186,20 +191,20 @@ void Application::Run()
 
 		if (Input::IsKeyBeingPressed(A)) 
 		{
-			sponzaTransform->setRotationY(sponzaTransform->getRotation().y + (timer * 10.0f));
+			planeTransform->setRotationY(planeTransform->getRotation().y + (timer * 10.0f));
 		}
 		if (Input::IsKeyBeingPressed(D))
 		{
-			sponzaTransform->setRotationY(sponzaTransform->getRotation().y - (timer * 10.0f));
+			planeTransform->setRotationY(planeTransform->getRotation().y - (timer * 10.0f));
 		}
 
 		if (Input::IsKeyBeingPressed(W))
 		{
-			sponzaTransform->setRotationX(sponzaTransform->getRotation().x + (timer * 10.0f));
+			planeTransform->setRotationX(planeTransform->getRotation().x + (timer * 10.0f));
 		}
 		if (Input::IsKeyBeingPressed(S))
 		{
-			sponzaTransform->setRotationX(sponzaTransform->getRotation().x - (timer * 10.0f));
+			planeTransform->setRotationX(planeTransform->getRotation().x - (timer * 10.0f));
 		}
 
 
@@ -257,7 +262,7 @@ void Application::Run()
 			//
 			Ptr<Transform> towerTransform = towerEntity->GetFirstComponentOfType<Transform>();
 			//towerTransform->setPosition(0.0f, 5.0f, -30.0f);
-			towerTransform->setPosition(0.0f, 5.0f, -3.0f);
+			towerTransform->setPosition(mScene->GetCamera()->GetPosition());
 			towerTransform->setScale(0.05f, 0.05f, 0.05f);
 			towerTransform->setRotation(-90.0f, 0.0f, 0.0f);
 		}
@@ -286,6 +291,21 @@ void Application::Run()
 			float timeZone = rintf(latLong[1] / 15.0f);    // estimate for now
 
 			mScene->SetSunTime(localTime, timeZone, julianDay, latLong[0], latLong[1]);
+		}
+
+		static float timer = 0;
+		timer += dt;
+
+		if (timer >= 1.0f)
+		{
+			std::ostringstream ss;
+			ss << "Ivy Sandbox v0.0.1 | frame time: ";
+			ss << dt * 1000;
+			ss << " | FPS: ";
+			ss << (1 / dt);
+			mEngine->GetWindow()->SetTitle(ss.str());
+
+			timer = 0.0f;
 		}
 
 		// Begin new frame

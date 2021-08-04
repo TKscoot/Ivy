@@ -149,6 +149,7 @@ void Ivy::ShadowRenderPass::SetupShader()
 	mDepthShader = CreatePtr<Shader>(vertexFilepath, fragmentFilepath);
 }
 
+/*
 // Implementierung der Methode von Sasha Willems "Vulkan Examples" (https://github.com/SaschaWillems/Vulkan)
 void Ivy::ShadowRenderPass::CalculateCascades(Vec2 currentWindowSize, CascadeData * cascades, const Vec3 & lightDirection)
 {
@@ -240,6 +241,121 @@ void Ivy::ShadowRenderPass::CalculateCascades(Vec2 currentWindowSize, CascadeDat
 
 		lastSplitDist = cascadeSplits[i];
 	}
+}
+*/
+void Ivy::ShadowRenderPass::CalculateCascades(Vec2 currentWindowSize, CascadeData* cascades, const Vec3& lightDirection)
+{
+	struct FrustumBounds
+	{
+		float r, l, b, t, f, n;
+	};
+
+	auto viewProjection = mCamera->GetProjectionMatrix(currentWindowSize) * mCamera->GetViewMatrix();
+
+	const int SHADOW_MAP_CASCADE_COUNT = 4;
+	float cascadeSplits[SHADOW_MAP_CASCADE_COUNT];
+
+	// TODO: less hard-coding!
+	float nearClip = 0.1f;
+	float farClip = 1000.0f;
+	float clipRange = farClip - nearClip;
+
+	float minZ = nearClip;
+	float maxZ = nearClip + clipRange;
+
+	float range = maxZ - minZ;
+	float ratio = maxZ / minZ;
+
+	// Calculate split depths based on view camera frustum
+	// Based on method presented in https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
+	for (uint32_t i = 0; i < SHADOW_MAP_CASCADE_COUNT; i++)
+	{
+		float p = (i + 1) / static_cast<float>(SHADOW_MAP_CASCADE_COUNT);
+		float log = minZ * std::pow(ratio, p);
+		float uniform = minZ + range * p;
+		float d = mCascadeSplitLambda * (log - uniform) + uniform;
+		cascadeSplits[i] = (d - nearClip) / clipRange;
+	}
+
+	cascadeSplits[3] = 0.3f;
+
+	// Calculate orthographic projection matrix for each cascade
+	float lastSplitDist = 0.0;
+	for (uint32_t i = 0; i < SHADOW_MAP_CASCADE_COUNT; i++)
+	{
+		float splitDist = cascadeSplits[i];
+
+		glm::vec3 frustumCorners[8] =
+		{
+			glm::vec3(-1.0f,  1.0f, -1.0f),
+			glm::vec3(1.0f,  1.0f, -1.0f),
+			glm::vec3(1.0f, -1.0f, -1.0f),
+			glm::vec3(-1.0f, -1.0f, -1.0f),
+			glm::vec3(-1.0f,  1.0f,  1.0f),
+			glm::vec3(1.0f,  1.0f,  1.0f),
+			glm::vec3(1.0f, -1.0f,  1.0f),
+			glm::vec3(-1.0f, -1.0f,  1.0f),
+		};
+
+		// Project frustum corners into world space
+		glm::mat4 invCam = glm::inverse(viewProjection);
+		for (uint32_t i = 0; i < 8; i++)
+		{
+			glm::vec4 invCorner = invCam * glm::vec4(frustumCorners[i], 1.0f);
+			frustumCorners[i] = invCorner / invCorner.w;
+		}
+
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			glm::vec3 dist = frustumCorners[i + 4] - frustumCorners[i];
+			frustumCorners[i + 4] = frustumCorners[i] + (dist * splitDist);
+			frustumCorners[i] = frustumCorners[i] + (dist * lastSplitDist);
+		}
+
+		// Get frustum center
+		glm::vec3 frustumCenter = glm::vec3(0.0f);
+		for (uint32_t i = 0; i < 8; i++)
+			frustumCenter += frustumCorners[i];
+
+		frustumCenter /= 8.0f;
+
+		//frustumCenter *= 0.01f;
+
+		float radius = 0.0f;
+		for (uint32_t i = 0; i < 8; i++)
+		{
+			float distance = glm::length(frustumCorners[i] - frustumCenter);
+			radius = glm::max(radius, distance);
+		}
+		radius = std::ceil(radius * 16.0f) / 16.0f;
+
+		glm::vec3 maxExtents = glm::vec3(radius);
+		glm::vec3 minExtents = -maxExtents;
+
+		glm::vec3 lightDir = -lightDirection;
+		glm::mat4 lightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, 0.0f + mCascadeNearPlaneOffset, maxExtents.z - minExtents.z + mCascadeFarPlaneOffset);
+
+		// Offset to texel space to avoid shimmering (from https://stackoverflow.com/questions/33499053/cascaded-shadow-map-shimmering)
+		glm::mat4 shadowMatrix = lightOrthoMatrix * lightViewMatrix;
+		const float ShadowMapResolution = 4096.0f;
+		glm::vec4 shadowOrigin = (shadowMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) * ShadowMapResolution / 2.0f;
+		glm::vec4 roundedOrigin = glm::round(shadowOrigin);
+		glm::vec4 roundOffset = roundedOrigin - shadowOrigin;
+		roundOffset = roundOffset * 2.0f / ShadowMapResolution;
+		roundOffset.z = 0.0f;
+		roundOffset.w = 0.0f;
+
+		lightOrthoMatrix[3] += roundOffset;
+
+		// Store split distance and matrix in cascade
+		cascades[i].SplitDepth = (nearClip + splitDist * clipRange) * -1.0f;
+		cascades[i].ViewProj = lightOrthoMatrix * lightViewMatrix;
+		cascades[i].View = lightViewMatrix;
+
+		lastSplitDist = cascadeSplits[i];
+	}
+
 }
 
 void Ivy::ShadowRenderPass::CreateFramebuffer()

@@ -45,7 +45,7 @@ namespace Ivy
 		void OnDraw(Ptr<Camera> camera, Vec2& currentWindowSize) override;
 
 		void CreateResources();
-		void CalculateNormals(int x, int z);
+		void CalculateNormals();
 
 		Ptr<TerrainMaterial> GetMaterial() { return mMaterial; }
 	private:

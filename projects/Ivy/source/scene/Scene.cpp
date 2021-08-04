@@ -123,6 +123,11 @@ void Ivy::Scene::Update(float deltaTime)
 			}
 		}
 
+		float sunAngle = glm::radians(35.0f);
+		float sunAngle1 = glm::radians(35.0f);
+		mDirLight.direction = glm::vec3(0.0f, sin(sunAngle), cos(sunAngle));
+		mDirLight.direction = glm::vec3(sin(sunAngle1), cos(sunAngle1), 0.0f);
+
 		mFirstUpdate = false;
 	}
 
@@ -387,10 +392,24 @@ void Ivy::Scene::DrawSceneSettingsGUI(float deltaTime)
 	}
 
 	static float sunAngle = glm::radians(35.0f);
+	static float sunAngle1 = glm::radians(35.0f);
 
 	if (ImGui::SliderAngle("Sun direction", &sunAngle, 0.0f, 180.0f))
 	{
 		mDirLight.direction = glm::vec3(0.0f, sin(sunAngle), cos(sunAngle));
+
+		if (mSkyboxType == HOSEK_WILKIE_SKY)
+		{
+			mScenePass->RenderSkyModelToCubemap();
+			if (mRecalculateEnvMap)
+			{
+				mScenePass->ComputeEnvironmentMap();
+			}
+		}
+	}
+	if (ImGui::SliderFloat3("Sun dir vector", v, -2.6f, 2.6f))
+	{
+		mDirLight.direction = glm::vec3(v[0], v[1], v[2]);
 
 		if (mSkyboxType == HOSEK_WILKIE_SKY)
 		{
