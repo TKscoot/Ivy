@@ -11,7 +11,7 @@
 #include "renderpasses/PostprocessingRenderPass.h"
 #include "rendering/ImGuiHook.h"
 #include "imguial_sparkline.h"
-
+#include "physics/PhysicsWorld.h"
 
 namespace Ivy
 {
@@ -74,11 +74,12 @@ namespace Ivy
 		{
 			Ptr<T> ent = CreatePtr<T>(std::forward<Args>(args)...);
 			ent->mIndex = mEntities.size();
-			ent->mScene = shared_from_this();
-			ent->AddComponent<Transform>();
+			ent->mTransform = ent->AddComponent<Transform>();
 			ent->AddComponent<Material>();
+			ent->mScene = shared_from_this();
+			ent->mAttachedSceneIsActive = mIsActiveScene;
 			ent->OnCreate();
-			Debug::CoreLog("Created entity with index {}", ent->mIndex);
+			Debug::CoreLog("Created entity with index {} in scene {}", ent->mIndex, mName);
 
 			mEntities.push_back(ent);
 			return ent;
@@ -328,8 +329,6 @@ namespace Ivy
 		GLuint mQuery = 0;
 
 
-		static Ptr<Scene>   mInstance;
-
 		Vector<Ptr<Entity>>   mEntities	 = {};
 		Ptr<Camera>           mCamera	 = nullptr;
 		Ptr<ShadowRenderPass> mCSM		 = nullptr;
@@ -338,7 +337,6 @@ namespace Ivy
 		Ptr<ImGuiHook>		  mImGuiHook = nullptr;
 		Ptr<SkyModel>		  mSkyModel  = nullptr;
 
-
 		// Lights
 		DirectionalLight	mDirLight	 = {};
 		Vector<SpotLight>	mSpotLights  = {};
@@ -346,5 +344,8 @@ namespace Ivy
 
 		bool mRenderGui = true;
 		bool mRecalculateEnvMap = false;
+
+		// Physics
+		Ptr<PhysicsWorld> mPhysicsWorld = nullptr;
 	};
 }

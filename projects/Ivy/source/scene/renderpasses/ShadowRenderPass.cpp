@@ -43,11 +43,11 @@ void Ivy::ShadowRenderPass::RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>&
 		{
 			if(entities[i]->IsActive())
 			{
-				Ptr<Transform> trans = entities[i]->GetFirstComponentOfType<Transform>();
+				Ptr<Transform> trans = entities[i]->GetComponent<Transform>();
 				Mat4 model = trans->getComposed();
 				mDepthShader->SetUniformMat4("model", model);
 
-				Vector<Ptr<Mesh>> meshes = entities[i]->GetComponentsOfType<Mesh>();
+				Vector<Ptr<Mesh>> meshes = entities[i]->GetComponents<Mesh>();
 				for(int j = 0; j < meshes.size(); j++)
 				{
 					meshes[j]->Draw(mDepthShader, false);
@@ -62,11 +62,10 @@ void Ivy::ShadowRenderPass::RenderShadows(VecI2 windowSize, Vector<Ptr<Entity>>&
 void Ivy::ShadowRenderPass::UpdateShaderUniforms(Ptr<Shader> shader)
 {
 	// Textures
-	//glBindTextureUnit(8, mTextures[0]);
-	//glBindTextureUnit(9, mTextures[1]);
-	//glBindTextureUnit(10, mTextures[2]);
-	//glBindTextureUnit(11, mTextures[3]);
-	glBindTextures(8, mTextures.size(), mTextures.data());
+	//glBindTextures(8, mTextures.size(), mTextures.data());
+
+	glBindTextureUnit(8, mArrayTexture);
+
 
 	// Light Space Matrices
 	Mat4 biasMatrix(
@@ -364,7 +363,7 @@ void Ivy::ShadowRenderPass::CreateFramebuffer()
 	glGenFramebuffers(1, &mFBO);
 
 	// Create the depth buffer
-	glGenTextures(mTextures.size(), mTextures.data());
+	/*glGenTextures(mTextures.size(), mTextures.data());
 
 	for(uint32_t i = 0; i < mTextures.size(); i++)
 	{
@@ -377,11 +376,37 @@ void Ivy::ShadowRenderPass::CreateFramebuffer()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-	}
+	}*/
+
+
+	// ARRAY TEXTURES
+	glGenTextures(1, &mArrayTexture);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, mArrayTexture);
+	glTexImage3D(
+		GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, SHADOW_WIDTH, SHADOW_HEIGHT, CASCADE_COUNT,
+		0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	constexpr float bordercolor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BORDER_COLOR, bordercolor);
+
+	// ARRAY TEXTURES END
+
+
 
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mTextures[0], 0);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mTextures[0], 0);
+	//glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_ARRAY, mArrayTexture, 0, 0);
 
+	for (size_t i = 0; i < CASCADE_COUNT; i++)
+	{
+		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, mArrayTexture, 0, i);
+	}
+	
 	// Disable writes to the color buffer
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
@@ -397,5 +422,6 @@ void Ivy::ShadowRenderPass::CreateFramebuffer()
 void Ivy::ShadowRenderPass::BindFboForWriting(uint32_t cascadeIndex)
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mTextures[cascadeIndex], 0);
+	glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, mArrayTexture, 0, cascadeIndex);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mTextures[cascadeIndex], 0);
 }

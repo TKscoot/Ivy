@@ -7,27 +7,27 @@
 class Worker
 {
 public:
-	Worker(bool start) : m_Running(start) { if(start) private_start(); }
-	Worker() : m_Running(false) {}
+	Worker(bool start) : mRunning(start) { if(start) private_start(); }
+	Worker() : mRunning(false) {}
 	~Worker() { stop(); }
 
 	template<typename... Args>
 	void push_task(Args&&... args)
 	{
 		{
-			std::lock_guard<std::mutex> lk(m_Mutex);
-			m_Queue.push_back(std::bind(std::forward<Args>(args)...));
+			std::lock_guard<std::mutex> lk(mMutex);
+			mQueue.push_back(std::bind(std::forward<Args>(args)...));
 		}
 
-		m_Condition.notify_all();
+		mCondition.notify_all();
 	}
 
 	void start()
 	{
 		{
-			std::lock_guard<std::mutex> lk(m_Mutex);
-			if(m_Running == true) return;
-			m_Running = true;
+			std::lock_guard<std::mutex> lk(mMutex);
+			if(mRunning == true) return;
+			mRunning = true;
 		}
 
 		private_start();
@@ -36,37 +36,37 @@ public:
 	void stop()
 	{
 		{
-			std::lock_guard<std::mutex> lk(m_Mutex);
-			if(m_Running == false) return;
-			m_Running = false;
+			std::lock_guard<std::mutex> lk(mMutex);
+			if(mRunning == false) return;
+			mRunning = false;
 		}
 
-		m_Condition.notify_all();
-		m_Thread.join();
+		mCondition.notify_all();
+		mThread.join();
 	}
 
 private:
 	void private_start()
 	{
-		m_Thread = std::thread([this]
+		mThread = std::thread([this]
 		{
 			for(;;)
 			{
-				decltype(m_Queue) local_queue;
+				decltype(mQueue) local_queue;
 				{
-					std::unique_lock<std::mutex> lk(m_Mutex);
-					m_Condition.wait(lk, [&] { return !m_Queue.empty() + !m_Running; });
+					std::unique_lock<std::mutex> lk(mMutex);
+					mCondition.wait(lk, [&] { return !mQueue.empty() + !mRunning; });
 
-					if(!m_Running)
+					if(!mRunning)
 					{
-						for(auto& func : m_Queue)
+						for(auto& func : mQueue)
 							func();
 
-						m_Queue.clear();
+						mQueue.clear();
 						return;
 					}
 
-					std::swap(m_Queue, local_queue);
+					std::swap(mQueue, local_queue);
 				}
 
 				for(auto& func : local_queue)
@@ -76,9 +76,9 @@ private:
 	}
 
 private:
-	std::condition_variable m_Condition;
-	std::list<std::function<void()>> m_Queue;
-	std::mutex m_Mutex;
-	std::thread m_Thread;
-	bool m_Running = false;
+	std::condition_variable mCondition;
+	std::list<std::function<void()>> mQueue;
+	std::mutex mMutex;
+	std::thread mThread;
+	bool mRunning = false;
 };

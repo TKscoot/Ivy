@@ -89,6 +89,17 @@ namespace Ivy
 		 */
 		void LoadShader(String vertexPath, String fragmentPath);
 
+		/// <summary>
+		/// Hot reloads the currently set shader.
+		/// </summary>
+		void ReloadShader();
+
+		/// <summary>
+		/// Shows or hides the solid wireframe of the mesh
+		/// </summary>
+		/// <param name="show"> show wireframe if set to true</param>
+		void ShowWireframe(bool show);
+
 		/*!
 		 * 
 		 * \return Returns the Pointer to the shader object
@@ -246,6 +257,8 @@ namespace Ivy
 		std::array<bool, (size_t)TextureMapType::TEXTURE_MAP_TYPE_LAST> mUsedTextureTypes;
 
 		Ptr<Shader> mShader = nullptr;
+		Ptr<Shader> mWireframeShader = nullptr;
+		bool mWireframeActive = false;
 
 		Vec3  mAmbient		 = Vec3(0.5f, 0.5f, 0.5f);
 		Vec3  mDiffuse		 = Vec3(1.0f, 1.0f, 1.0f);

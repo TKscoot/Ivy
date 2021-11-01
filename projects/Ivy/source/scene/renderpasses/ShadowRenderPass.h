@@ -42,9 +42,10 @@ namespace Ivy
 
 		void SetupShader();
 
-		std::array<GLuint, 4> GetTextureIDs()	 { return mTextures; }
-		std::array<Mat4, 4>   GetLightMatrices() { return mLightSpaceMatrices; }
-		const unsigned int	  GetCascadeCount()  { return CASCADE_COUNT; }
+		//std::array<GLuint, 4> GetTextureIDs() { return mTextures; }
+		GLuint GetTextureID() const	 { return mArrayTexture; }
+		std::array<Mat4, 4>   GetLightMatrices() const { return mLightSpaceMatrices; }
+		const unsigned int	  GetCascadeCount()  const { return CASCADE_COUNT; }
 
 
 	private:
@@ -57,7 +58,9 @@ namespace Ivy
 
 		//Ptr<Framebuffer>	mFramebuffer = nullptr;
 		GLuint mFBO = 0;
-		std::array<GLuint, 4> mTextures;
+		//std::array<GLuint, 4> mTextures;
+
+		GLuint mArrayTexture;
 
 		Ptr<Framebuffer>	mShadowFBO   = nullptr;
 		Ptr<Shader>			mDepthShader = nullptr;

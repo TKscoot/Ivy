@@ -6,8 +6,8 @@ layout (location = 2) in vec3 aTangent;
 layout (location = 3) in vec3 aBitangent;
 layout (location = 4) in vec2 aTexCoord;
 
-layout(location = 5) in ivec4 aBoneIDs;
-layout(location = 6) in vec4 aBoneWeights;
+layout (location = 5) in ivec4 aBoneIDs;
+layout (location = 6) in vec4 aBoneWeights;
 
 uniform mat4 model;
 uniform mat4 view;

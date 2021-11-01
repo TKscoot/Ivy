@@ -10,6 +10,9 @@
     <Filter Include="environment">
       <UniqueIdentifier>{3AC24330-A677-BC25-2F6C-B6FC9B20B329}</UniqueIdentifier>
     </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{A823A1AC-1403-2048-1D1B-AB1E897986A9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="rendering">
       <UniqueIdentifier>{03CFAD0B-6F39-6282-B877-1328242140D7}</UniqueIdentifier>
     </Filter>
@@ -18,6 +21,9 @@
     </Filter>
     <Filter Include="scene\components">
       <UniqueIdentifier>{28A7FA07-14A0-195A-3DD2-FEDE292AF965}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\components\terrain_filters">
+      <UniqueIdentifier>{44847E22-30D5-6964-5939-582645E9FCCD}</UniqueIdentifier>
     </Filter>
     <Filter Include="scene\renderpasses">
       <UniqueIdentifier>{115E2D3A-FD41-EE8F-66A2-E8E252A5D811}</UniqueIdentifier>
@@ -34,6 +40,9 @@
       <Filter>audio</Filter>
     </ClInclude>
     <ClInclude Include="source\core\AsyncWorker.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\BitMask.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="source\core\Engine.h">
@@ -58,6 +67,9 @@
       <Filter>environment</Filter>
     </ClInclude>
     <ClInclude Include="source\ivypch.h" />
+    <ClInclude Include="source\physics\PhysicsWorld.h">
+      <Filter>physics</Filter>
+    </ClInclude>
     <ClInclude Include="source\rendering\Buffer.h">
       <Filter>rendering</Filter>
     </ClInclude>
@@ -127,6 +139,15 @@
     <ClInclude Include="source\scene\components\Transform.h">
       <Filter>scene\components</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\components\terrain_filters\PerlinHeightmapFilter.h">
+      <Filter>scene\components\terrain_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\components\terrain_filters\TerrainFilter.h">
+      <Filter>scene\components\terrain_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\renderpasses\NewCSM.h">
+      <Filter>scene\renderpasses</Filter>
+    </ClInclude>
     <ClInclude Include="source\scene\renderpasses\PostprocessingRenderPass.h">
       <Filter>scene\renderpasses</Filter>
     </ClInclude>
@@ -145,6 +166,7 @@
     <ClInclude Include="source\scene\renderpasses\skymodels\SkyModel.h">
       <Filter>scene\renderpasses\skymodels</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\components\Rigidbody.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\audio\AudioContext.cpp">
@@ -163,6 +185,9 @@
       <Filter>environment</Filter>
     </ClCompile>
     <ClCompile Include="source\ivypch.cpp" />
+    <ClCompile Include="source\physics\PhysicsWorld.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
     <ClCompile Include="source\rendering\Buffer.cpp">
       <Filter>rendering</Filter>
     </ClCompile>
@@ -220,6 +245,9 @@
     <ClCompile Include="source\scene\components\TerrainMaterial.cpp">
       <Filter>scene\components</Filter>
     </ClCompile>
+    <ClCompile Include="source\scene\renderpasses\NewCSM.cpp">
+      <Filter>scene\renderpasses</Filter>
+    </ClCompile>
     <ClCompile Include="source\scene\renderpasses\PostprocessingRenderPass.cpp">
       <Filter>scene\renderpasses</Filter>
     </ClCompile>
@@ -232,5 +260,6 @@
     <ClCompile Include="source\scene\renderpasses\skymodels\HosekWilkieSkyModel.cpp">
       <Filter>scene\renderpasses\skymodels</Filter>
     </ClCompile>
+    <ClCompile Include="source\scene\components\Rigidbody.cpp" />
   </ItemGroup>
 </Project>

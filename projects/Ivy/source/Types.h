@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <set>
 #include <random>
+#define GLM_SWIZZLE
 #include <glm/glm.hpp>
 
 namespace Ivy
@@ -135,7 +136,7 @@ namespace Ivy
 		uint32_t width = 0;
 		uint32_t height = 0;
 
-		GLenum internalFormat = GL_RGBA8;
+		GLenum internalFormat = GL_COMPRESSED_RGBA;
 		GLenum dataFormat = GL_RGBA;
 
 		String filepath = "";

@@ -153,7 +153,6 @@
     <None Include="Lib\Debug\imgui_widgets.obj" />
     <None Include="Lib\ImGui.idb" />
     <None Include="Lib\ImGui.lib" />
-    <None Include="Lib\ImGui.lib.lastcodeanalysissucceeded" />
     <None Include="Lib\ImGui.pdb" />
     <None Include="Lib\Release\CodeAnalysisResultManifest.txt" />
     <None Include="Lib\Release\ImGui.Build.CppClean.log" />
@@ -167,7 +166,6 @@
     <None Include="Lib\Release\ImGui.tlog\Lib-link.write.1.tlog" />
     <None Include="Lib\Release\ImGui.tlog\Lib.command.1.tlog" />
     <None Include="Lib\Release\ImGui.vcxproj.FileListAbsolute.txt" />
-    <None Include="Lib\Release\NativeCodeAnalysis.read.1.tlog" />
     <None Include="Lib\Release\binary_to_compressed_c.nativecodeanalysis.sarif" />
     <None Include="Lib\Release\binary_to_compressed_c.nativecodeanalysis.xml" />
     <None Include="Lib\Release\binary_to_compressed_c.obj" />

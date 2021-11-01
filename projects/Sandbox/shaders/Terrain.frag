@@ -10,7 +10,6 @@ in vec3 FragPos;
 in vec3 ViewPosition;
 in vec2 TexCoords;
 in vec3 Normal;
-in vec3 Halfway;
 
 uniform vec3 dirLightDirection;
 uniform float steepnessCutoff;

@@ -8,6 +8,7 @@ TerrainGenerator::TerrainGenerator()
 void TerrainGenerator::OnCreate()
 {
 	mTerrain = mScene->CreateEntity<Terrain>(mDimensions.x, mDimensions.y);
+	//mTerrain->GetComponent<Transform>()->setPositionX(80.0f);
 	mTerrain->GetMaterial()->AddUniform<float>("steepnessCutoff", &mSteepnessCutoff);
 }
 
@@ -24,45 +25,18 @@ void TerrainGenerator::OnStart()
 
 	//mTerrain->GetFirstComponentOfType<Transform>()->setScale(Vec3(50.0f));
 
+
 	for (int i = 0; i < 30; i++)
 	{
 		auto ent = mScene->CreateEntity();
 		auto mesh = ent->AddComponent<Mesh>("assets/models/Oak_Tree.obj");
-		auto t = ent->GetFirstComponentOfType<Transform>();
+		auto t = ent->GetComponent<Transform>();
 
+		float h = mTerrain->GetHeightFromWorldPos(Vec3(i * 5, 0.0f, 0.0f));
 
-
-		auto transform = mTerrain->GetFirstComponentOfType<Transform>();
-
-		Vec3 worldPos = Vec3(i * 5,  0.0f, 0.0f) - transform->getPosition();
-
-
-		Vec3 twd;
-		twd.x = (mDimensions.x - 1) * 250.0f;
-		twd.y = 0.0f;
-		twd.z = (mDimensions.y - 1) * 250.0f;
-
-		Vec3 pos;
-		pos.x = ((worldPos.x - transform->getPosition().x) / twd.x);// * mWidth;
-		pos.z = ((worldPos.z - transform->getPosition().z) / twd.z);// * mHeight;
-
-		Vec3 terPos;
-		terPos.x = mDimensions.x * pos.x;
-		terPos.z = mDimensions.y * pos.z;
-
-		terPos.x = (i * 5 + 0.5f * ((mDimensions.x - 1) * 250.0f)) / 250.0f;
-		terPos.z = (0.0f - 0.5f * ((mDimensions.y - 1) * 250.0f)) / -250.0f;
-
-		int x = glm::floor(terPos.x);
-		int z = glm::floor(terPos.z);
-		
-		float h = mTerrain->GetHeightFromWorldPos(i * 5, 0);
-		h = (Vec3(i*5, h, 0) * Mat3(mTerrain->GetFirstComponentOfType<Transform>()->getComposed())).y;
-
-		//h = mHeightmap[x * mDimensions.x + z];
 		Debug::Log("Height: {}", h);
 		
-		t->setPosition(Vec3(i *5, h, 0));
+		t->setPosition(Vec3(i * 5, h, 0));
 	}
 
 
@@ -70,8 +44,7 @@ void TerrainGenerator::OnStart()
 
 void TerrainGenerator::OnUpdate(float deltaTime)
 {
-	static int erosionTime = 0.0f;
-	ImGui::Begin("Erosion");
+	ImGui::Begin("Terrain");
 	ImGui::SliderFloat("Steepness cutoff", &mSteepnessCutoff, 0.0, 1.0);
 
 	if (ImGui::Button("Generate")) {
@@ -82,43 +55,46 @@ void TerrainGenerator::OnUpdate(float deltaTime)
 	{
 		ImGui::BeginChild("Erosion", ImVec2(0, 420), true);
 
-		//ImGui::SliderInt("Iterations", &mIterations, 1, 30000);
-		ImGui::Spacing();
-
-		//ImGui::SliderInt("MaxDropletLifetime", &mMaxDropletLifetime, 1, 100);
-		//ImGui::SliderFloat("Inertia", &mInertia, 0.0f, 1.0f);
-		//ImGui::SliderFloat("InitialSpeed", &mInitialSpeed, 0.0f, 20.0f);
-		//ImGui::SliderFloat("InitialWater", &mInitialWater, 0.0f, 20.0f);
-		//ImGui::SliderFloat("InitialSediment", &mInitialSediment, 0.0f, 1.0f);
-		//ImGui::SliderFloat("MinSlope", &mMinSlope, 0.0f, 20.0f);
-		//ImGui::SliderFloat("MaxSedimentCapacity", &mMaxSedimentCapacity, 1.0f, 64.0f);
-		//ImGui::SliderFloat("Deposition", &mDeposition, 0.0f, 1.0f);
-		//ImGui::SliderFloat("Erosion", &mErosion, 0.0f, 1.0f);
-		//ImGui::SliderFloat("Gravity", &mGravity, 1.0f, 10.0f);
-		//ImGui::SliderFloat("EvaporationSpeed", &mEvaporationSpeed, 0.0f, 1.0f);
-		//ImGui::Spacing();
-
 		if(ImGui::Button("Erode!"))
 		{
-			auto start = std::chrono::steady_clock::now();
-			
 			Erode();
-		
-			auto end = std::chrono::steady_clock::now();
-			erosionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 		}
-		ImGui::SameLine();
-		ImGui::Text("Calculation took %d milliseconds!", erosionTime);
 		ImGui::Spacing();
 
-		//if(ImGui::Button("Reset parameters!"))
-		//{
-		//	ResetParameters();
-		//}
 		ImGui::EndChild();
 	}
 	ImGui::Spacing();
 	ImGui::End();
+
+
+	static bool wireframe = false;
+	if (Input::IsKeyDown(F3))
+	{
+		Ptr<Shader> wireframeShader = nullptr;
+		if (wireframe)
+		{
+			mTerrain->GetMaterial()->InitDefaultShader();
+			wireframe = false;
+		}
+		else
+		{
+			wireframeShader = CreatePtr<Shader>(
+				"shaders/debug/Wireframe_Terrain.vert",
+				"shaders/debug/Terrain_Wireframe.frag",
+				"shaders/debug/Wireframe.geom");
+			
+			auto& tm = mTerrain->GetComponents<TerrainMaterial>();
+			if (!tm.empty())
+			{
+				for (auto& mat : tm)
+				{
+					mat->SetShader(wireframeShader);
+				}
+			}
+
+			wireframe = true;
+		}
+	}
 }
 
 void TerrainGenerator::GenerateHeightmap()
@@ -145,7 +121,7 @@ void TerrainGenerator::GenerateHeightmap()
 			float sum = 0.0f;
 			float freq = baseFreq;
 			float persist = persistence;
-			for(int octave = 0; octave < 2; octave++)
+			for(int octave = 0; octave < 4; octave++)
 			{
 				glm::vec2 p(hx * freq, hy * freq);
 				p.x += seed;

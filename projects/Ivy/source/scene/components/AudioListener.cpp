@@ -28,5 +28,4 @@ void Ivy::AudioListener::UpdateValues()
 	Vec3 lookAt = mCamera->GetLookAt();
 
 	mContext->GetEngine()->setListenerPosition(mContext->Vec3ToVec3df(mPosition), mContext->Vec3ToVec3df(lookAt));
-
 }

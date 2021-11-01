@@ -23,7 +23,7 @@ Ivy::Mesh::Mesh(Ptr<Entity> entity) : Ivy::Component::Component(entity)
 {
 
 	mCamera = entity->GetSceneCamera();
-	SetupBoundingBox();
+	
 }
 
 Ivy::Mesh::Mesh(Ptr<Entity> entity, String filepath, bool useMtlIfProvided) : Ivy::Component::Component(entity)
@@ -68,11 +68,13 @@ void Ivy::Mesh::OnUpdate(float deltaTime)
 	}
 }
 
-void Ivy::Mesh::OnSceneLoad()
+void Ivy::Mesh::OnSceneLoad(Ptr<Scene> scene)
 {
 	mCamera = mEntity->GetSceneCamera();
 
 	Load();
+
+	SetupBoundingBox();
 }
 
 void Ivy::Mesh::OnSceneUnload()
@@ -141,7 +143,7 @@ void Ivy::Mesh::Load()
 
 	mSubmeshes.reserve(mAssimpScene->mNumMeshes);
 
-	Vector<Ptr<Material>> materials = mEntity->GetComponentsOfType<Material>();
+	Vector<Ptr<Material>> materials = mEntity->GetComponents<Material>();
 
 	for(uint32_t i = 0; i < mAssimpScene->mNumMeshes; i++)
 	{
@@ -405,7 +407,7 @@ void Ivy::Mesh::Load()
 	
 	if(mIsAnimated)
 	{
-		Vector<Ptr<Material>> mats = mEntity->GetComponentsOfType<Material>();
+		Vector<Ptr<Material>> mats = mEntity->GetComponents<Material>();
 		for(int i = 0; i < mats.size(); i++)
 		{
 			mats[i]->SetShader(CreatePtr<Shader>("shaders/Default_Animated.vert", "shaders/PBR.frag"));
@@ -416,14 +418,16 @@ void Ivy::Mesh::Load()
 	// sorting submeshes for better texture binding performance
 	//std::sort(mSubmeshes.begin(), mSubmeshes.end(), less_than_key());
 
+	SetupBoundingBox();
+
 }
 
 void Ivy::Mesh::Draw(bool bindTextures)
 {
 	if (!IsActive()) return;
 
-	auto& materials = mEntity->GetComponentsOfType<Material>();
-	auto& transform = mEntity->GetFirstComponentOfType<Transform>();
+	auto& materials = mEntity->GetComponents<Material>();
+	auto& transform = mEntity->GetComponent<Transform>();
 
 	for (int i = 0; i < mSubmeshes.size(); i++)
 	{
@@ -473,8 +477,8 @@ void Ivy::Mesh::Draw(Ptr<Shader> shader, bool bindTextures)
 {
 	if(!IsActive()) return;
 
-	auto& materials = mEntity->GetComponentsOfType<Material>();
-	auto& transform = mEntity->GetFirstComponentOfType<Transform>();
+	auto& materials = mEntity->GetComponents<Material>();
+	auto& transform = mEntity->GetComponent<Transform>();
 
 	for(int i = 0; i < mSubmeshes.size(); i++)
 	{
@@ -667,7 +671,7 @@ void Ivy::Mesh::DrawBoundingBox(Mat4 proj, Mat4 view)
 		SetupBoundingBox();
 	}
 
-	auto& transform = mEntity->GetFirstComponentOfType<Transform>();
+	auto& transform = mEntity->GetComponent<Transform>();
 
 
 	for (int i = 0; i < mSubmeshes.size(); i++)

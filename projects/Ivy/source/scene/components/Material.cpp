@@ -13,19 +13,18 @@ Ivy::Material::Material(Ptr<Entity> entity)
 	, Component::Component(entity)
 {
 	// Set default shader
-	static Ptr<Shader> defaultShader = CreatePtr<Shader>("shaders/Default.vert", "shaders/PBR.frag"); // TODO: Check if animated
-	mShader = defaultShader;
+	static Ptr<Shader> defaultShader = CreatePtr<Shader>(
+		"shaders/Default.vert", 
+		"shaders/PBR.frag"); // TODO: Check if animated
+
+	// preload wireframe shader for later use TODO: maybe load it only when we need it
+	mWireframeShader = CreatePtr<Shader>(
+		"shaders/debug/Wireframe.vert",
+		"shaders/debug/PBR_Wireframe.frag",
+		"shaders/debug/Wireframe.geom");
+
 	
 	SetShader(defaultShader);
-	// Set default color values
-	SetTextureTiling(mTextureTiling);
-	SetAmbientColor(mAmbient);
-	SetDiffuseColor(mDiffuse);
-	SetSpecularColor(mSpecular);
-	SetMetallic(mMetallic);
-	SetRoughness(mRoughness);
-	UseIBL(mUseIBL);
-	SetDefaultShaderUniforms();
 
 	int width  = 2;
 	int height = 2;
@@ -125,6 +124,47 @@ void Ivy::Material::LoadShader(String vertexPath, String fragmentPath)
 	SetShader(mShader);
 }
 
+void Ivy::Material::ReloadShader()
+{
+	mShader->Recompile();
+	// Set default color values
+	mShader->Bind();
+	SetTextureTiling(mTextureTiling);
+	SetAmbientColor(mAmbient);
+	SetDiffuseColor(mDiffuse);
+	SetSpecularColor(mSpecular);
+	SetMetallic(mMetallic);
+	SetRoughness(mRoughness);
+	UseIBL(mUseIBL);
+	SetDefaultShaderUniforms();
+	mShader->Unbind();
+
+	Debug::CoreLog("Reloaded shader!");
+}
+
+void Ivy::Material::ShowWireframe(bool show)
+{
+	
+
+	if (show)
+	{
+		if (!mWireframeActive)
+		{
+			SetShader(mWireframeShader);
+			mWireframeActive = true;
+		}
+	}
+	else
+	{
+		if (mWireframeActive)
+		{
+			SetShader(mShader);
+			mWireframeActive = false;
+		}
+	}
+
+}
+
 void Ivy::Material::UpdateShaderTextureBools()
 {
 	mShader->SetUniformInt("useNormalMap",		mUsedTextureTypes[1]);
@@ -145,8 +185,6 @@ void Ivy::Material::SetDefaultShaderUniforms()
 	mShader->SetUniformInt("useMetallicMap",  0);
 	mShader->Unbind();
 }
-
-
 
 void Ivy::Material::UpdateMaterialUniforms()
 {
@@ -180,34 +218,6 @@ void Ivy::Material::LoadTexturesAsync(std::vector<String> filepaths)
 		}
 		td.Free();
 	}
-
-
-	/*
-	tf::Executor executor;
-	tf::Taskflow tf;
-
-	for(auto& s : filepaths)
-	{
-		mFutures.push_back(executor.async(LoadTextureAsync, s));
-		tf.emplace(LoadTextureAsync, s);
-	}
-
-	executor.run(tf);
-
-	for(auto& data : mFutures)
-	{
-		Texture2DData td = data.get();
-
-		Ptr<Texture2D> texture = CreatePtr<Texture2D>(td.width, td.height, td.data);
-
-		if(texture)
-		{
-			Debug::CoreLog("Created Texture: {}", td.filepath);
-			mLoadedTextures.insert({ td.filepath, texture });
-		}
-		td.Free();
-	}
-	*/
 }
 
 
@@ -231,12 +241,4 @@ Ivy::Texture2DData Ivy::Material::LoadTextureAsync(String filepath)
 	}
 
 	return data;
-
-
-	//if(texture)
-	//{
-	//	Debug::CoreLog("Loaded texture file: {}", filepath);
-	//	std::lock_guard<std::mutex> lock(gTextureMutex);
-	//	mLoadedTextures.insert({ filepath, texture });
-	//}
 }

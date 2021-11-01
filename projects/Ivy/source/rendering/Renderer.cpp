@@ -12,9 +12,10 @@ void Ivy::Renderer::Initialize()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	glEnable(GL_CULL_FACE);
+	glHint(GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST);
 
 	//TODO TEST!!
-	glDisable(GL_FRAMEBUFFER_SRGB);
+	//glDisable(GL_FRAMEBUFFER_SRGB);
 
 
 	glShadeModel(GL_SMOOTH);
@@ -76,6 +77,14 @@ void Ivy::Renderer::GLLogCallback(unsigned source, unsigned type, unsigned id, u
 		Debug::CoreLog(message);
 		return;
 	}
+}
+
+void Ivy::Renderer::ReloadShaderIncludes()
+{
+	DeleteShaderIncludes();
+	AddShaderIncludes();
+
+	Debug::CoreLog("Reloaded shader includes!");
 }
 
 void Ivy::Renderer::EnableDebugMessages()
@@ -153,33 +162,93 @@ void Ivy::Renderer::AddShaderIncludes()
 	for(auto& p : std::filesystem::recursive_directory_iterator("shaders\\include"))
 	{
 		String path = p.path().string();
-		if(endsWith(path, ".glsl") 
-			|| endsWith(path, ".inc") 
-			|| endsWith(path, ".shaderinc") 
-			|| endsWith(path, ".glslinc"))
+		AddShaderInclude(path);
+	}
+}
+
+void Ivy::Renderer::AddShaderInclude(String& name, String& source)
+{
+	if (std::find(mShaderIncludes.begin(), mShaderIncludes.end(), name) != mShaderIncludes.end())
+	{
+		Debug::CoreInfo("{} already included! Aborting the include!", name);
+		return;
+	}
+
+	if (name[0] != '/')
+	{
+		name.insert(0, "/");
+	}
+
+	mShaderIncludes.push_back(name);
+
+	glNamedStringARB(GL_SHADER_INCLUDE_ARB, name.size(), name.c_str(), source.size(), source.c_str());
+	Debug::CoreInfo("Added {} to shader includes", name);
+}
+
+void Ivy::Renderer::AddShaderInclude(String& path)
+{
+
+
+	if (endsWith(path, ".glsl")
+		|| endsWith(path, ".inc")
+		|| endsWith(path, ".shaderinc")
+		|| endsWith(path, ".glslinc"))
+	{
+		size_t pos = path.find("shaders\\include\\");
+		String name = path;
+		getFilenameFromPath(name);
+
+		String source = "";
+
+		// Open file
+		std::ifstream fs(path.c_str());
+		if (!fs)
 		{
-			size_t pos = path.find("shaders\\include\\");
-			String name = path;
-			getFilenameFromPath(name);
-
-			String source = "";
-
-			// Open file
-			std::ifstream fs(path.c_str());
-			if(!fs)
-			{
-				Debug::CoreError("Could not read shader include file: {}", path);
-			}
-
-			// Iterate through file and save result in string
-			source.assign((std::istreambuf_iterator<char>(fs)),
-				(std::istreambuf_iterator<char>()));
-
-			name.insert(0, "/");
-			
-			glNamedStringARB(GL_SHADER_INCLUDE_ARB, name.size(), name.c_str(), source.size(), source.c_str());
-			Debug::CoreInfo("Added {} to shader includes", name);
-
+			Debug::CoreError("Could not read shader include file: {}", path);
 		}
+
+		// Iterate through file and save result in string
+		source.assign((std::istreambuf_iterator<char>(fs)),
+			(std::istreambuf_iterator<char>()));
+
+		name.insert(0, "/");
+
+		if (std::find(mShaderIncludes.begin(), mShaderIncludes.end(), name) != mShaderIncludes.end())
+		{
+			Debug::CoreInfo("{} already included! Aborting the include!", name);
+			return;
+		}
+
+		mShaderIncludes.push_back(name);
+
+		glNamedStringARB(GL_SHADER_INCLUDE_ARB, name.size(), name.c_str(), source.size(), source.c_str());
+		Debug::CoreInfo("Added {} to shader includes", name);
+
+	}
+}
+
+void Ivy::Renderer::DeleteShaderIncludes()
+{
+	for (auto& s : mShaderIncludes)
+	{
+		DeleteShaderInclude(s);
+	}
+}
+
+void Ivy::Renderer::DeleteShaderInclude(String& name)
+{
+	glDeleteNamedStringARB(name.size(), name.data());
+
+	auto it = std::find(mShaderIncludes.begin(), mShaderIncludes.end(), name);
+
+	// If element was found
+	if (it != mShaderIncludes.end())
+	{
+
+		// calculating the index
+		// of K
+		int index = it - mShaderIncludes.begin();
+
+		mShaderIncludes.erase(mShaderIncludes.begin() + index);
 	}
 }

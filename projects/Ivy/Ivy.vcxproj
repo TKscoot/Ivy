@@ -56,7 +56,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ivypch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;dependencies\OpenAl\include;dependencies\libsndfile\include;dependencies\effolkronium;dependencies\FMOD\inc;dependencies\irrKlang\include;dependencies\MagicEnum;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;dependencies\OpenAl\include;dependencies\libsndfile\include;dependencies\effolkronium;dependencies\FMOD\inc;dependencies\irrKlang\include;dependencies\MagicEnum;dependencies\bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -68,8 +68,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;fmod_vc.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;dependencies\OpenAl\lib;dependencies\libsndfile\lib;dependencies\FMOD\lib\x64;dependencies\irrKlang\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;fmod_vc.lib;irrKlang.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;dependencies\OpenAl\lib;dependencies\libsndfile\lib;dependencies\FMOD\lib\x64;dependencies\irrKlang\lib;dependencies\bullet\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -77,7 +77,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ivypch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;dependencies\OpenAl\include;dependencies\libsndfile\include;dependencies\effolkronium;dependencies\FMOD\inc;dependencies\irrKlang\include;dependencies\MagicEnum;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;dependencies\GLFW\Include;dependencies\GLAD\include;dependencies\spdlog\include;dependencies\glm;dependencies\stb_image;dependencies\assimp\include;dependencies\ImGui;dependencies\taskflow;dependencies\OpenAl\include;dependencies\libsndfile\include;dependencies\effolkronium;dependencies\FMOD\inc;dependencies\irrKlang\include;dependencies\MagicEnum;dependencies\bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -92,16 +92,18 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;fmod_vc.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;dependencies\OpenAl\lib;dependencies\libsndfile\lib;dependencies\FMOD\lib\x64;dependencies\irrKlang\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;fmod_vc.lib;irrKlang.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>dependencies\GLFW\Lib;dependencies\GLAD\Lib;dependencies\assimp\lib;dependencies\ImGui\lib;dependencies\OpenAl\lib;dependencies\libsndfile\lib;dependencies\FMOD\lib\x64;dependencies\irrKlang\lib;dependencies\bullet\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="source\Helper.h" />
     <ClInclude Include="source\Ivy.h" />
+    <ClInclude Include="source\scene\components\Rigidbody.h" />
     <ClInclude Include="source\Types.h" />
     <ClInclude Include="source\audio\AudioContext.h" />
     <ClInclude Include="source\core\AsyncWorker.h" />
+    <ClInclude Include="source\core\BitMask.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\Timer.h" />
     <ClInclude Include="source\environment\Input.h" />
@@ -110,6 +112,7 @@
     <ClInclude Include="source\environment\LogFormatters.h" />
     <ClInclude Include="source\environment\Window.h" />
     <ClInclude Include="source\ivypch.h" />
+    <ClInclude Include="source\physics\PhysicsWorld.h" />
     <ClInclude Include="source\rendering\Buffer.h" />
     <ClInclude Include="source\rendering\BufferLayout.h" />
     <ClInclude Include="source\rendering\Framebuffer.h" />
@@ -133,6 +136,9 @@
     <ClInclude Include="source\scene\components\Mesh.h" />
     <ClInclude Include="source\scene\components\TerrainMaterial.h" />
     <ClInclude Include="source\scene\components\Transform.h" />
+    <ClInclude Include="source\scene\components\terrain_filters\PerlinHeightmapFilter.h" />
+    <ClInclude Include="source\scene\components\terrain_filters\TerrainFilter.h" />
+    <ClInclude Include="source\scene\renderpasses\NewCSM.h" />
     <ClInclude Include="source\scene\renderpasses\PostprocessingRenderPass.h" />
     <ClInclude Include="source\scene\renderpasses\SceneRenderPass.h" />
     <ClInclude Include="source\scene\renderpasses\ShadowRenderPass.h" />
@@ -149,6 +155,7 @@
     <ClCompile Include="source\ivypch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="source\physics\PhysicsWorld.cpp" />
     <ClCompile Include="source\rendering\Buffer.cpp" />
     <ClCompile Include="source\rendering\Framebuffer.cpp" />
     <ClCompile Include="source\rendering\ImGuiHook.cpp" />
@@ -159,6 +166,7 @@
     <ClCompile Include="source\rendering\Texture.cpp" />
     <ClCompile Include="source\rendering\VertexArray.cpp" />
     <ClCompile Include="source\scene\Camera.cpp" />
+    <ClCompile Include="source\scene\components\Rigidbody.cpp" />
     <ClCompile Include="source\scene\Entity.cpp" />
     <ClCompile Include="source\scene\Scene.cpp" />
     <ClCompile Include="source\scene\SceneManager.cpp" />
@@ -168,6 +176,7 @@
     <ClCompile Include="source\scene\components\Material.cpp" />
     <ClCompile Include="source\scene\components\Mesh.cpp" />
     <ClCompile Include="source\scene\components\TerrainMaterial.cpp" />
+    <ClCompile Include="source\scene\renderpasses\NewCSM.cpp" />
     <ClCompile Include="source\scene\renderpasses\PostprocessingRenderPass.cpp" />
     <ClCompile Include="source\scene\renderpasses\SceneRenderPass.cpp" />
     <ClCompile Include="source\scene\renderpasses\ShadowRenderPass.cpp" />

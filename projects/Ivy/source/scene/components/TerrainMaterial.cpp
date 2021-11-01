@@ -51,8 +51,9 @@ void Ivy::TerrainMaterial::BindTextures()
 void Ivy::TerrainMaterial::InitDefaultShader()
 {
 
-	String vertexFilepath = "shaders/Terrain.vert";
-	String fragmentFilepath = "shaders/Terrain.frag";
+	String vertexFilepath   = "shaders/debug/Wireframe_Terrain.vert";
+	String fragmentFilepath = "shaders/debug/Terrain_Wireframe.frag";
+	String geometryFilepath = "shaders/debug/Wireframe.geom";
 
 	if(!std::filesystem::exists(vertexFilepath))
 	{
@@ -147,7 +148,7 @@ void main()
 		ofs.close();
 	}
 
-	mShader = CreatePtr<Shader>(vertexFilepath, fragmentFilepath);
+	mShader = CreatePtr<Shader>(vertexFilepath, fragmentFilepath, geometryFilepath);
 
 }
 

@@ -16,7 +16,6 @@ out vec3 FragPos;
 out vec3 ViewPosition;
 out vec2 TexCoords;
 out vec3 Normal;
-out vec3 Halfway;
 
 const vec3 light = normalize (vec3 (2, 1, 3));
 
@@ -27,7 +26,6 @@ void main()
 	ViewPosition = vec3(view * vec4(FragPos, 1.0));
 
 	Normal = mat3(model) * aNormal;
-	Halfway = normalize(ViewPosition + light);
 
     gl_Position = projection * view * model * vec4(aPosition.xyz, 1.0);
 

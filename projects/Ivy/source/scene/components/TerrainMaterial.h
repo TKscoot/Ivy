@@ -88,8 +88,8 @@ namespace Ivy
 		void UploadUniforms();
 		void BindTextures();
 	
-	private:
 		void InitDefaultShader();
+	private:
 
 		Vector<Ptr<Texture2D>> mTextures;
 		Vector<UniformInfo> mUniforms;

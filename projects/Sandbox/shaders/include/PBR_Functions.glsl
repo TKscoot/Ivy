@@ -104,6 +104,7 @@ float gaSchlickGGX(float cosLi, float NdotV, float roughness)
 }
 
 const vec3 Fdielectric = vec3(0.04);
+
 // Hazel Lighting Function
 vec3 Lighting(DirLight light, vec3 F0, vec3 view, vec3 normal, float roughness, float metallic, float NdotV, vec3 albedo)
 {
@@ -153,12 +154,10 @@ vec3 Lighting(PointLight light, vec3 albedo, vec3 F0, vec3 fragPos, vec3 view, v
     float denominator = 4 * max(dot(normal, view), 0.0) * max(dot(normal, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
     vec3 specular = nominator / denominator;
 
-    // kS is equal to Fresnel
-    vec3 kS = F;
     // for energy conservation, the diffuse and specular light can't
     // be above 1.0 (unless the surface emits light); to preserve this
     // relationship the diffuse component (kD) should equal 1.0 - kS.
-    vec3 kD = vec3(1.0) - kS;
+    vec3 kD = vec3(1.0) - F;
     // multiply kD by the inverse metalness such that only non-metals
     // have diffuse lighting, or a linear blend if partly metal (pure metals
     // have no diffuse light).

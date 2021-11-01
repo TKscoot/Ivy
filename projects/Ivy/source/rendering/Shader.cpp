@@ -3,7 +3,17 @@
 
 Ivy::Shader::Shader(const String& vertexFilepath, const String& fragmentFilepath)
 {
-	AddShaderSource(vertexFilepath, fragmentFilepath);
+	mVertexFilepath = vertexFilepath;
+	mFragmentFilepath = fragmentFilepath;
+	AddShaderSource(mVertexFilepath, mFragmentFilepath);
+}
+
+Ivy::Shader::Shader(const String& vertexFilepath, const String& fragmentFilepath, const String& geometryFilepath)
+{
+	mVertexFilepath = vertexFilepath;
+	mFragmentFilepath = fragmentFilepath;
+	mGeometryFilepath = geometryFilepath;
+	AddShaderSource(mVertexFilepath, mFragmentFilepath, mGeometryFilepath);
 }
 
 Ivy::Shader::Shader(const String & computeFilepath)
@@ -56,6 +66,46 @@ void Ivy::Shader::AddShaderSource(const String & vertexFilepath, const String & 
 	Compile();
 }
 
+void Ivy::Shader::AddShaderSource(const String& vertexFilepath, const String& fragmentFilepath, const String& geometryFilepath)
+{
+	if (vertexFilepath.find(".glsl") != std::string::npos ||
+		vertexFilepath.find(".vert") != std::string::npos)
+	{
+		sources[GL_VERTEX_SHADER] = ReadFile(vertexFilepath);
+	}
+	else
+	{
+		Debug::CoreError("Vertex shader file extension not supported. Use .glsl or .vert ({})", vertexFilepath);
+		return;
+	}
+
+	if (fragmentFilepath.find(".glsl") != std::string::npos ||
+		fragmentFilepath.find(".frag") != std::string::npos)
+	{
+		sources[GL_FRAGMENT_SHADER] = ReadFile(fragmentFilepath);
+	}
+	else
+	{
+		Debug::CoreError("Fragment shader file extension not supported. Use .glsl or .frag ({})", fragmentFilepath);
+		return;
+	}
+
+	if (geometryFilepath.find(".glsl") != std::string::npos ||
+		geometryFilepath.find(".gs") != std::string::npos ||
+		geometryFilepath.find(".geom") != std::string::npos)
+	{
+		sources[GL_GEOMETRY_SHADER] = ReadFile(geometryFilepath);
+	}
+	else
+	{
+		Debug::CoreError("Geometry shader file extension not supported. Use .glsl or .gs or .geom ({})", fragmentFilepath);
+		return;
+	}
+
+
+	Compile();
+}
+
 void Ivy::Shader::Bind()
 {
 	glUseProgram(mProgram);
@@ -64,6 +114,20 @@ void Ivy::Shader::Bind()
 void Ivy::Shader::Unbind()
 {
 	glUseProgram(0);
+}
+
+void Ivy::Shader::Recompile()
+{
+	Destroy();
+
+	if (!mGeometryFilepath.empty())
+	{
+		AddShaderSource(mVertexFilepath, mFragmentFilepath, mGeometryFilepath);
+	}
+	else
+	{
+		AddShaderSource(mVertexFilepath, mFragmentFilepath);
+	}
 }
 
 void Ivy::Shader::Destroy()
@@ -152,13 +216,12 @@ void Ivy::Shader::Compile()
 {
 	mProgram = glCreateProgram();
 
-	std::array<GLuint, 2> shaderIDs = { 0, 0 };
+	std::vector<GLuint> shaderIDs = {};
 
 	// Debugging vars
 	int  success;
 	char infoLog[512];
 
-	int i = 0;
 	for (auto& kv : sources)
 	{
 		GLuint type = kv.first;
@@ -180,8 +243,7 @@ void Ivy::Shader::Compile()
 		}
 
 		glAttachShader(mProgram, shader);
-		shaderIDs[i] = shader;
-		i++;
+		shaderIDs.push_back(shader);
 	}
 
 	glLinkProgram(mProgram);
@@ -202,28 +264,3 @@ void Ivy::Shader::Compile()
 		}
 	}
 }
-/*
-Ivy::ComputeShader::ComputeShader(const String & computeFilepath)
-{
-	if(computeFilepath.find(".glsl") != std::string::npos ||
-		computeFilepath.find(".comp") != std::string::npos)
-	{
-		sources[GL_COMPUTE_SHADER] = ReadFile(computeFilepath);
-	}
-	else
-	{
-		Debug::CoreError("Compute shader file extension not supported. Use .glsl or .comp ({})", computeFilepath);
-		return;
-	}
-
-
-	Compile();
-}
-
-void Ivy::ComputeShader::Dispatch(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ)
-{
-	auto tex = std::get<Ptr<TextureHDRI>>(mTexture);
-	//glBindImageTexture(0, tex->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
-	glDispatchCompute(groupCountX, groupCountY, groupCountZ);
-}
-*/

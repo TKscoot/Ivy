@@ -1,15 +1,13 @@
 #include "ivypch.h"
 #include "Scene.h"
 
-
-Ivy::Ptr<Ivy::Scene> Ivy::Scene::mInstance = nullptr;
-
 Ivy::Scene::Scene(String name)
 {
 	mName = name;
 	mCamera = CreatePtr<Camera>(Vec3(0.0f, 0.0f, 0.0f));
 	
 	mCSM = CreatePtr<ShadowRenderPass>(mCamera);
+
 	
 	AddDirectionalLight(
 		3.0f,							 //intensity
@@ -23,6 +21,7 @@ Ivy::Scene::Scene(String name)
 
 	mSkyModel = CreatePtr<HosekWilkieSkyModel>();
 
+	mPhysicsWorld = CreatePtr<PhysicsWorld>();
 }
 
 Ivy::Scene::~Scene()
@@ -34,12 +33,12 @@ Ivy::Ptr<Ivy::Entity> Ivy::Scene::CreateEntity()
 {
 	Ptr<Entity> ent = CreatePtr<Entity>();
 	ent->mIndex = mEntities.size();
-	ent->mCamera = mCamera;
-	ent->AddComponent<Transform>();
-	ent->AddComponent<Material>();
-	ent->OnCreate();
 	ent->mScene = shared_from_this();
+	ent->mCamera = mCamera;
+	ent->mTransform = ent->AddComponent<Transform>();
+	ent->AddComponent<Material>();
 	ent->mAttachedSceneIsActive = mIsActiveScene;
+	ent->OnCreate();
 	Debug::CoreLog("Created entity with index {} in scene {}", ent->mIndex, mName);
 	
 	mEntities.push_back(ent);
@@ -284,7 +283,7 @@ void Ivy::Scene::Load()
 			{
 				if(c)
 				{
-					c->OnSceneLoad(); // Load components such as meshes for resource management
+					c->OnSceneLoad(shared_from_this()); // Load components such as meshes for resource management
 				}
 			}
 		}
@@ -313,18 +312,18 @@ void Ivy::Scene::Unload()
 
 	mScenePass->UnloadEnvironmentMap();
 	mScenePass->DestroySkybox();
-
 }
 
 void Ivy::Scene::DrawSceneSettingsGUI(float deltaTime)
 {
 	static float timer = 0;
 	static float fps = 0;
-	float frametime = deltaTime * 1000;
+	static float frametime = 0;
 
 	timer += deltaTime;
 	if (timer >= 1.0f)
 	{
+		frametime = deltaTime * 1000;
 		fps = 1 / deltaTime;
 		timer = 0;
 	}
@@ -380,7 +379,7 @@ void Ivy::Scene::DrawSceneSettingsGUI(float deltaTime)
 	{
 		for (auto& e : mEntities)
 		{
-			for (auto& c : e->GetComponentsOfType<Material>())
+			for (auto& c : e->GetComponents<Material>())
 			{
 				if (c != nullptr)
 				{
@@ -396,7 +395,7 @@ void Ivy::Scene::DrawSceneSettingsGUI(float deltaTime)
 
 	if (ImGui::SliderAngle("Sun direction", &sunAngle, 0.0f, 180.0f))
 	{
-		mDirLight.direction = glm::vec3(0.0f, sin(sunAngle), cos(sunAngle));
+		mDirLight.direction = glm::vec3(cos(sunAngle), 0.0f, 0.0f);
 
 		if (mSkyboxType == HOSEK_WILKIE_SKY)
 		{

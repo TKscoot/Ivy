@@ -108,6 +108,7 @@ namespace Ivy
 
 		Ptr<ShadowRenderPass> mCSM = nullptr;
 
+
 		VecI2				  mWindowSize = Vec2(0.0f);
 
 		// FBO

@@ -14,7 +14,7 @@ Ivy::PostprocessingRenderPass::PostprocessingRenderPass(Ptr<SceneRenderPass> sce
 		-1.0f, -1.0f, 0.0f, 0.0f,
 		 1.0f, -1.0f, 1.0f, 0.0f,
 		 1.0f,  1.0f, 1.0f, 1.0f
-	};;
+	};
 
 	BufferLayout layout =
 	{

@@ -1,18 +1,23 @@
 #include "Application.h"
+#include "core/BitMask.h"
 
 Application::Application()
 {
+	TestBitmask();
+
+
 	mEngine = CreatePtr<Engine>();
 	mEngine->Initialize(1600, 900, "Ivy Sandbox v0.3.7");
 	//mEngine->GetWindow()->SetWindowIcon("assets/textures/Misc/awesomeface.png");
 
 	mScene = SceneManager::GetInstance()->CreateScene("TestScene");
-	mScene2 = SceneManager::GetInstance()->CreateScene("TestScene2");
+	mScene2 = SceneManager::GetInstance()->CreateScene("SponzaScene");
 
 	SetupScene();
 	SetupEntities();
 
-	SceneManager::GetInstance()->SetActiveScene("TestScene");
+	SceneManager::GetInstance()->SetActiveScene("SponzaScene");
+
 
 }
 
@@ -43,46 +48,46 @@ void Application::SetupScene()
 void Application::SetupEntities()
 {
 	// Animated Pilot
-	//Ptr<Entity> pilotEntity = mScene2->CreateEntity();
-	//pilotEntity->AddComponent<Mesh>("assets/models/Pilot_LP_Animated.fbx");
-	//pilotEntity->GetFirstComponentOfType<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
-	//Vector<Ptr<Material>> pilotMaterials = pilotEntity->GetComponentsOfType<Material>();
-	//for(auto& pilotMat : pilotMaterials)
-	//{
-	//	pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::ALBEDO);
-	//	pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Normal_OpenGL.png", Material::TextureMapType::NORMAL);
-	//	pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
-	//	pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
-	//	//shadowTestMaterial->SetMetallic(0.1f);
-	//	//shadowTestMaterial->SetRoughness(0.9f);
-	//	pilotMat->UseIBL(false);
-	//}
-	//pilotEntity->SetActive(true);
+	Ptr<Entity> pilotEntity = mScene2->CreateEntity();
+	pilotEntity->AddComponent<Mesh>("assets/models/Scene_Base.obj");
+	//pilotEntity->GetComponent<Transform>()->setScale(Vec3(0.5f, 0.5f, 0.5f));
+	Vector<Ptr<Material>> pilotMaterials = pilotEntity->GetComponents<Material>();
+	for(auto& pilotMat : pilotMaterials)
+	{
+		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Base_Color.png", Material::TextureMapType::ALBEDO);
+		pilotMat->LoadTexture("assets/textures/Scene_Base/Stone_rockWall_02_Normal.jpg", Material::TextureMapType::NORMAL);
+		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Metallic.png", Material::TextureMapType::METALLIC);
+		pilotMat->LoadTexture("assets/textures/Pilot_LP_Animated/Material.002_Roughness.png", Material::TextureMapType::ROUGHNESS);
+		//shadowTestMaterial->SetMetallic(0.1f);
+		//shadowTestMaterial->SetRoughness(0.9f);
+		pilotMat->UseIBL(false);
+	}
+	pilotEntity->SetActive(false);
 
 	// Sponza scene
-	Ptr<Entity> sponzaEntity = mScene2->CreateEntity();
+	Ptr<Entity> sponzaEntity = mScene2->CreateEntity(); 
 	sponzaEntity->AddComponent<Mesh>("assets/models/sponza_pbr.obj");
-	sponzaEntity->GetFirstComponentOfType<Transform>()->setScale(0.025f, 0.025f, 0.025f);
-
-
+	sponzaEntity->GetComponent<Transform>()->setScale(0.025f, 0.025f, 0.025f);
 	/*
+	sponzaEntity->SetActive(false);
+
 	*/
 
-	planeEntity = mScene->CreateEntity();
-
-	planeEntity->AddComponent<Mesh>("assets/models/piper_pa18.obj");
-	auto mat = planeEntity->GetFirstComponentOfType<Material>();
-	planeTransform = planeEntity->GetFirstComponentOfType<Transform>();
-	//transform->setRotationX(90);
-	planeTransform->setPositionY(15.0f);
-	//transform->setPositionX(50);
-	//mat->UseIBL(false);
-	mat->LoadTexture("assets/textures/DamagedHelmet/Default_albedo.jpg", Material::TextureMapType::ALBEDO);
-	mat->LoadTexture("assets/textures/DamagedHelmet/Default_metalRoughness.jpg", Material::TextureMapType::METALLIC);
-	mat->LoadTexture("assets/textures/DamagedHelmet/Default_metalRoughness.jpg", Material::TextureMapType::ROUGHNESS);
-	mat->LoadTexture("assets/textures/DamagedHelmet/Default_normal.jpg", Material::TextureMapType::NORMAL);
-
-	planeEntity->SetActive(false);
+	//planeEntity = mScene->CreateEntity();
+	//
+	//planeEntity->AddComponent<Mesh>("assets/models/piper_pa18.obj");
+	//auto mat = planeEntity->GetComponent<Material>();
+	//planeTransform = planeEntity->GetComponent<Transform>();
+	////transform->setRotationX(90);
+	//planeTransform->setPositionY(15.0f);
+	////transform->setPositionX(50);
+	////mat->UseIBL(false);
+	//mat->LoadTexture("assets/textures/DamagedHelmet/Default_albedo.jpg", Material::TextureMapType::ALBEDO);
+	//mat->LoadTexture("assets/textures/DamagedHelmet/Default_metalRoughness.jpg", Material::TextureMapType::METALLIC);
+	//mat->LoadTexture("assets/textures/DamagedHelmet/Default_metalRoughness.jpg", Material::TextureMapType::ROUGHNESS);
+	//mat->LoadTexture("assets/textures/DamagedHelmet/Default_normal.jpg", Material::TextureMapType::NORMAL);
+	//
+	//planeEntity->SetActive(false);
 
 	/*
 
@@ -169,6 +174,8 @@ void Application::Run()
 
 	float timer = 0.0f;
 
+	bool wireframe = false;
+
 	// Beginning the game loop
 	while(!mEngine->ShouldTerminate())
 	{
@@ -178,7 +185,7 @@ void Application::Run()
 		timer += dt * 0.001f;
 
 		float speed = 5.0f;
-
+		/*
 		const Mat4 inverted = glm::inverse(planeTransform->getComposed());
 		const Vec3 forward = normalize(glm::vec3(inverted[2]));
 
@@ -206,9 +213,58 @@ void Application::Run()
 		{
 			planeTransform->setRotationX(planeTransform->getRotation().x - (timer * 10.0f));
 		}
+		*/
+
+		if (Input::IsKeyDown(F4))
+		{
+			mEngine->GetRenderer()->ReloadShaderIncludes();
+
+			for (auto& e : SceneManager::GetInstance()->GetActiveScene()->GetEntities())
+			{
+				auto& m = e->GetComponents<Material>();
+				if (!m.empty())
+				{
+					for (auto& mat : m)
+					{
+						mat->ReloadShader();
+					}
+				}
+			}
+		}
+
+		if (Input::IsKeyDown(F3))
+		{
+			Ptr<Shader> wireframeShader = nullptr;
+			if (wireframe)
+			{
+				wireframeShader = CreatePtr<Shader>(
+					"shaders/Default.vert", 
+					"shaders/PBR.frag");
+				wireframe = false;
+			}
+			else
+			{
+				wireframeShader = CreatePtr<Shader>(
+					"shaders/debug/Wireframe.vert",
+					"shaders/debug/PBR_Wireframe.frag",
+					"shaders/debug/Wireframe.geom");
+				wireframe = true;
+			}
+
+			for (auto& e : SceneManager::GetInstance()->GetActiveScene()->GetEntities())
+			{
+				auto& m = e->GetComponents<Material>();
+				if (!m.empty())
+				{
+					for (auto& mat : m)
+					{
+						mat->SetShader(wireframeShader);
+					}
+				}
 
 
-
+			}
+		}
 
 		if(Input::IsMouseButtonDown(MouseCode::Button1))
 		{
@@ -232,7 +288,7 @@ void Application::Run()
 		}
 		if(Input::IsKeyDown(KeyCode::D2))
 		{
-			SceneManager::GetInstance()->SetActiveScene("TestScene2");
+			SceneManager::GetInstance()->SetActiveScene("SponzaScene");
 		}
 
 
@@ -254,13 +310,13 @@ void Application::Run()
 		{
 			Ptr<Entity> towerEntity = mScene->CreateEntity();
 			towerEntity->AddComponent<Mesh>("assets/models/Cerberus.FBX");
-			Ptr<Material> towerMat = towerEntity->GetFirstComponentOfType<Material>();
+			Ptr<Material> towerMat = towerEntity->GetComponent<Material>();
 			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_A.tga", Material::TextureMapType::ALBEDO);
 			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_N.tga", Material::TextureMapType::NORMAL);
 			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_M.tga", Material::TextureMapType::METALLIC);
 			towerMat->LoadTexture("assets/textures/Cerberus/Cerberus_R.tga", Material::TextureMapType::ROUGHNESS);
 			//
-			Ptr<Transform> towerTransform = towerEntity->GetFirstComponentOfType<Transform>();
+			Ptr<Transform> towerTransform = towerEntity->GetComponent<Transform>();
 			//towerTransform->setPosition(0.0f, 5.0f, -30.0f);
 			towerTransform->setPosition(mScene->GetCamera()->GetPosition());
 			towerTransform->setScale(0.05f, 0.05f, 0.05f);

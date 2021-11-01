@@ -57,7 +57,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;..\Ivy\dependencies\FMOD\inc;..\Ivy\dependencies\irrKlang\include;..\Ivy\dependencies\MagicEnum;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;..\Ivy\dependencies\FMOD\inc;..\Ivy\dependencies\irrKlang\include;..\Ivy\dependencies\MagicEnum;..\Ivy\dependencies\bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -68,7 +68,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;fmod_vc.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\OpenAl\lib;..\Ivy\dependencies\libsndfile\lib;..\Ivy\dependencies\FMOD\lib\x64;..\Ivy\dependencies\irrKlang\lib;..\Ivy\dependencies\assimp\lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\OpenAl\lib;..\Ivy\dependencies\libsndfile\lib;..\Ivy\dependencies\FMOD\lib\x64;..\Ivy\dependencies\irrKlang\lib;..\Ivy\dependencies\bullet\lib;..\Ivy\dependencies\assimp\lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)"
@@ -80,7 +80,7 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;..\Ivy\dependencies\FMOD\inc;..\Ivy\dependencies\irrKlang\include;..\Ivy\dependencies\MagicEnum;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Ivy\source;..\Ivy\dependencies\GLFW\Include;..\Ivy\dependencies\GLAD\include;..\Ivy\dependencies\spdlog\include;..\Ivy\dependencies\glm;..\Ivy\dependencies\stb_image;..\Ivy\dependencies\assimp\include;..\Ivy\dependencies\ImGui;..\Ivy\dependencies\taskflow;..\Ivy\dependencies\OpenAl\include;..\Ivy\dependencies\libsndfile\include;..\Ivy\dependencies\effolkronium;..\Ivy\dependencies\FMOD\inc;..\Ivy\dependencies\irrKlang\include;..\Ivy\dependencies\MagicEnum;..\Ivy\dependencies\bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -94,7 +94,7 @@ xcopy "$(SolutionDir)projects\Sandbox\shaders\*.*" "$(TargetDir)shaders\" /y /e 
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>GLFW3.lib;assimp-vc141-mt.lib;OpenAL32.lib;libsndfile-1.lib;fmod_vc.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\OpenAl\lib;..\Ivy\dependencies\libsndfile\lib;..\Ivy\dependencies\FMOD\lib\x64;..\Ivy\dependencies\irrKlang\lib;..\Ivy\dependencies\assimp\lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Ivy\dependencies\GLAD\Lib;..\Ivy\dependencies\ImGui\Lib;..\Ivy\dependencies\OpenAl\lib;..\Ivy\dependencies\libsndfile\lib;..\Ivy\dependencies\FMOD\lib\x64;..\Ivy\dependencies\irrKlang\lib;..\Ivy\dependencies\bullet\lib;..\Ivy\dependencies\assimp\lib;..\Ivy\dependencies\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)"

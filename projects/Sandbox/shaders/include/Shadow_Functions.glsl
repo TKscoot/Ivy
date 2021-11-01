@@ -1,6 +1,25 @@
-/////////////////////////////////////////////
-// PCSS
-/////////////////////////////////////////////
+float u_light_zNear = 0.0; // 0.01 gives artifacts? maybe because of ortho proj?
+float u_light_zFar = 10000.0;
+vec2 u_lightRadiusUV = vec2(0.05);
+
+// Penumbra
+
+
+float HardShadows_DirectionalLightArr(sampler2DArray shadowMap, uint cascade, vec3 shadowCoords, vec3 normal)
+{
+	float bias = GetShadowBias(normal);
+	float shadowMapDepth = texture(shadowMap, vec3(shadowCoords.xy * 0.5 + 0.5, cascade)).x;
+	return step(shadowCoords.z, shadowMapDepth + bias) * ShadowFade;
+
+}
+
+float SearchRegionRadiusUV(float zWorld)
+{
+	const float light_zNear = 0.0; // 0.01 gives artifacts? maybe because of ortho proj?
+	const float lightRadiusUV = 0.05;
+	return lightRadiusUV * (zWorld - light_zNear) / zWorld;
+
+}
 
 
 const vec2 PoissonDistribution[64] = vec2[](
@@ -93,3 +112,74 @@ vec2 SamplePoisson(int index)
 {
 	return PoissonDistribution[index % 64];
 }
+
+
+float FindBlockerDistance_DirectionalLightArr(sampler2DArray shadowMap, uint cascade, vec3 shadowCoords, float uvLightSize, vec3 normal)
+{
+	float bias = GetShadowBias(normal);
+
+	int numBlockerSearchSamples = 64;
+	int blockers = 0;
+	float avgBlockerDistance = 0;
+
+	float searchWidth = SearchRegionRadiusUV(shadowCoords.z);
+	for (int i = 0; i < numBlockerSearchSamples; i++)
+	{
+		float z = texture(shadowMap, vec3((shadowCoords.xy * 0.5 + 0.5) + SamplePoisson(i) * searchWidth, cascade)).r;
+		if (z < (shadowCoords.z - bias))
+		{
+			blockers++;
+			avgBlockerDistance += z;
+		}
+	}
+
+	if (blockers > 0)
+		return avgBlockerDistance / float(blockers);
+
+	return -1;
+}
+
+float PCF_DirectionalLightArr(sampler2DArray shadowMap, uint cascade, vec3 shadowCoords, float uvRadius, vec3 normal)
+{
+	float bias = GetShadowBias(normal);
+	int numPCFSamples = 64;
+
+	float sum = 0;
+	for (int i = 0; i < numPCFSamples; i++)
+	{
+		vec2 offset = SamplePoisson(i) * uvRadius;
+		float z = texture(shadowMap, vec3((shadowCoords.xy * 0.5 + 0.5) + offset, cascade)).r;
+		sum += step(shadowCoords.z - bias, z);
+	}
+	return sum / numPCFSamples;
+}
+
+float NV_PCF_DirectionalLightArr(sampler2DArray shadowMap, uint cascade, vec3 shadowCoords, float uvRadius, vec3 normal)
+{
+	float bias = GetShadowBias(normal);
+
+	float sum = 0;
+	for (int i = 0; i < 16; i++)
+	{
+		vec2 offset = poissonDisk[i] * uvRadius;
+		float z = texture(shadowMap, vec3((shadowCoords.xy * 0.5 + 0.5) + offset, cascade)).r;
+		sum += step(shadowCoords.z - bias, z);
+	}
+	return sum / 16.0f;
+}
+
+float PCSS_DirectionalLightArr(sampler2DArray shadowMap, uint cascade, vec3 shadowCoords, float uvLightSize, vec3 normal)
+{
+	float blockerDistance = FindBlockerDistance_DirectionalLightArr(shadowMap, cascade, shadowCoords, uvLightSize, normal);
+	if (blockerDistance == -1) // No occlusion
+		return 1.0f;
+
+	float penumbraWidth = (shadowCoords.z - blockerDistance) / blockerDistance;
+
+	float NEAR = 0.01; // Should this value be tweakable?
+	float uvRadius = penumbraWidth * uvLightSize * NEAR / shadowCoords.z; // Do we need to divide by shadowCoords.z?
+	uvRadius = min(uvRadius, 0.002f);
+	return PCF_DirectionalLightArr(shadowMap, cascade, shadowCoords, uvRadius, normal) * ShadowFade;
+}
+
+/////////////////////////////////////////////

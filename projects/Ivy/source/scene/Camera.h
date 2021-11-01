@@ -120,6 +120,8 @@ namespace Ivy
 		 */
 		void SetFOV(float fov) { mFOV = fov; }
 
+		float GetFOV() { return mFOV; }
+
 		/*!
 		 * Resets the camera to default values
 		 * 

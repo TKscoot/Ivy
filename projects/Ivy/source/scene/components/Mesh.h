@@ -118,7 +118,7 @@ namespace Ivy
 		 */
 		void OnUpdate(float deltaTime) final;
 
-		void OnSceneLoad() final;
+		void OnSceneLoad(Ptr<Scene> scene) final;
 		void OnSceneUnload() final;
 
 		void Destroy();
@@ -141,6 +141,9 @@ namespace Ivy
 		void SetDrawBoundingBox(bool draw) { mDrawBoundingBox = draw; }
 
 		bool GetDrawBoundingBox() { return mDrawBoundingBox; }
+
+		void Draw(bool bindTextures = true);
+		void Draw(Ptr<Shader> shader, bool bindTextures = true);
 
     protected:
 
@@ -209,8 +212,7 @@ namespace Ivy
 
         void CreateResources();
 		void SetResourceData();
-		void Draw(bool bindTextures = true);
-		void Draw(Ptr<Shader> shader, bool bindTextures = true);
+
 
 		static inline float GetCameraDistance(Submesh& sm, Vec3 camPos)
 		{

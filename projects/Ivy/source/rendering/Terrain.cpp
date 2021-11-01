@@ -16,7 +16,7 @@ void Ivy::Terrain::GenerateMesh()
 	mVertices.resize(mWidth * mHeight);
 	int idx = 0;
 	mIndices.clear();
-
+/*
 	for(int z = 0; z < mHeight; z++)
 	{
 		for(int x = 0; x < mWidth; x++)
@@ -36,7 +36,66 @@ void Ivy::Terrain::GenerateMesh()
 		}
 
 	}
+*/
 
+	// Size of the terrain in world units
+	float terrainWidth = (mWidth - 1) * mPointWidth;
+	float terrainHeight = (mHeight - 1) * mPointWidth;
+
+	float halfTerrainWidth = terrainWidth * 0.5f;
+	float halfTerrainHeight = terrainHeight * 0.5f;
+
+
+
+	for (unsigned int j = 0; j < mHeight; ++j)
+	{
+		for (unsigned i = 0; i < mWidth; ++i)
+		{
+			unsigned int index = (j * mWidth) + i;
+			float heightValue = 0.0f;// GetHeightValue(&heightMap[index * bytesPerPixel], bytesPerPixel);
+
+			float S = (i / (float)(mWidth - 1));
+			float T = (j / (float)(mHeight - 1));
+
+			float X = (S * terrainWidth) - halfTerrainWidth;
+			float Y = heightValue * mPointWidth;
+			float Z = (T * terrainHeight) - halfTerrainHeight;
+
+
+			mVertices[index].position = glm::vec4(X, Y, Z, 1.0f);
+			mVertices[index].texcoord = Vec2(S, T) * mUVScale;
+			mVertices[index].normal   = Vec3(0.0f);
+		}
+	}
+
+
+
+
+	const uint32_t numTris = (mWidth - 1) * (mHeight - 1) * 2;
+
+	mIndices.clear();
+	mIndices.resize(numTris * 3);
+
+	unsigned int index = 0; // Index in the index buffer
+	for (unsigned int j = 0; j < (mHeight - 1); ++j)
+	{
+		for (unsigned int i = 0; i < (mWidth - 1); ++i)
+		{
+			int vertexIndex = (j * mWidth) + i;
+			// Top triangle (T0)
+			mIndices[index++] = vertexIndex;                     // V0
+			mIndices[index++] = vertexIndex + mWidth + 1;        // V3
+			mIndices[index++] = vertexIndex + 1;                 // V1
+			// Bottom triangle (T1)
+			mIndices[index++] = vertexIndex;                     // V0
+			mIndices[index++] = vertexIndex + mWidth;            // V2
+			mIndices[index++] = vertexIndex + mWidth + 1;        // V3
+		}
+	}
+
+
+
+	/*
 	// Indices
 	mIndices.clear();
 	for(uint64_t x = 0; x < (mWidth - 1); ++x)
@@ -57,6 +116,7 @@ void Ivy::Terrain::GenerateMesh()
 			mIndices.push_back(i1);
 		}
 	}
+	*/
 }
 
 void Ivy::Terrain::SetHeight(int x, int z, float height)
@@ -71,9 +131,65 @@ float Ivy::Terrain::GetHeight(int x, int z)
 	return mHeights[z * mWidth + x];
 }
 
-float Ivy::Terrain::GetHeightFromWorldPos(float xPos, float zPos)
+float Ivy::Terrain::GetHeightFromWorldPos(Vec3 position)
 {
-	return mVertices[zPos * mWidth + xPos].position.y;
+	float height = -FLT_MAX;
+
+	if (mWidth < 2 || mHeight < 2) return height;
+
+	// Width and height of the terrain in world units
+	float terrainWidth = (mWidth - 1) * mPointWidth;
+	float terrainHeight = (mHeight - 1) * mPointWidth;
+	float halfWidth = terrainWidth * 0.5f;
+	float halfHeight = terrainHeight * 0.5f;
+
+	// Multiple the position by the inverse of the terrain matrix 
+	// to get the position in terrain local space
+	glm::vec3 terrainPos = glm::vec3(glm::inverse(mTransform->getComposed()) * glm::vec4(position, 1.0f));
+	glm::vec3 invBlockScale(1.0f / mPointWidth, 0.0f, 1.0f / mPointWidth);
+
+	// Calculate an offset and scale to get the vertex indices
+	glm::vec3 offset(halfWidth, 0.0f, halfHeight);
+
+	// Get the 4 vertices that make up the triangle we're over
+	glm::vec3 vertexIndices = (terrainPos + offset) * invBlockScale;
+
+	int u0 = (int)floorf(vertexIndices.x);
+	int u1 = u0 + 1;
+	int v0 = (int)floorf(vertexIndices.z);
+	int v1 = v0 + 1;
+
+	if (u0 >= 0 && u1 < mWidth && v0 >= 0 && v1 < mHeight)
+	{
+		glm::vec3 p00 = mVertices[(v0 * mWidth) + u0].position;    // Top-left vertex
+		glm::vec3 p10 = mVertices[(v0 * mWidth) + u1].position;    // Top-right vertex
+		glm::vec3 p01 = mVertices[(v1 * mWidth) + u0].position;    // Bottom-left vertex
+		glm::vec3 p11 = mVertices[(v1 * mWidth) + u1].position;    // Bottom-right vertex
+
+		// Which triangle are we over?
+		float percentU = vertexIndices.x - u0;
+		float percentV = vertexIndices.z - v0;
+
+		glm::vec3 dU, dV;
+		if (percentU > percentV)
+		{   // Top triangle
+			dU = p10 - p00;
+			dV = p11 - p10;
+		}
+		else
+		{   // Bottom triangle
+			dU = p11 - p01;
+			dV = p01 - p00;
+		}
+
+		glm::vec3 heightPos = p00 + (dU * percentU) + (dV * percentV);
+		// Convert back to world-space by multiplying by the terrain's world matrix
+		heightPos = glm::vec3(mTransform->getComposed() * glm::vec4(heightPos, 1));
+		height = heightPos.y;
+	}
+
+
+	return height;
 }
 
 void Ivy::Terrain::SetHeights(float* heights)
@@ -117,7 +233,7 @@ void Ivy::Terrain::OnUpdate(float deltaTime)
 
 void Ivy::Terrain::OnDraw(Ptr<Camera> camera, Vec2& currentWindowSize)
 {
-	auto transform = GetFirstComponentOfType<Transform>();
+	auto transform = GetComponent<Transform>();
 	mShader->Bind();
 	mShader->SetUniformMat4("view", camera->GetViewMatrix());
 	mShader->SetUniformMat4("projection", camera->GetProjectionMatrix(currentWindowSize));

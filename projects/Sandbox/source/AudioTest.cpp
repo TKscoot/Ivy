@@ -12,7 +12,7 @@ void AudioTest::OnCreate()
 {
 	mAudioClip = AddComponent<AudioClip>("assets/sounds/ophelia.mp3");
 
-	mAudioClip3D = AddComponent<AudioClip3D>(GetFirstComponentOfType<Transform>(), "assets/sounds/ophelia.mp3");
+	mAudioClip3D = AddComponent<AudioClip3D>(GetComponent<Transform>(), "assets/sounds/ophelia.mp3");
 	mAudioClip3D->ShouldLoop(true);
 	
 	mAudioListener = AddComponent<AudioListener>(mScene->GetCamera());
@@ -98,27 +98,6 @@ void AudioTest::OnUpdate(float deltaTime)
 		mAudioClip->ShouldLoop(loop);
 	}
 
-
-	/*
-	GetVolume();
-
-	SetVolume(float volume);
-
-	GetPan();
-
-	SetPan(float pan);
-
-	IsFinished();
-
-	GetDuration();
-
-	GetPlaybackPosition();
-
-	SetPlaybackPosition(int position);
-
-	GetPlaybackSpeed();
-	SetPlaybackSpeed(float speed);
-	*/
 	ImGui::End();
 }
 

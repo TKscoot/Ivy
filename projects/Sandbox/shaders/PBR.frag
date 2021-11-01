@@ -2,7 +2,7 @@
 #extension GL_ARB_shading_language_include : require
 #include "/LightStructs.glsl"
 #include "/PBR_Functions.glsl"
-#include "/Shadow_Functions.glsl"
+//#include "/Shadow_Functions.glsl"
 
 out vec4 FragColor;
 out vec4 GodRayOcclusionColor;
@@ -24,9 +24,15 @@ layout(binding = 5) uniform sampler2D   aoMap;
 layout(binding = 4) uniform sampler2D   brdfLutTexture;
 layout(binding = 6) uniform samplerCube radianceMap;
 layout(binding = 7) uniform samplerCube irradianceMap;
-layout(binding = 8) uniform sampler2D   shadowMap0[4];
+layout(binding = 8) uniform sampler2DArray u_ShadowMapTexture;
 // ACHTUNG! NEXT SAMPLER BINDING == 12
 //layout(binding = 12) uniform sampler2D  noiseTexture;
+
+
+//uniform mat4 lightSpaceMatrices[16];
+//uniform float cascadePlaneDistances[16];
+//uniform int cascadeCount;   // number of frusta - 1
+//uniform float farPlane;
 
 
 //uniform vec3 lightPos;
@@ -89,7 +95,7 @@ vec3 IBL(vec3 F0, vec3 Lr, vec3 normal, float roughness, float metallic, vec3 al
 vec3 RotateVectorAboutY(float angle, vec3 vec);
 
 // Chernos Shadow method
-float CalcShadowsCherno(vec3 normal);
+float CalcShadowsCherno(vec3 normal, vec3 view);
 float PCSS_DirectionalLight(sampler2D shadowMap, vec3 shadowCoords, float uvLightSize, vec3 normal);
 float PCF_DirectionalLight(sampler2D shadowMap, vec3 shadowCoords, float uvRadius, vec3 normal);
 float HardShadows_DirectionalLight(sampler2D shadowMap, vec3 shadowCoords, vec3 normal);
@@ -97,6 +103,10 @@ float FindBlockerDistance_DirectionalLight(sampler2D shadowMap, vec3 shadowCoord
 float GetShadowBias(vec3 normal);
 vec2 searchRegionRadiusUV(float zWorld);
 
+float CalcShadowArr(sampler2DArray shadowMap, uint cascade, vec3 fragPosLightSpace, vec3 lightPos, vec3 N);
+
+
+#include "/Shadow_Functions.glsl"
 
 //MAIN
 void main()
@@ -148,12 +158,14 @@ void main()
 	float shadow = 0.0;
 	if(csm.oldShadows)
 	{
-		shadow = 1 - CalcCascadedShadows(N);
+		//shadow = 1 - CalcCascadedShadows(N);
 	}
 	else
 	{
-		shadow = CalcShadowsCherno(N);
+		shadow = CalcShadowsCherno(N, viewPos);
 	}
+
+	//shadow = CalcShadowChernoNew();
 
 
 
@@ -271,7 +283,45 @@ float CalcShadow(sampler2D shadowMap, vec3 fragPosLightSpace, vec3 lightPos, vec
     return shadow;
 }
 
+float CalcShadowArr(sampler2DArray shadowMap, uint cascade, vec3 fragPosLightSpace, vec3 lightPos, vec3 N)
+{
+
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace;// fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    //projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, vec3(projCoords.xy * 0.5 + 0.5, cascade)).r;
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // calculate bias (based on depth map resolution and slope)
+    vec3 normal = normalize(Normal);
+    vec3 lightDir = normalize(lightPos);//normalize(lightPos - FragPos);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    // check whether current frag pos is in shadow
+    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0).xy;
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, vec3(vec2(projCoords.xy + vec2(x, y) * texelSize), cascade)).r;
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+
+    return shadow;
+}
+
 // Leicht abge�nderte Implementation basierend auf Yan Chernikovs Hazel Engine (https://github.com/TheCherno/Hazel)
+/*
 float CalcCascadedShadows(vec3 N)
 {
 const uint SHADOW_MAP_CASCADE_COUNT = 4;
@@ -345,6 +395,7 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 
 	return shadowAmount;
 }
+*/
 
 vec3 RotateVectorAboutY(float angle, vec3 vec)
 {
@@ -376,9 +427,13 @@ vec3 IBL(vec3 F0, vec3 Lr, vec3 normal, float roughness, float metallic, vec3 al
 
 
 
-float u_light_zNear = 0.0; // 0.01 gives artifacts? maybe because of ortho proj?
-float u_light_zFar = 10000.0;
-vec2 u_lightRadiusUV = vec2(0.05);
+
+
+
+
+//float u_light_zNear = 0.0; // 0.01 gives artifacts? maybe because of ortho proj?
+//float u_light_zFar = 10000.0;
+//vec2 u_lightRadiusUV = vec2(0.05);
 
 vec2 searchRegionRadiusUV(float zWorld)
 {
@@ -465,7 +520,7 @@ float PCSS_DirectionalLight(sampler2D shadowMap, vec3 shadowCoords, float uvLigh
 	return 1.0 - PCF_DirectionalLight(shadowMap, shadowCoords, uvRadius, normal) * ShadowFade;
 }
 
-
+/*
 float CalcShadowsCherno(vec3 normal)
 {
 const uint SHADOW_MAP_CASCADE_COUNT = 4;
@@ -539,3 +594,156 @@ const uint SHADOW_MAP_CASCADE_COUNT = 4;
 
 	return shadowAmount;
 }
+*/
+
+float CalcShadowsCherno(vec3 normal, vec3 view)
+{
+	uint cascadeIndex = 0;
+
+	const uint SHADOW_MAP_CASCADE_COUNT = 4;
+	for(uint i = 0; i < SHADOW_MAP_CASCADE_COUNT - 1; i++)
+	{
+		if(ViewPosition.z < csm.cascadeSplits[i])
+			CascadeIndex = i + 1;
+	}
+
+	float shadowDistance = csm.maxShadowDistance;
+	float transitionDistance = csm.shadowFade;
+	float dist = length(view);
+	ShadowFade = dist - (shadowDistance - transitionDistance);
+	ShadowFade /= transitionDistance;
+	ShadowFade = clamp(1.0 - ShadowFade, 0.0, 1.0);
+
+	bool fadeCascades = csm.cascadeFading;
+	float shadowAmount = 1.0;
+	if (fadeCascades)
+	{
+		float cascadeTransitionFade = csm.cascadeTransitionFade;
+
+		float c0 = smoothstep(csm.cascadeSplits[0] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[0] - cascadeTransitionFade * 0.5f, viewPos.z);
+		float c1 = smoothstep(csm.cascadeSplits[1] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[1] - cascadeTransitionFade * 0.5f, viewPos.z);
+		float c2 = smoothstep(csm.cascadeSplits[2] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[2] - cascadeTransitionFade * 0.5f, viewPos.z);
+		if (c0 > 0.0 && c0 < 1.0)
+		{
+			// Sample 0 & 1
+			vec3 shadowMapCoords = (FragPosLightSpace[0].xyz / FragPosLightSpace[0].w);
+			float shadowAmount0 = csm.softShadows ? PCSS_DirectionalLightArr(u_ShadowMapTexture, 0, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLightArr(u_ShadowMapTexture, 0, shadowMapCoords, normal);
+			shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
+			float shadowAmount1 = csm.softShadows ? PCSS_DirectionalLightArr(u_ShadowMapTexture, 1, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLightArr(u_ShadowMapTexture, 1, shadowMapCoords, normal);
+
+			shadowAmount = mix(shadowAmount0, shadowAmount1, c0);
+		}
+		else if (c1 > 0.0 && c1 < 1.0)
+		{
+			// Sample 1 & 2
+			vec3 shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
+			float shadowAmount1 = csm.softShadows ? PCSS_DirectionalLightArr(u_ShadowMapTexture, 1, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLightArr(u_ShadowMapTexture, 1, shadowMapCoords, normal);
+			shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
+			float shadowAmount2 = csm.softShadows ? PCSS_DirectionalLightArr(u_ShadowMapTexture, 2, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLightArr(u_ShadowMapTexture, 2, shadowMapCoords, normal);
+
+			shadowAmount = mix(shadowAmount1, shadowAmount2, c1);
+		}
+		else if (c2 > 0.0 && c2 < 1.0)
+		{
+			// Sample 2 & 3
+			vec3 shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
+			float shadowAmount2 = csm.softShadows ? PCSS_DirectionalLightArr(u_ShadowMapTexture, 2, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLightArr(u_ShadowMapTexture, 2, shadowMapCoords, normal);
+			shadowMapCoords = (FragPosLightSpace[3].xyz / FragPosLightSpace[3].w);
+			float shadowAmount3 = csm.softShadows ? PCSS_DirectionalLightArr(u_ShadowMapTexture, 3, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLightArr(u_ShadowMapTexture, 3, shadowMapCoords, normal);
+
+			shadowAmount = mix(shadowAmount2, shadowAmount3, c2);
+		}
+		else
+		{
+			vec3 shadowMapCoords = (FragPosLightSpace[cascadeIndex].xyz / FragPosLightSpace[cascadeIndex].w);
+			shadowAmount = csm.softShadows ? PCSS_DirectionalLightArr(u_ShadowMapTexture, cascadeIndex, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLightArr(u_ShadowMapTexture, cascadeIndex, shadowMapCoords, normal);
+		}
+	}
+	else
+	{
+		vec3 shadowMapCoords = (FragPosLightSpace[cascadeIndex].xyz / FragPosLightSpace[cascadeIndex].w);
+		shadowAmount = csm.softShadows ? PCSS_DirectionalLightArr(u_ShadowMapTexture, cascadeIndex, shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLightArr(u_ShadowMapTexture, cascadeIndex, shadowMapCoords, normal);
+	}
+
+
+	//float NdotL = dot(normal, dirLight.direction);
+	//NdotL = smoothstep(0.0, 0.4, NdotL + 0.2);
+	//shadowAmount *= (NdotL * 1.0);
+	return shadowAmount;
+
+}
+/*
+float CalcShadowsCherno1(vec3 normal)
+{
+const uint SHADOW_MAP_CASCADE_COUNT = 4;
+	for(uint i = 0; i < SHADOW_MAP_CASCADE_COUNT - 1; i++)
+	{
+		if(ViewPosition.z < csm.cascadeSplits[i])
+			CascadeIndex = i + 1;
+	}
+
+	float shadowDistance = csm.maxShadowDistance;
+	float transitionDistance = csm.shadowFade;
+	float dist = length(ViewPosition);
+	ShadowFade = dist - (shadowDistance - transitionDistance);
+	ShadowFade /= transitionDistance;
+	ShadowFade = clamp(1.0 - ShadowFade, 0.0, 1.0);
+
+	bool fadeCascades = csm.cascadeFading;
+	float shadowAmount = 1.0;
+	if (fadeCascades)
+	{
+		float cascadeTransitionFade = csm.cascadeTransitionFade;
+
+		float c0 = smoothstep(csm.cascadeSplits[0] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[0] - cascadeTransitionFade * 0.5f, viewPos.z);
+		float c1 = smoothstep(csm.cascadeSplits[1] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[1] - cascadeTransitionFade * 0.5f, viewPos.z);
+		float c2 = smoothstep(csm.cascadeSplits[2] + cascadeTransitionFade * 0.5f, csm.cascadeSplits[2] - cascadeTransitionFade * 0.5f, viewPos.z);
+		if (c0 > 0.0 && c0 < 1.0)
+		{
+			// Sample 0 & 1
+			vec3 shadowMapCoords = (FragPosLightSpace[0].xyz / FragPosLightSpace[0].w);
+			float shadowAmount0 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[0], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[0], shadowMapCoords, normal);
+			shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
+			float shadowAmount1 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[1], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[1], shadowMapCoords, normal);
+
+			shadowAmount = mix(shadowAmount0, shadowAmount1, c0);
+		}
+		else if (c1 > 0.0 && c1 < 1.0)
+		{
+			// Sample 1 & 2
+			vec3 shadowMapCoords = (FragPosLightSpace[1].xyz / FragPosLightSpace[1].w);
+			float shadowAmount1 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[1], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[1], shadowMapCoords, normal);
+			shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
+			float shadowAmount2 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[2], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[2], shadowMapCoords, normal);
+
+			shadowAmount = mix(shadowAmount1, shadowAmount2, c1);
+		}
+		else if (c2 > 0.0 && c2 < 1.0)
+		{
+			// Sample 2 & 3
+			vec3 shadowMapCoords = (FragPosLightSpace[2].xyz / FragPosLightSpace[2].w);
+			float shadowAmount2 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[2], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[2], shadowMapCoords, normal);
+			shadowMapCoords = (FragPosLightSpace[3].xyz / FragPosLightSpace[3].w);
+			float shadowAmount3 = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[3], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[3], shadowMapCoords, normal);
+
+			shadowAmount = mix(shadowAmount2, shadowAmount3, c2);
+		}
+		else
+		{
+			vec3 shadowMapCoords = (FragPosLightSpace[CascadeIndex].xyz / FragPosLightSpace[CascadeIndex].w);
+			shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[CascadeIndex], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[CascadeIndex], shadowMapCoords, normal);
+		}
+	}
+	else
+	{
+		vec3 shadowMapCoords = (FragPosLightSpace[CascadeIndex].xyz / FragPosLightSpace[CascadeIndex].w);
+		shadowAmount = csm.softShadows ? PCSS_DirectionalLight(shadowMap0[CascadeIndex], shadowMapCoords, csm.lightSize, normal) : HardShadows_DirectionalLight(shadowMap0[CascadeIndex], shadowMapCoords, normal);
+	}
+
+	float NdotL = dot(normal, dirLight.direction);
+	NdotL = smoothstep(0.0, 0.4, NdotL + 0.2);
+	shadowAmount *= (NdotL * 1.0);
+
+	return shadowAmount;
+}
+*/

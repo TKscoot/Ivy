@@ -2,7 +2,7 @@
 #include "SceneRenderPass.h"
 
 Ivy::SceneRenderPass::SceneRenderPass(
-	Ptr<Camera> camera, 
+	Ptr<Camera>				camera,
 	Ptr<Window>				window,
 	Vector<Ptr<Entity>>&	entities,
 	Ptr<ShadowRenderPass>   shadowPass,
@@ -138,7 +138,7 @@ void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize, bool 
 
 		mEntities[i]->OnDraw(mCamera, currentWindowSize);
 
-		Vector<Ptr<Material>> materials = mEntities[i]->GetComponentsOfType<Material>();
+		Vector<Ptr<Material>> materials = mEntities[i]->GetComponents<Material>();
 		if (materials.empty())
 		{
 			continue;
@@ -163,6 +163,9 @@ void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize, bool 
 
 		shader->SetUniformFloat3("viewPos", mCamera->GetPosition());
 
+		shader->SetUniformFloat("ElapsedTime", (float)glfwGetTime());
+
+
 		if(mEnvUnfiltered)
 		{
 			mEnvUnfiltered->Bind(6);
@@ -174,10 +177,11 @@ void Ivy::SceneRenderPass::Render(float deltaTime, Vec2 currentWindowSize, bool 
 
 		PushLightParams(shader);
 
-		Vector<Ptr<Mesh>> meshes = mEntities[i]->GetComponentsOfType<Mesh>();
+		Vector<Ptr<Mesh>> meshes = mEntities[i]->GetComponents<Mesh>();
 		for(int j = 0; j < meshes.size(); j++)
 		{
 			meshes[j]->Draw();
+
 			if (meshes[j]->mDrawBoundingBox)
 			{
 				meshes[j]->DrawBoundingBox(projection, view);

@@ -3,6 +3,7 @@
 namespace Ivy
 {
 	class Entity;
+	class Scene;
 
 	/*!
 	 * Base component class
@@ -33,7 +34,7 @@ namespace Ivy
 		 * Load your resources here!! Else they will be loaded on program start!
 		 * 
 		 */
-		virtual void OnSceneLoad() {};
+		virtual void OnSceneLoad(Ptr<Scene> scene) {};
 
 		/*!
 		 * Gets called when scene is being unloaded and other scene gets loaded

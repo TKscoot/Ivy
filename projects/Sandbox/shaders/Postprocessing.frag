@@ -58,6 +58,9 @@ float depthStrength();
 void SEUSmotionBlur(inout vec3 color, float depth);
 vec3 GaussianBlur();
 
+vec3 DepthOfField(vec3 color, vec2 texCoord, float focusPoint, float focusScale, vec2 texelSize);
+
+
 float LinearizeDepth(float d,float zNear,float zFar)
 {
     float z_n = 2.0 * d - 1.0;
@@ -107,10 +110,20 @@ void main()
 	}
 	if(UseDepthOfField)
 	{
+		/*
 		float dofStrength = depthStrength();
 		vec3 blurred = GaussianBlur();
 
 		color = mix(blurred, color, dofStrength);
+		*/
+		ivec2 texSize = textureSize(sceneColorMap, 0);
+		vec2 fTexSize = vec2(float(texSize.x), float(texSize.y));
+		float centerDepth = LinearizeDepth(texture(sceneDepthMap, vec2(0.5f)).r, 0.1, FarPlane);// *uFar;
+		//float centerDepth = texture(sceneDepthMap, vec2(0.5f)).r;
+		float focusPoint = centerDepth;
+		float focusScale = 1.5f;
+
+		color = DepthOfField(color, TexCoords, focusPoint, focusScale, 1.0f / fTexSize);
 	}
 
 	vec4 sunPos = Projection * View *  vec4(-2.0, 4.0, -1.0, 1.0);
@@ -457,4 +470,39 @@ vec3 snowing(in vec2 uv)
 
 
   return acc;
+}
+
+const float GOLDEN_ANGLE = 2.39996323;
+const float MAX_BLUR_SIZE = 20.0;
+const float RAD_SCALE = 2.0; // Smaller = nicer blur, larger = faster
+
+
+// Cherno Depth of Field
+float GetBlurSize(float depth, float focusPoint, float focusScale)
+{
+	float coc = clamp((1.0 / focusPoint - 1.0 / depth) * focusScale, -1.0, 1.0);
+	return abs(coc) * MAX_BLUR_SIZE;
+}
+
+
+vec3 DepthOfField(vec3 color, vec2 texCoord, float focusPoint, float focusScale, vec2 texelSize)
+{
+	float centerDepth = LinearizeDepth(texture(sceneDepthMap, texCoord).r, 0.1, FarPlane);// *uFar;
+	float centerSize = GetBlurSize(centerDepth, focusPoint, focusScale);
+	float tot = 1.0;
+	float radius = RAD_SCALE;
+	for (float ang = 0.0; radius < MAX_BLUR_SIZE; ang += GOLDEN_ANGLE)
+	{
+		vec2 tc = texCoord + vec2(cos(ang), sin(ang)) * texelSize * radius;
+		vec3 sampleColor = texture(sceneColorMap, tc).rgb;
+		float sampleDepth = texture(sceneDepthMap, tc).r * FarPlane;
+		float sampleSize = GetBlurSize(sampleDepth, focusPoint, focusScale);
+		if (sampleDepth > centerDepth)
+			sampleSize = clamp(sampleSize, 0.0, centerSize * 2.0);
+		float m = smoothstep(radius - 0.5, radius + 0.5, sampleSize);
+		color += mix(color / tot, sampleColor, m);
+		tot += 1.0;
+		radius += RAD_SCALE / radius;
+	}
+	return color /= tot;
 }

@@ -154,9 +154,6 @@
     <None Include="Lib\ImGui.lib">
       <Filter>Lib</Filter>
     </None>
-    <None Include="Lib\ImGui.lib.lastcodeanalysissucceeded">
-      <Filter>Lib</Filter>
-    </None>
     <None Include="Lib\ImGui.pdb">
       <Filter>Lib</Filter>
     </None>
@@ -194,9 +191,6 @@
       <Filter>Lib\Release\ImGui.tlog</Filter>
     </None>
     <None Include="Lib\Release\ImGui.vcxproj.FileListAbsolute.txt">
-      <Filter>Lib\Release</Filter>
-    </None>
-    <None Include="Lib\Release\NativeCodeAnalysis.read.1.tlog">
       <Filter>Lib\Release</Filter>
     </None>
     <None Include="Lib\Release\binary_to_compressed_c.nativecodeanalysis.sarif">

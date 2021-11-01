@@ -43,6 +43,12 @@ Ivy::Ptr<Ivy::Scene> Ivy::SceneManager::GetScene(String name)
 
 void Ivy::SceneManager::SetActiveScene(String name)
 {
+	if (mScenes[name] == nullptr)
+	{
+		Debug::CoreError("Scene \"{}\" does not exist or is nullptr! Not changing scene!", name);
+		return;
+	}
+
 	if(mActiveScene)
 	{
 		mActiveScene->Unload();
@@ -54,7 +60,6 @@ void Ivy::SceneManager::SetActiveScene(String name)
 		}
 
 	}
-
 
 	mActiveScene = mScenes[name];
 	mActiveScene->mIsActiveScene = true;

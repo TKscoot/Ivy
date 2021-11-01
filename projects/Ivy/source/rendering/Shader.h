@@ -10,10 +10,12 @@ namespace Ivy
 	public:
 		Shader() {};
 		Shader(const String& vertexFilepath, const String& fragmentFilepath);
+		Shader(const String& vertexFilepath, const String& fragmentFilepath, const String& geometryFilepath);
 		Shader(const String& computeFilepath);
 		~Shader();
 
 		void AddShaderSource(const String& vertexFilepath, const String& fragmentFilepath);
+		void AddShaderSource(const String& vertexFilepath, const String& fragmentFilepath, const String& geometryFilepath);
 
 		///
 		/// Binds the shader program. This tells the renderer to use this program.
@@ -24,6 +26,13 @@ namespace Ivy
 		/// Unbinds the shader program.
 		///
 		void Unbind();
+
+
+		/*!
+		 * Reloads shader
+		 *
+		 */
+		void Recompile();
 
 		/*!
 		 * Destroys shader object(s)
@@ -121,6 +130,9 @@ namespace Ivy
 		// Variables
 		UnorderedMap<GLuint, String> sources;
 		GLuint mProgram = 0;
+		String mVertexFilepath;
+		String mFragmentFilepath;
+		String mGeometryFilepath;
 
 	};
 

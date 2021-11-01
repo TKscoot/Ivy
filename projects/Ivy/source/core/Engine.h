@@ -78,6 +78,8 @@ namespace Ivy
 		 */
 		static void Terminate() { mTerminate = true; }
 
+		const Ptr<Renderer> GetRenderer() const { return mRenderer; }
+
 	private:
 		void CheckGLVersion(int supportedMajor, int supportedMinor);
 

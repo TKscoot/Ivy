@@ -152,7 +152,8 @@ project "Ivy"
 		"projects/Ivy/dependencies/effolkronium",
 		"projects/Ivy/dependencies/FMOD/inc",
 		"projects/Ivy/dependencies/irrKlang/include",
-		"projects/Ivy/dependencies/MagicEnum"
+		"projects/Ivy/dependencies/MagicEnum",
+		"projects/Ivy/dependencies/bullet/include"
 	}
 	
 	libdirs
@@ -164,7 +165,8 @@ project "Ivy"
 		"projects/Ivy/dependencies/OpenAl/lib",
 		"projects/Ivy/dependencies/libsndfile/lib",
 		"projects/Ivy/dependencies/FMOD/lib/x64",
-		"projects/Ivy/dependencies/irrKlang/lib"
+		"projects/Ivy/dependencies/irrKlang/lib",
+		"projects/Ivy/dependencies/bullet/lib"
 	}
 	
     links 
@@ -186,6 +188,9 @@ project "Ivy"
 		links "libsndfile-1.lib"
 		links "fmod_vc.lib"
 		links "irrKlang.lib"
+		links "BulletCollision_Debug.lib"
+		links "BulletDynamics_Debug.lib"
+		links "LinearMath_Debug.lib"
     filter {}
 	
 	filter{ "system:windows", "configurations:Release"}
@@ -195,6 +200,9 @@ project "Ivy"
 		links "libsndfile-1.lib"
 		links "fmod_vc.lib"
 		links "irrKlang.lib"
+		links "BulletCollision.lib"
+		links "BulletDynamics.lib"
+		links "LinearMath.lib"
     filter {}
 
     -- We specify where the source files are.
@@ -231,7 +239,8 @@ project "Sandbox"
 		"projects/Ivy/dependencies/effolkronium",
 		"projects/Ivy/dependencies/FMOD/inc",
 		"projects/Ivy/dependencies/irrKlang/include",
-		"projects/Ivy/dependencies/MagicEnum"
+		"projects/Ivy/dependencies/MagicEnum",
+		"projects/Ivy/dependencies/bullet/include"
 	}
 	
 
@@ -242,7 +251,8 @@ project "Sandbox"
 		"projects/Ivy/dependencies/OpenAl/lib",
 		"projects/Ivy/dependencies/libsndfile/lib",
 		"projects/Ivy/dependencies/FMOD/lib/x64",
-		"projects/Ivy/dependencies/irrKlang/lib"
+		"projects/Ivy/dependencies/irrKlang/lib",
+		"projects/Ivy/dependencies/bullet/lib" 
 	}
 
 	LibraryDir = {}

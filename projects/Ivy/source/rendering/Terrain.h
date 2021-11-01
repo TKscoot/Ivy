@@ -32,7 +32,7 @@ namespace Ivy
 		void SetHeight(int x, int z, float height);
 		float GetHeight(int x, int z);
 
-		float GetHeightFromWorldPos(float xPos, float zPos);
+		float GetHeightFromWorldPos(Vec3 position);
 
 		// heights array has to be of size width * height of terrain
 		void SetHeights(float* heights);
@@ -54,7 +54,7 @@ namespace Ivy
 		int				  mHeight = 512;
 		float			  mUVScale = 16.0f;
 
-		const float		  mPointWidth = 250.0f;
+		const float		  mPointWidth = 0.25f;
 
 		float baseFreq = 4.0f;
 		float persistence = 0.5f;

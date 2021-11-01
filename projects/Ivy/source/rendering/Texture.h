@@ -110,6 +110,12 @@ namespace Ivy
 
 		// TODO: void SetPixel(Vec2i coord, Vec4 colorValues); 
 
+		/// <summary>
+		/// Sets if texture compression should be used
+		/// </summary>
+		/// <param name="use">true to use texture compression</param>
+		void SetTextureCompression(bool use) { mUseCompression = use; }
+
 		static Texture2DData LoadTextureData(String file);
 
 		String GetFilepath() { return mFilepath; }
@@ -119,10 +125,12 @@ namespace Ivy
 		String	 mFilepath = "";
 
 		GLuint	 mID			 = 0;
-		GLenum	 mInternalFormat;
+		GLenum	 mInternalFormat = GL_COMPRESSED_RGBA;
 		GLenum	 mDataFormat;
 		uint32_t mWidth          = 0;
 		uint32_t mHeight         = 0;
+
+		bool mUseCompression = true;
 	};
 
 	class TextureCube

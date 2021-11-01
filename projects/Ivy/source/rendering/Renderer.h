@@ -72,6 +72,8 @@ namespace Ivy
 			mImGuiHook->NotifyNewFrame();
 		}
 
+		void ReloadShaderIncludes();
+
 	private:
 
 		// Methods
@@ -79,6 +81,10 @@ namespace Ivy
 		void InitLoadingScreen();
 
 		void AddShaderIncludes();
+		void AddShaderInclude(String& name, String& data);
+		void AddShaderInclude(String& path);
+		void DeleteShaderIncludes();
+		void DeleteShaderInclude(String& name);
 
 		// Variables
 		Ptr<Window>       mWindow;
@@ -90,6 +96,8 @@ namespace Ivy
 		Ptr<Texture2D>	  mLoadingScreenTexture;
 
 		Ptr<ImGuiHook>	  mImGuiHook = nullptr;
+
+		Vector<String>    mShaderIncludes;
 
 		GLuint mQueryID = 0;
 

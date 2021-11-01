@@ -30,7 +30,7 @@ namespace Ivy
 		float GetCameraDistance()
 		{
 			Vec3 camPos = mCamera->GetPosition();
-			Vec3 position = GetFirstComponentOfType<Transform>()->getPosition();
+			Vec3 position = GetComponent<Transform>()->getPosition();
 			float dist = glm::length2(position - camPos);
 
 			return dist;
@@ -121,7 +121,7 @@ namespace Ivy
 		 * \return Returns all components of a specified type
 		 */
 		template <typename T>
-		Vector<Ptr<T>> const GetComponentsOfType()
+		Vector<Ptr<T>> const GetComponents()
 		{
 			std::type_index const index = std::type_index(typeid(T));
 			if (mComponents.end() == mComponents.find(index))
@@ -145,7 +145,7 @@ namespace Ivy
 		 * \return Returns the first added component of a specified type
 		 */
 		template<typename T>
-		Ptr<T> const GetFirstComponentOfType()
+		Ptr<T> const GetComponent()
 		{
 			std::type_index const index = std::type_index(typeid(T));
 			if (mComponents.end() == mComponents.find(index))
@@ -223,6 +223,7 @@ namespace Ivy
 	protected:
 		Ptr<Scene> mScene = nullptr;
 		bool mAttachedSceneIsActive = false;
+		Ptr<Transform> mTransform = nullptr;
 	
 	private:
 		void StartComponents();
